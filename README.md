@@ -266,25 +266,22 @@ The public installation handle does not expose a raw target resolver. Scripts mu
 
 | Page | Selected adapters |
 | --- | --- |
-| [All capabilities](http://127.0.0.1:4173/examples/) | All seven adapters, with every demo on the page and additional reference-boundary comparisons. |
+| [Demo gallery](http://127.0.0.1:4173/examples/) | Six adapters, with every demo on the page and additional reference-boundary comparisons. |
 | [Labels](http://127.0.0.1:4173/examples/labels/) | `labels({ activation: "focus-and-click", naming: true })` only |
 | [Popover targets](http://127.0.0.1:4173/examples/popover-targets/) | `popoverTargets()` only |
 | [Dialog commands](http://127.0.0.1:4173/examples/dialog-commands/) | `dialogCommands()` only |
 | [Popover commands](http://127.0.0.1:4173/examples/popover-commands/) | `popoverCommands()` only |
 | [Text names and descriptions](http://127.0.0.1:4173/examples/text-names/) | `textNames({ getText })` only |
 | [Form actions](http://127.0.0.1:4173/examples/forms/) | `formTargets()` only |
-| [Combobox relationships](http://127.0.0.1:4173/examples/comboboxes/) | `comboboxTargets({ getTargets })` only |
 | [Original six-scenario companion](http://127.0.0.1:4173/examples/scenarios/) | Labels, popover targets, and text names for the retained declarative comparisons. |
 
-The main page contains working examples for all seven adapters. Each capability also has an independent page and bundle, allowing behavior and loading cost to be compared with only that adapter selected. The boundary comparisons use existing adapters.
+The main page contains working examples for six adapters. Each demonstrated capability also has an independent page and bundle, allowing behavior and loading cost to be compared with only that adapter selected. The boundary comparisons use existing adapters.
 
 The demos pair a short capability description with working controls and live observations. Browser details, behavior limits, and implementation notes are expandable; code samples and measured file sizes remain available on each page. Shared styles follow the system’s light or dark preference, including shadow-root controls and syntax highlighting, with no theme switch or additional JavaScript.
 
-Every page supports `?mode=auto`, `?mode=fallback`, and `?mode=off`. Automatic mode loads its selected setup when the native surface is absent. The gallery and combobox page also set `cooperativeFallback: true` on the shared demo bootstrap, keeping their selected setup available with native Phase 1. Forced mode exercises the fallback; off mode loads no fallback and leaves native browser behavior available. Each mode still imports the application after selection. The observations report DOM state, not computed accessibility results.
+Every page supports `?mode=auto`, `?mode=fallback`, and `?mode=off`. Automatic mode loads its selected setup when the native surface is absent. Forced mode exercises the fallback; off mode loads no fallback and leaves native browser behavior available. Each mode still imports the application after selection. The observations report DOM state, not computed accessibility results.
 
 The form demo keeps native inputs, a checkbox, and a select inside its declarative form. Outside Submit, Save draft (`formnovalidate`), and Reset buttons exercise validation, submitter data, and native defaults. Its component-local listeners cancel navigation, capture `FormData` synchronously, and display events and actual `.form` getters; the example sends no form data.
-
-The combobox demo keeps focus in its editable input while filtering and navigating the component's real public options. It shows the effective listbox and active-option references, with keyboard and pointer selection supplied by the demo component. Its dedicated bundle contains only the combobox adapter and core.
 
 The retained six-scenario companion contains original examples inspired by [Microsoft Edge's Reference Target demos](https://microsoftedge.github.io/Demos/reference-target/). All six use parser-created Declarative Shadow DOM and retained `data-reference-target` metadata:
 
@@ -315,7 +312,7 @@ The built pages show current JavaScript sizes, including the baseline, additiona
 
 Sizes are shown in decimal KB (`1 KB = 1,000 bytes`). Raw figures measure emitted minified JavaScript; gzip figures sum the separately compressed size of each JavaScript file. They exclude Microlighter and its demo highlighting script/grammars, HTML, CSS, JSON, source maps, and HTTP headers. The local server can serve the measured JavaScript gzip sidecars, so its compressed bodies correspond to the reported per-file figures; browser caching and other servers' compression can change actual network transfer.
 
-An independent capability's fallback cost includes the core installer and its required shared utilities. Adding the seven independent costs does not predict the gallery's cost: the gallery shares code and is bundled as its own graph. The combobox bridge remains an additional setup download in automatic mode even with native Phase 1. Rebuild after changing a feature, selection, or build setting to regenerate the visible report and manifest.
+An independent capability's fallback cost includes the core installer and its required shared utilities. Adding the six independent costs does not predict the gallery's cost: the gallery shares code and is bundled as its own graph. Rebuild after changing a feature, selection, or build setting to regenerate the visible report and manifest.
 
 ## Run locally
 
@@ -354,4 +351,4 @@ The preparation command leaves the source checkout in place and preserves Pages 
 
 Native-surface tests may be skipped where that API is absent; force-mode simulations do not establish native interoperability. Browser behavior and accessibility outcomes require browser and assistive-technology validation. No cross-browser conformance claim is made here.
 
-Validation on 31 August 2026: **17 Node/package tests passed** and the Chromium 151 browser suite reported **100 passed, 0 failed, 1 skipped**. The skipped test needs a native Reference Target surface. The gallery tests cover all seven individual pages, their shared gallery, conditional loading, interactions, displayed size/file reports, and separate syntax highlighting that preserves sample text and live form observations. Combobox checks cover public relationships, ownership and cleanup, scope/privacy guards, keyboard and pointer interaction, and simulated native Phase 1 coexistence and loading. Pages checks also cover project-relative links and branch preparation that preserves source work and publication history. The demos were checked in light and dark palettes at desktop and narrow widths. Firefox, Safari, and assistive-technology behavior remain unverified by this run.
+Validation on 31 August 2026: **16 Node/package tests passed** and the Chromium 151 browser suite reported **98 passed, 0 failed, 1 skipped**. The skipped test needs a native Reference Target surface. The gallery tests cover all six individual pages, their shared gallery, conditional loading, interactions, displayed size/file reports, and separate syntax highlighting that preserves sample text and live form observations. Combobox adapter checks cover public relationships, ownership and cleanup, scope/privacy guards, and simulated native Phase 1 coexistence. Pages checks also cover project-relative links and branch preparation that preserves source work and publication history. The demos were checked in light and dark palettes at desktop and narrow widths. Firefox, Safari, and assistive-technology behavior remain unverified by this run.

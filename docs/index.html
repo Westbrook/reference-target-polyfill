@@ -30,7 +30,7 @@
             <p class="eyebrow">Reference Target fallback / v0.1.0 prototype</p>
             <h1>Wire up<br><em>what you need.</em></h1>
             <p class="intro">Give references to a component a destination inside its shadow root. Choose the fallback behaviors your application uses.</p>
-            <p class="hero-link"><a href="./examples/">Try the seven capabilities <span aria-hidden="true">↗</span></a></p>
+            <p class="hero-link"><a href="./examples/">Try the six demo capabilities <span aria-hidden="true">↗</span></a></p>
           </div>
           <aside class="margin-note" aria-label="Package at a glance">
             <p class="note-label">A small, deliberate fallback</p>
@@ -130,7 +130,7 @@ root.innerHTML = '&lt;input id="control" type="email"&gt;';</code></pre>
                   <tr><th scope="row"><a href="./examples/popover-commands/">Popover commands ↗</a><code>popover-commands</code></th><td><code>popoverCommands()</code></td><td><code>show-popover</code>, <code>hide-popover</code>, and <code>toggle-popover</code> commands.</td></tr>
                   <tr><th scope="row"><a href="./examples/text-names/">Text names ↗</a><code>text-names</code></th><td><code>textNames({ getText })</code></td><td>Plain-text approximations for inward <code>aria-labelledby</code> and <code>aria-describedby</code>, using a component’s public text.</td></tr>
                   <tr><th scope="row"><a href="./examples/forms/">Form actions ↗</a><code>form-targets</code></th><td><code>formTargets()</code></td><td>Outside submit and reset controls act on an inner native form.</td></tr>
-                  <tr><th scope="row"><a href="./examples/comboboxes/">Comboboxes ↗</a><code>combobox-targets</code></th><td><code>comboboxTargets({ getTargets })</code></td><td>Connect an editable input to a component’s real public listbox and active option in the same DOM tree.</td></tr>
+                  <tr><th scope="row"><a href="#comboboxes">Comboboxes</a><code>combobox-targets</code></th><td><code>comboboxTargets({ getTargets })</code></td><td>Connect an editable input to a component’s real public listbox and active option in the same DOM tree.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -201,7 +201,7 @@ for (const button of document.querySelectorAll('[form="profile"]')) {
           <div class="section-label">05 / One popup, two references</div>
           <div class="doc-body">
             <h2 id="comboboxes-title">Give the input real public options</h2>
-            <p>The input controls a listbox and tracks a separate active option. Keep those real elements in its DOM tree, optionally slotted through the component’s shadow root. <a href="./examples/comboboxes/">Try filtering, arrow keys, and selection ↗</a></p>
+            <p>The input controls a listbox and tracks a separate active option. Keep those real elements in its DOM tree, optionally slotted through the component’s shadow root.</p>
             <figure class="source-example">
               <figcaption>reference-target.setup.js — comboboxes only</figcaption>
               <pre><code class="language-javascript" data-code-sample>import { installReferenceTarget } from "reference-target-fallback/core";

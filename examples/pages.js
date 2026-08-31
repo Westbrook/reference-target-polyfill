@@ -6,7 +6,6 @@ const capabilities = [
   { id: "popover-commands", directory: "popover-commands", title: "Popover commands" },
   { id: "text-names", directory: "text-names", title: "Text names and descriptions" },
   { id: "form-targets", directory: "forms", title: "Form submission and reset" },
-  { id: "combobox-targets", directory: "comboboxes", title: "Combobox relationships" },
 ];
 
 export const pages = [

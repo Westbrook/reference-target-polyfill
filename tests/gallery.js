@@ -6,7 +6,6 @@ const capabilities = [
   { id: "popover-commands", directory: "popover-commands" },
   { id: "text-names", directory: "text-names" },
   { id: "form-targets", directory: "forms" },
-  { id: "combobox-targets", directory: "comboboxes" },
 ];
 
 /** Integration tests use generated pages and their real module entry points. */
@@ -176,7 +175,7 @@ export function registerGalleryTests({ test, assert, equal, requirePrimitive }) 
     return page;
   }
 
-  test("Built gallery: all seven capabilities, boundaries, and generated bundle comparisons share one page", async ({ fixture }) => {
+  test("Built gallery: all six capabilities, boundaries, and generated bundle comparisons share one page", async ({ fixture }) => {
     requirePopovers();
     requireDialogs();
     requireForms();
@@ -393,133 +392,11 @@ export function registerGalleryTests({ test, assert, equal, requirePrimitive }) 
     equal(updates.checked, true);
   });
 
-  test("Built combobox page: keyboard, filtering, and pointer selection keep real public option relationships", async ({ fixture }) => {
-    const page = await individual(fixture, "combobox-targets");
-    const input = page.document.getElementById("cb-input");
-    const host = page.document.getElementById("cb-host");
-    const listbox = page.document.getElementById("cb-listbox");
-    assert(input && host && listbox && !input.disabled);
-    equal(input.getAttribute("aria-controls"), listbox.id);
-    equal(input.getRootNode(), listbox.getRootNode());
-    assert(host.contains(listbox));
-    equal(listbox.getAttribute("role"), "listbox");
-    equal(listbox.querySelectorAll('[role="option"]').length, 7, "The demo has one real option for each choice");
-    equal(page.document.querySelectorAll('[role="listbox"]').length, 1, "There is no mirrored accessibility listbox");
-
-    function key(value) {
-      input.dispatchEvent(new page.realm.KeyboardEvent("keydown", { key: value, bubbles: true, cancelable: true }));
-    }
-    function active(id) {
-      equal(input.getAttribute("aria-activedescendant"), id);
-      equal(page.document.activeElement, input, "Navigation keeps DOM focus in the editable input");
-      if (id) {
-        const option = page.document.getElementById(id);
-        assert(listbox.contains(option));
-        equal(option.getAttribute("role"), "option");
-        assert(option.getClientRects().length > 0, "The active option is actually rendered");
-        equal(input.getAttribute("aria-expanded"), "true");
-      }
-    }
-    input.focus();
-    key("ArrowDown");
-    active("cb-option-accessibility");
-    key("ArrowDown");
-    active("cb-option-browser-apis");
-    key("ArrowUp");
-    active("cb-option-accessibility");
-    key("Enter");
-    equal(input.value, "Accessibility");
-    equal(input.getAttribute("aria-expanded"), "false");
-    active(null);
-    assert(page.document.getElementById("cb-status").textContent.includes("Accessibility"));
-
-    input.value = "web";
-    input.dispatchEvent(new page.realm.Event("input", { bubbles: true }));
-    active(null);
-    key("ArrowDown");
-    active("cb-option-indieweb");
-    key("ArrowDown");
-    active("cb-option-web-components");
-    key("Escape");
-    equal(input.getAttribute("aria-expanded"), "false");
-    equal(input.value, "web", "Escape keeps the user's input text");
-    active(null);
-
-    input.value = "";
-    input.dispatchEvent(new page.realm.Event("input", { bubbles: true }));
-    const css = page.document.getElementById("cb-option-css");
-    assert(css && !css.hidden);
-    const down = new page.realm.PointerEvent("pointerdown", { bubbles: true, cancelable: true, pointerType: "mouse", button: 0 });
-    css.dispatchEvent(down);
-    assert(down.defaultPrevented, "Pointer selection prevents an intermediate focus transfer");
-    css.click();
-    equal(input.value, "CSS");
-    equal(input.getAttribute("aria-expanded"), "false");
-    active(null);
-    assert(page.document.getElementById("cb-status").textContent.includes("CSS"));
-
-    input.value = "no matching topic";
-    input.dispatchEvent(new page.realm.Event("input", { bubbles: true }));
-    key("ArrowDown");
-    active(null);
-    equal(listbox.querySelectorAll('[role="option"]:not([hidden])').length, 0);
-  });
-
-  test("Built combobox auto bootstrap loads its cooperative adapter beside a native Phase 1 surface", async ({ fixture }) => {
-    const url = new URL("comboboxes/", galleryURL);
-    const response = await fetch(url, { cache: "no-store" });
-    assert(response.ok, "The generated combobox page must be available");
-    const parsed = new DOMParser().parseFromString(await response.text(), "text/html");
-    const base = parsed.createElement("base");
-    base.href = url.href;
-    const nativeSurface = parsed.createElement("script");
-    nativeSurface.textContent = `
-      window.__comboboxTestAttachShadow = Element.prototype.attachShadow;
-      const descriptor = Object.getOwnPropertyDescriptor(ShadowRoot.prototype, "referenceTarget");
-      if (!descriptor) {
-        const values = new WeakMap();
-        Object.defineProperty(ShadowRoot.prototype, "referenceTarget", {
-          configurable: true,
-          get() { return values.get(this) ?? null; },
-          set(value) { values.set(this, value == null ? null : String(value)); }
-        });
-      }
-    `;
-    parsed.head.prepend(base, nativeSurface);
-    const frame = document.createElement("iframe");
-    frame.title = "Combobox auto mode with an isolated native Phase 1 surface";
-    frame.srcdoc = `<!doctype html>${parsed.documentElement.outerHTML}`;
-    const loaded = new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error("Native-surface combobox page did not load")), 10000);
-      frame.addEventListener("load", () => { clearTimeout(timer); resolve(); }, { once: true });
-    });
-    fixture.append(frame);
-    await loaded;
-    const realm = frame.contentWindow;
-    const pageDocument = frame.contentDocument;
-    await waitFor(pageDocument, () => ["true", "error"].includes(pageDocument.documentElement.dataset.referenceTargetReady),
-      "Auto-mode combobox did not reach application readiness");
-    const state = pageDocument.documentElement.dataset;
-    equal(state.referenceTargetReady, "true");
-    equal(state.referenceTargetSurface, "true");
-    equal(state.referenceTargetRequestedMode, "auto");
-    equal(state.referenceTargetAdapters, "combobox-targets");
-    equal(state.referenceTargetMode, "fallback");
-    equal(realm.Element.prototype.attachShadow, realm.__comboboxTestAttachShadow,
-      "Cooperative loading must not replace a native attachShadow method");
-    const input = pageDocument.getElementById("cb-input");
-    input.focus();
-    input.dispatchEvent(new realm.KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true, cancelable: true }));
-    equal(input.getAttribute("aria-controls"), "cb-listbox");
-    equal(input.getAttribute("aria-activedescendant"), "cb-option-accessibility");
-    equal(pageDocument.activeElement, input);
-  });
-
   test("Built gallery: off mode initializes all examples without installing the fallback", async ({ fixture }) => {
     const page = await loadPage(fixture, "", "off");
     equal(page.document.documentElement.dataset.referenceTargetAdapters, "");
     equal(page.document.documentElement.dataset.bundlePath, "baseline");
-    equal(page.document.querySelectorAll("section[data-capability]").length, 7);
+    equal(page.document.querySelectorAll("section[data-capability]").length, 6);
     equal(page.document.querySelectorAll("[data-reference-target-text]").length, 0);
     assert(/\[native code\]/.test(page.realm.Function.prototype.toString.call(page.realm.Element.prototype.attachShadow)));
     const labelRoot = shadowRoot(page, "lj-checkbox-host");
@@ -527,11 +404,5 @@ export function registerGalleryTests({ test, assert, equal, requirePrimitive }) 
     assert(!labelRoot.getElementById("control").disabled, "Application module initialization must complete in off mode too");
     equal(page.document.getElementById("tn-input").getAttribute("aria-labelledby"), "tn-label-host");
     equal(page.document.getElementById("tn-input").getAttribute("aria-describedby"), "tn-description-host");
-    equal(page.document.getElementById("cb-input").getAttribute("aria-controls"), "cb-host");
-    const combobox = page.document.getElementById("cb-input");
-    combobox.focus();
-    combobox.dispatchEvent(new page.realm.KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true, cancelable: true }));
-    equal(combobox.getAttribute("aria-controls"), "cb-host");
-    equal(combobox.getAttribute("aria-activedescendant"), "cb-host", "Browser-only mode does not rewrite cooperative relationships");
   });
 }

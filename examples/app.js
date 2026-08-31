@@ -4,5 +4,4 @@ import "./shared/features/dialog-commands.js";
 import "./shared/features/popover-commands.js";
 import "./shared/features/text-names.js";
 import "./shared/features/form-targets.js";
-import "./shared/features/combobox-targets.js";
 import "./shared/features/boundaries.js";

@@ -142,6 +142,19 @@ ol.try-it li::marker { color: var(--accent); font-family: var(--mono-font); }
 #event-log .empty, #reset-output { color: var(--muted); }
 #reset-output { margin-top: 17px; font-size: .8rem; }
 
+.combobox-card { position: relative; }
+.combobox-card .field { margin-bottom: 0; }
+.combobox-margin { margin: 0 0 17px; color: var(--accent) !important; font: italic 1.15rem/1.45 var(--display-font) !important; }
+#cb-listbox { max-height: 245px; overflow-y: auto; margin-top: 5px; padding: 5px; border: 1px solid var(--ink); background: var(--paper); box-shadow: 4px 4px 0 var(--shadow); }
+#cb-listbox [role="option"] { position: relative; padding: 9px 12px 9px 30px; cursor: pointer; font-size: .9rem; }
+#cb-listbox [role="option"]:hover { outline: 1px dotted var(--accent); outline-offset: -2px; }
+#cb-listbox [aria-selected="true"] { background: var(--signal); color: var(--signal-ink); }
+#cb-listbox [aria-selected="true"]::before { content: ""; position: absolute; left: 12px; top: 50%; border-block: 4px solid transparent; border-left: 6px solid currentColor; transform: translateY(-50%); }
+.combobox-empty { margin: 5px 0 0; padding: 12px; border: 1px dashed var(--line); color: var(--muted); font-size: .86rem; }
+.combobox-count { min-height: 1.6em; margin: 12px 0 0; color: var(--muted); font: .68rem/1.6 var(--mono-font); }
+#cb-status { min-height: 3em; font-size: .83rem; }
+#cb-relations { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .7rem; }
+
 button { padding: 10px 15px; border: 1px solid var(--ink); border-radius: 2px; color: var(--paper); background: var(--ink); font: 500 .83rem/1.5 var(--body-font); cursor: pointer; }
 button:hover:not(:disabled) { box-shadow: 3px 3px 0 var(--line); }
 button:active:not(:disabled) { box-shadow: none; }

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" data-demo-page="combobox-targets" data-capabilities="combobox-targets" data-reference-target-ready="false">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Interactive Reference Target examples with conditional, modular fallbacks and measured JavaScript bundle sizes.">
+    <title>Reference Target · Comboboxes</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script type="module" src="./main.js"></script>
+  <link rel="stylesheet" href="../shared/microlighter/themes/github.css">
+</head>
+  <body>
+    <a class="skip-link" href="#demos">Skip to the demos</a>
+    <main>
+      <header class="page-header">
+        <div class="masthead">
+          <a class="site-wordmark" href="../">reference <span aria-hidden="true">/</span> target</a>
+          <p class="masthead-note">Browser experiments &amp; working notes</p>
+        </div>
+        <nav class="site-nav" aria-label="Capability pages">
+          <a href="../">All capabilities</a>
+          <a href="../labels/">Labels</a>
+          <a href="../popover-targets/">Popover targeting</a>
+          <a href="../dialog-commands/">Dialog commands</a>
+          <a href="../popover-commands/">Popover commands</a>
+          <a href="../text-names/">Text names</a>
+          <a href="../forms/">Form actions</a>
+          <a href="../comboboxes/" aria-current="page">Comboboxes</a>
+          <a class="docs-link" href="../../">Use the polyfill ↗</a>
+        </nav>
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">07 / Combobox relationships</p>
+            <h1>Keep typing.<br><em>Keep your place.</em></h1>
+            <p class="intro">A listbox, an active option, and a cooperative bridge between them.</p>
+          </div>
+          <figure class="reference-map" role="img" aria-label="A combobox input refers to a component host. A cooperative adapter connects it to a public listbox and its active option.">
+            <div class="map-source"><span class="map-label">outside</span><code>combobox input</code></div>
+            <span class="map-arrow" aria-hidden="true">↘</span>
+            <div class="map-host">
+              <span class="map-label">host</span>
+              <div class="map-shadow">
+                <span class="map-label">public, slotted popup</span>
+                <div class="map-target"><code>#listbox</code><br><code>#active-option</code></div>
+              </div>
+            </div>
+            <figcaption>One host. Two public destinations.</figcaption>
+          </figure>
+        </div>
+        <section class="runtime-panel" aria-label="Browser and fallback settings">
+          <nav class="mode-links" aria-label="Choose a loading mode">
+            <a href="?mode=auto" data-mode="auto">Automatic</a>
+            <a href="?mode=fallback" data-mode="fallback">Force fallback</a>
+            <a href="?mode=off" data-mode="off">Browser alone</a>
+          </nav>
+          <p id="ready-status" data-ready="false" role="status">Preparing the controls…</p>
+          <details class="runtime-details">
+            <summary>Browser details</summary>
+            <dl class="status-grid">
+              <div><dt>Current path</dt><dd id="mode-status">Checking browser support…</dd></div>
+              <div><dt>Native API surface</dt><dd id="surface-status">Checking…</dd></div>
+              <div class="adapters"><dt>Active adapters</dt><dd id="adapter-status">Waiting for setup…</dd></div>
+            </dl>
+            <p id="mode-note" class="mode-note">Automatic includes the cooperative bridge even with native Phase 1. Browser alone leaves the adapter out.</p>
+          </details>
+          <p class="error" id="load-error" role="alert" hidden></p>
+          <noscript><p class="error">Enable JavaScript to try the controls.</p></noscript>
+        </section>
+      </header>
+
+      <div class="demo-stack" id="demos">
+        <section class="scenario" id="combobox-targets" data-capability="combobox-targets" data-ready="loading" aria-labelledby="combobox-targets-title">
+  <p class="case-kind">Combobox relationships</p>
+  <h2 id="combobox-targets-title">One host. Two destinations.</h2>
+  <p>The input controls a listbox and points to its active option, through a component-provided public popup.</p>
+  <p class="expected" id="cb-instructions"><strong>Try:</strong> Type to filter, use ↑ / ↓ to explore, Enter to choose, and Escape to close. Focus stays in the input.</p>
+
+  <div class="field-grid">
+    <article class="demo-card combobox-card">
+      <p class="combobox-margin">A small directory of rabbit holes ↴</p>
+      <label class="field" for="cb-input">
+        <span id="cb-label">Find a web topic</span>
+        <input id="cb-input" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false"
+          aria-controls="cb-host" aria-activedescendant="cb-host" aria-describedby="cb-instructions"
+          autocomplete="off" spellcheck="false" placeholder="Try “web” or press ↓" disabled>
+      </label>
+      <rt-topic-picker id="cb-host" data-input="cb-input">
+        <div id="cb-listbox" role="listbox" aria-labelledby="cb-label" hidden></div>
+        <p id="cb-empty" class="combobox-empty" hidden>No topics match. Try another search.</p>
+      </rt-topic-picker>
+      <p class="combobox-count" id="cb-count" aria-live="polite">Preparing the suggestions…</p>
+      <p class="observation" id="cb-status" role="status">No topic selected.</p>
+    </article>
+    <article class="demo-card">
+      <h3>Follow the references</h3>
+      <pre id="cb-relations" aria-label="Combobox DOM relationships">Waiting for setup…</pre>
+      <p class="expected">These are the input’s actual ID references. The listbox and options share its DOM tree; a closed shadow root supplies the component’s shell.</p>
+    </article>
+  </div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The adapter rewrites <code>aria-controls="cb-host"</code> to the public listbox and <code>aria-activedescendant="cb-host"</code> to its current public option. The component handles filtering, keyboard input, selection, visibility, scrolling, and focus.</p>
+    <p>This is a cooperative bridge, not the proposed Phase 2 map into private roots. There is one real listbox, with real visible options distributed through a slot. Native Phase 1 still has only one target per host, so Automatic also loads this adapter there.</p>
+    <p>Browser alone keeps the component interactions but leaves the authored host references unresolved. DOM readouts do not establish screen-reader support; test the browser and assistive technology combinations you ship.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <pre><code id="combobox-targets-code-html" class="language-html" data-code-sample>&lt;input role="combobox" type="text" aria-expanded="true"
+  aria-controls="topic-picker" aria-activedescendant="topic-picker"&gt;
+&lt;rt-topic-picker id="topic-picker"&gt;
+  &lt;!-- Public light DOM, slotted into the component's shell. --&gt;
+  &lt;div id="topics" role="listbox" aria-label="Web topics"&gt;
+    &lt;div id="topic-css" role="option" aria-selected="true"&gt;CSS&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/rt-topic-picker&gt;</code></pre>
+    <pre><code id="combobox-targets-code-javascript" class="language-javascript" data-code-sample>// reference-target.setup.js
+import { installReferenceTarget } from 'reference-target-fallback/core';
+import { comboboxTargets } from 'reference-target-fallback/adapters/combobox-targets';
+
+export const referenceTargets = installReferenceTarget({
+  adapters: [comboboxTargets({
+    // The component intentionally exposes only its public nodes.
+    getTargets: host =&gt; host.getComboboxTargets?.() ?? null,
+  })],
+});
+// The component calls referenceTargets.refresh() after model/render updates.</code></pre>
+    <pre><code id="combobox-targets-code-bootstrap" class="language-javascript" data-code-sample>// bootstrap.js — Phase 1 support does not replace this cooperative bridge.
+const { referenceTargets } = await import('./reference-target.setup.js');
+await import('./app.js');
+// app.js is an ordinary module; it does not need to export a start() method.</code></pre>
+  </details>
+</section>
+
+      </div>
+
+      <section class="metrics-panel" data-bundle-id="combobox-targets" aria-label="JavaScript delivery sizes">
+    <h2>JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="7680" data-gzip-bytes="3559">
+      <h3>Page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="7680">7.680 KB</strong>
+      <span data-size="gzip" data-bytes="3559">3.559 KB gzip</span>
+      <p>Always loaded.</p>
+    </article>
+<article class="size-card" data-size-kind="fallback" data-bytes="11570" data-gzip-bytes="4528">
+      <h3>Fallback additional</h3>
+      <strong data-size="bytes" data-bytes="11570">11.570 KB</strong>
+      <span data-size="gzip" data-bytes="4528">4.528 KB gzip</span>
+      <p>Core + selected adapters.</p>
+    </article>
+<article class="size-card" data-size-kind="total" data-bytes="19250" data-gzip-bytes="8087">
+      <h3>Total with fallback</h3>
+      <strong data-size="bytes" data-bytes="19250">19.250 KB</strong>
+      <span data-size="gzip" data-bytes="8087">8.087 KB gzip</span>
+      <p>Shared files counted once.</p>
+    </article></div>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <details>
+      <summary>Inspect the 5 generated JavaScript files</summary>
+      <p class="metric-note">Selected adapters: <code>combobox-targets</code>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. CSS, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <div class="table-scroll"><table class="files-table">
+        <caption>Files included in this page’s totals</caption>
+        <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
+        <tbody><tr data-file-path="comboboxes/app-REKGSCLI.js" data-delivery="baseline">
+      <td><a data-bundle-file="comboboxes/app-REKGSCLI.js" href="../comboboxes/app-REKGSCLI.js"><code>comboboxes/app-REKGSCLI.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="3772">3.772 KB</td>
+      <td data-size="gzip" data-bytes="1640">1.640 KB</td>
+    </tr>
+<tr data-file-path="comboboxes/chunk-32G5PXKY.js" data-delivery="baseline">
+      <td><a data-bundle-file="comboboxes/chunk-32G5PXKY.js" href="../comboboxes/chunk-32G5PXKY.js"><code>comboboxes/chunk-32G5PXKY.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="924">0.924 KB</td>
+      <td data-size="gzip" data-bytes="464">0.464 KB</td>
+    </tr>
+<tr data-file-path="comboboxes/chunk-UGAEMXCZ.js" data-delivery="baseline">
+      <td><a data-bundle-file="comboboxes/chunk-UGAEMXCZ.js" href="../comboboxes/chunk-UGAEMXCZ.js"><code>comboboxes/chunk-UGAEMXCZ.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="2744">2.744 KB</td>
+      <td data-size="gzip" data-bytes="1251">1.251 KB</td>
+    </tr>
+<tr data-file-path="comboboxes/main.js" data-delivery="baseline">
+      <td><a data-bundle-file="comboboxes/main.js" href="../comboboxes/main.js"><code>comboboxes/main.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="240">0.240 KB</td>
+      <td data-size="gzip" data-bytes="204">0.204 KB</td>
+    </tr>
+<tr data-file-path="comboboxes/reference-target.setup-FUKAIMFO.js" data-delivery="fallback">
+      <td><a data-bundle-file="comboboxes/reference-target.setup-FUKAIMFO.js" href="../comboboxes/reference-target.setup-FUKAIMFO.js"><code>comboboxes/reference-target.setup-FUKAIMFO.js</code></a></td>
+      <td>Fallback additional</td>
+      <td data-size="bytes" data-bytes="11570">11.570 KB</td>
+      <td data-size="gzip" data-bytes="4528">4.528 KB</td>
+    </tr></tbody>
+      </table></div>
+      <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>
+    </details>
+  </section>
+
+      <details class="reading-notes" aria-labelledby="reading-title">
+        <summary>Implementation notes &amp; limitations</summary>
+        <h2 id="reading-title">Fallback scope</h2>
+        <p>The adapter connects editable inputs to component-provided public listboxes and options in the same DOM tree. It does not expose targets inside private roots or implement the proposed Phase 2 target map.</p>
+        <p>See the <a href="https://github.com/WICG/webcomponents/blob/gh-pages/proposals/reference-target-explainer.md#aria-activedescendant-and-comboboxes">combobox problem in the explainer</a> and the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/">ARIA combobox pattern</a>. Verify assistive technology behavior separately.</p>
+      </details>
+      <footer class="page-footer">
+        <p>Inspired by <a href="https://microsoftedge.github.io/Demos/reference-target/">Edge’s Reference Target demos</a>. <a href="../scenarios/">Reference cases</a>.</p>
+      </footer>
+    </main>
+  <script type="module" src="../shared/code-highlighting.js"></script>
+</body>
+</html>

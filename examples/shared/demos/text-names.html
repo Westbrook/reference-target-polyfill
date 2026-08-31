@@ -1,0 +1,64 @@
+<section id="text-names" class="scenario" data-capability="text-names" aria-labelledby="tn-title">
+  <p class="case-kind">Text names and descriptions</p>
+  <h2 id="tn-title">Choose the text a reference supplies</h2>
+  <p>Let components supply an input’s name and description.</p>
+  <div class="try-it field-grid">
+    <rt-gallery-label id="tn-label-host" data-reference-target="text" data-label-text="Delivery preference">
+      <template shadowrootmode="open" shadowrootreferencetarget="text">
+        <link rel="stylesheet" href="{{assets}}/components.css">
+        <strong id="text">Delivery preference</strong>
+        <p class="extra">This extra component text is outside the selected name.</p>
+      </template>
+    </rt-gallery-label>
+    <input id="tn-input" type="text" aria-labelledby="tn-label-host" aria-describedby="tn-description-host" placeholder="For example, leave at reception" disabled>
+    <rt-gallery-description id="tn-description-host" data-reference-target="text" data-description-text="Tell us where the parcel should be left.">
+      <template shadowrootmode="open" shadowrootreferencetarget="text">
+        <link rel="stylesheet" href="{{assets}}/components.css">
+        <p id="text">Tell us where the parcel should be left.</p>
+        <p class="extra">This extra component text is outside the selected description.</p>
+      </template>
+    </rt-gallery-description>
+    <div class="button-row"><button id="tn-update" type="button" disabled>Change the component text</button></div>
+  </div>
+  <p class="expected"><strong>Try:</strong> Change the text, then inspect the input’s name and description in your accessibility tools.</p>
+  <div class="observation"><span>DOM references and text proxies — not computed accessibility</span><output id="tn-observation">Waiting for setup.</output></div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The fallback creates hidden text references from <code>data-label-text</code> and <code>data-description-text</code>. Components keep those public values in sync with their visible text.</p>
+    <p>This plain-text approximation does not compute accessible names from arbitrary markup. The readout shows DOM references, not computed accessibility.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Publish text on the hosts; select a provider during fallback setup.</p>
+    <pre><code id="text-names-code-html" class="language-html" data-code-sample>&lt;input id="tn-input" type="text" aria-labelledby="tn-label-host"
+    aria-describedby="tn-description-host"&gt;
+&lt;rt-gallery-label id="tn-label-host" data-reference-target="text"
+    data-label-text="Delivery preference"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="text"&gt;
+    &lt;strong id="text"&gt;Delivery preference&lt;/strong&gt;
+    &lt;p&gt;This extra component text is outside the selected name.&lt;/p&gt;
+  &lt;/template&gt;
+&lt;/rt-gallery-label&gt;
+&lt;rt-gallery-description id="tn-description-host" data-reference-target="text"
+    data-description-text="Tell us where the parcel should be left."&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="text"&gt;
+    &lt;p id="text"&gt;Tell us where the parcel should be left.&lt;/p&gt;
+  &lt;/template&gt;
+&lt;/rt-gallery-description&gt;</code></pre>
+    <pre><code id="text-names-code-javascript" class="language-javascript" data-code-sample>// In the conditionally loaded setup module (package imports):
+import { installReferenceTarget } from 'reference-target-fallback/core';
+import { textNames } from 'reference-target-fallback/adapters/text-names';
+
+const fallback = installReferenceTarget({
+  adapters: [textNames({
+    getText(host, kind) {
+      return host.getAttribute(kind === 'label'
+        ? 'data-label-text' : 'data-description-text');
+    },
+  })],
+});
+fallback.hydrate(document);</code></pre>
+  </details>
+</section>

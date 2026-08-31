@@ -1,0 +1,51 @@
+<section id="labels" class="scenario" data-capability="labels" aria-labelledby="lj-title">
+  <p class="case-kind">Labels</p>
+  <h2 id="lj-title">An outside label, an inside control</h2>
+  <p>A label reaches the checkbox selected by the component.</p>
+  <p class="expected"><strong>Try:</strong> Click either label, then its checkbox.</p>
+  <article class="demo-card">
+    <h3>Reference the host by ID</h3>
+    <div class="try-it button-row">
+      <label id="lj-checkbox-label" for="lj-checkbox-host">Send me release notes</label>
+      <rt-gallery-checkbox id="lj-checkbox-host" data-reference-target="control">
+        <template shadowrootmode="open" shadowrootreferencetarget="control">
+          <link rel="stylesheet" href="{{assets}}/components.css">
+          <input id="control" type="checkbox" disabled>
+        </template>
+      </rt-gallery-checkbox>
+    </div>
+    <div class="observation"><span>DOM observation</span><output id="lj-checkbox-observation">Waiting for setup.</output></div>
+  </article>
+  <article class="demo-card">
+    <h3>Wrap the component in its label</h3>
+    <div class="try-it">
+      <label id="lj-wrapping-label" class="button-row">
+        <span>Remember this preference</span>
+        <rt-gallery-wrapped-checkbox id="lj-wrapped-host" data-reference-target="control">
+          <template shadowrootmode="open" shadowrootreferencetarget="control">
+            <link rel="stylesheet" href="{{assets}}/components.css">
+            <input id="control" type="checkbox" disabled>
+          </template>
+        </rt-gallery-wrapped-checkbox>
+      </label>
+    </div>
+    <div class="observation"><span>DOM observation</span><output id="lj-wrapped-observation">Waiting for setup.</output></div>
+  </article>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The first label uses <code>for</code>; the second contains its component. The fallback applies a focus-and-click policy and requests outward ARIA naming where supported.</p>
+    <p>It does not create native <code>label.control</code> or <code>input.labels</code> links. DOM readouts do not verify accessible names or screen-reader behavior.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Explicit-label markup. Fallback setup hydrates <code>data-reference-target</code>; styling and readiness flags are omitted.</p>
+    <pre><code id="labels-code-html" class="language-html" data-code-sample>&lt;label id="lj-checkbox-label" for="lj-checkbox-host"&gt;Send me release notes&lt;/label&gt;
+&lt;rt-gallery-checkbox id="lj-checkbox-host" data-reference-target="control"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="control"&gt;
+    &lt;input id="control" type="checkbox"&gt;
+  &lt;/template&gt;
+&lt;/rt-gallery-checkbox&gt;</code></pre>
+  </details>
+</section>

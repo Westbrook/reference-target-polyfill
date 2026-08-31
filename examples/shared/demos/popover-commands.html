@@ -1,0 +1,52 @@
+<section class="scenario" id="popover-commands" data-capability="popover-commands" aria-labelledby="pc-title">
+  <p class="case-kind">Popover commands</p>
+  <h2 id="pc-title">Commands can be canceled</h2>
+  <p>Send built-in popover commands to an internal panel.</p>
+  <div class="try-it">
+    <div class="button-row">
+      <button id="pc-toggle" type="button" commandfor="pc-host" command="toggle-popover" disabled>Toggle with a command</button>
+      <button id="pc-show" type="button" commandfor="pc-host" command="show-popover" disabled>Show with a command</button>
+      <button id="pc-hide" type="button" commandfor="pc-host" command="hide-popover" disabled>Hide with a command</button>
+    </div>
+    <label class="checkbox-row" for="pc-cancel"><input id="pc-cancel" type="checkbox" disabled> Cancel the next command</label>
+    <rt-popover-command-demo id="pc-host" data-reference-target="pc-panel">
+      <template shadowrootmode="open" shadowrootreferencetarget="pc-panel">
+        <link rel="stylesheet" href="{{assets}}/components.css">
+        <section id="pc-panel" popover="manual" role="dialog" aria-labelledby="pc-panel-title" hidden>
+          <p class="eyebrow">A command reached the component</p>
+          <h2 id="pc-panel-title">A panel with a say</h2>
+          <p>The component can cancel a <code>command</code> event before the corresponding native popover operation runs.</p>
+          <p>This manual popover stays open until a hide or toggle action closes it.</p>
+          <button id="pc-close" type="button" disabled>Close from inside</button>
+        </section>
+      </template>
+    </rt-popover-command-demo>
+  </div>
+  <p class="expected"><strong>Try:</strong> Select “Cancel the next command,” then Show twice.</p>
+  <div class="observation"><span>DOM observation</span><output id="pc-observation" role="status">Waiting for setup.</output></div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The first Show is canceled; the second opens the panel. Hide and Toggle exercise the other built-in commands.</p>
+    <p>The fallback uses native popover methods after dispatching a synthetic cancelable command event. Event trust, paths and source handling can differ from native behavior.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Three commands share one target. The demo also listens for cancellation.</p>
+    <pre><code id="popover-commands-code-html" class="language-html" data-code-sample>&lt;button id="pc-toggle" type="button" commandfor="pc-host"
+    command="toggle-popover"&gt;Toggle with a command&lt;/button&gt;
+&lt;button id="pc-show" type="button" commandfor="pc-host"
+    command="show-popover"&gt;Show with a command&lt;/button&gt;
+&lt;button id="pc-hide" type="button" commandfor="pc-host"
+    command="hide-popover"&gt;Hide with a command&lt;/button&gt;
+&lt;rt-popover-command-demo id="pc-host" data-reference-target="pc-panel"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="pc-panel"&gt;
+    &lt;section id="pc-panel" popover="manual" role="dialog"
+        aria-labelledby="pc-panel-title"&gt;
+      &lt;h2 id="pc-panel-title"&gt;A panel with a say&lt;/h2&gt;
+    &lt;/section&gt;
+  &lt;/template&gt;
+&lt;/rt-popover-command-demo&gt;</code></pre>
+  </details>
+</section>

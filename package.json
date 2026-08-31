@@ -1,0 +1,63 @@
+{
+  "name": "reference-target-fallback",
+  "version": "0.1.0",
+  "description": "A modular, component-aware fallback for selected Reference Target behaviors.",
+  "author": "Westbrook Johnson",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Westbrook/reference-target-polyfill.git"
+  },
+  "homepage": "https://westbrook.github.io/reference-target-polyfill/",
+  "bugs": {
+    "url": "https://github.com/Westbrook/reference-target-polyfill/issues"
+  },
+  "keywords": [
+    "reference-target",
+    "shadow-dom",
+    "web-components",
+    "polyfill",
+    "accessibility"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "./examples/reference-target.setup.js",
+    "./examples/*/reference-target.setup.js",
+    "./examples/app.js",
+    "./examples/*/app.js",
+    "./examples/shared/features/*.js"
+  ],
+  "exports": {
+    "./core": "./src/core.js",
+    "./detect": "./src/detect.js",
+    "./adapters/labels": "./src/adapters/labels.js",
+    "./adapters/popover-targets": "./src/adapters/popover-targets.js",
+    "./adapters/dialog-commands": "./src/adapters/dialog-commands.js",
+    "./adapters/popover-commands": "./src/adapters/popover-commands.js",
+    "./adapters/text-names": "./src/adapters/text-names.js",
+    "./adapters/form-targets": "./src/adapters/form-targets.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "REFERENCE-TARGET-PROPOSAL.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prestart": "npm run build:pages",
+    "start": "node scripts/serve.js",
+    "test": "node --test tests/*.test.js",
+    "test:browser": "npm start",
+    "build:example": "node scripts/build-example.js",
+    "build:pages": "node scripts/build-pages.js",
+    "prepare:pages": "npm run build:pages && node scripts/prepare-pages.js",
+    "check": "npm test && npm run build:pages && npm pack --dry-run"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "microlighter": "2.1.0"
+  }
+}

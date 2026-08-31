@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reference Target fallback: browser tests</title>
+    <style>
+      :root { font: 16px/1.5 system-ui, sans-serif; color-scheme: light dark; }
+      body { max-width: 72rem; margin: 2rem auto; padding: 0 1.5rem; }
+      h1 { font-size: 1.65rem; }
+      #status { padding: .8rem 1rem; border: 2px solid currentColor; border-radius: .4rem; }
+      [data-state="passed"], .pass { color: light-dark(#166534, #86efac); }
+      [data-state="failed"], .fail { color: light-dark(#b91c1c, #fca5a5); }
+      .skip { color: light-dark(#854d0e, #fde047); }
+      li { padding: .25rem 0; }
+      dt { font-weight: 600; }
+      dd { margin: 0 0 .5rem; overflow-wrap: anywhere; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .8rem; }
+      #fixtures { position: absolute; left: -10000px; top: 0; width: 500px; }
+      code { font-size: .9em; }
+    </style>
+  </head>
+  <body>
+    <h1>Reference Target fallback: browser tests</h1>
+    <p>These tests exercise DOM behavior with native dialog and popover primitives.
+      Behavior tests force the fallback even when Reference Target is available;
+      separate cases check normal native detection. They do not certify
+      accessible-name computation or assistive-technology behavior.</p>
+    <dl id="environment">
+      <dt>Browser</dt>
+      <dd id="user-agent">Reading environment…</dd>
+      <dt>Native Reference Target surface before installation</dt>
+      <dd id="native-reference-target">Checking…</dd>
+    </dl>
+    <p id="status" role="status" data-state="running">Loading tests…</p>
+    <ol id="results"></ol>
+    <div id="fixtures"></div>
+    <script type="module" src="./browser.js"></script>
+  </body>
+</html>

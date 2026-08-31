@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-demo-page="form-targets" data-capabilities="form-targets" data-reference-target-ready="false">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Interactive Reference Target examples with conditional, modular fallbacks and measured JavaScript bundle sizes.">
+    <title>Reference Target · Form actions</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script type="module" src="./main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#demos">Skip to the demos</a>
+    <main>
+      <header class="page-header">
+        <div class="masthead">
+          <a class="site-wordmark" href="../">reference <span aria-hidden="true">/</span> target</a>
+          <p class="masthead-note">Browser experiments &amp; working notes</p>
+        </div>
+        <nav class="site-nav" aria-label="Capability pages">
+          <a href="../">All capabilities</a>
+          <a href="../labels/">Labels</a>
+          <a href="../popover-targets/">Popover targeting</a>
+          <a href="../dialog-commands/">Dialog commands</a>
+          <a href="../popover-commands/">Popover commands</a>
+          <a href="../text-names/">Text names</a>
+          <a href="../forms/" aria-current="page">Form actions</a>
+          <a class="docs-link" href="../../">Use the polyfill ↗</a>
+        </nav>
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">06 / Form actions</p>
+            <h1>A form inside.<br><em>Actions outside.</em></h1>
+            <p class="intro">Submit or reset an internal form from outside its component.</p>
+          </div>
+          <figure class="reference-map" role="img" aria-label="A reference to a host is forwarded to a target inside its shadow root.">
+            <div class="map-source"><span class="map-label">outside</span><code>form="host"</code></div>
+            <span class="map-arrow" aria-hidden="true">↘</span>
+            <div class="map-host">
+              <span class="map-label">host</span>
+              <div class="map-shadow">
+                <span class="map-label">shadow root</span>
+                <div class="map-target"><code>#form</code></div>
+              </div>
+            </div>
+            <figcaption>One public reference. An internal destination.</figcaption>
+          </figure>
+        </div>
+        <section class="runtime-panel" aria-label="Browser and fallback settings">
+          <nav class="mode-links" aria-label="Choose a loading mode">
+            <a href="?mode=auto" data-mode="auto">Automatic</a>
+            <a href="?mode=fallback" data-mode="fallback">Force fallback</a>
+            <a href="?mode=off" data-mode="off">Browser alone</a>
+          </nav>
+          <p id="ready-status" data-ready="false" role="status">Preparing the controls…</p>
+          <details class="runtime-details">
+            <summary>Browser details</summary>
+            <dl class="status-grid">
+              <div><dt>Current path</dt><dd id="mode-status">Checking browser support…</dd></div>
+              <div><dt>Native API surface</dt><dd id="surface-status">Checking…</dd></div>
+              <div class="adapters"><dt>Active adapters</dt><dd id="adapter-status">Waiting for setup…</dd></div>
+            </dl>
+            <p id="mode-note" class="mode-note">Automatic checks for the native property. Force fallback loads the selected adapters. Browser alone leaves them out.</p>
+          </details>
+          <p class="error" id="load-error" role="alert" hidden></p>
+          <noscript><p class="error">Enable JavaScript to try the controls.</p></noscript>
+        </section>
+      </header>
+
+      <div class="demo-stack" id="demos">
+        <!-- demo:form-targets -->
+      </div>
+
+      <!-- bundle-summary -->
+
+      <details class="reading-notes" aria-labelledby="reading-title">
+        <summary>Implementation notes &amp; limitations</summary>
+        <h2 id="reading-title">Fallback scope</h2>
+        <p>Forwards submit and reset actions only. External data controls remain unassociated; a temporary inner submitter changes submitter identity and event paths.</p>
+        <p>Readouts describe DOM state. Check computed names, keyboard behavior and assistive technology separately.</p>
+      </details>
+      <footer class="page-footer">
+        <p>Inspired by <a href="https://microsoftedge.github.io/Demos/reference-target/">Edge’s Reference Target demos</a>. <a href="../scenarios/">Reference cases</a>.</p>
+      </footer>
+    </main>
+  </body>
+</html>

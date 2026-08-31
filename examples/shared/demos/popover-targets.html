@@ -1,0 +1,49 @@
+<section class="scenario" id="popover-targets" data-capability="popover-targets" aria-labelledby="pt-title">
+  <p class="case-kind">Popover targets</p>
+  <h2 id="pt-title">One panel, three actions</h2>
+  <p>Outside buttons use <code>popovertarget</code> to reach the component’s panel.</p>
+  <div class="try-it">
+    <div class="button-row">
+      <button id="pt-toggle" type="button" popovertarget="pt-host" popovertargetaction="toggle" disabled>Toggle panel</button>
+      <button id="pt-show" type="button" popovertarget="pt-host" popovertargetaction="show" disabled>Show panel</button>
+      <button id="pt-hide" type="button" popovertarget="pt-host" popovertargetaction="hide" disabled>Hide panel</button>
+    </div>
+    <rt-popover-target-demo id="pt-host" data-reference-target="pt-panel">
+      <template shadowrootmode="open" shadowrootreferencetarget="pt-panel">
+        <link rel="stylesheet" href="{{assets}}/components.css">
+        <section id="pt-panel" popover="manual" role="dialog" aria-labelledby="pt-panel-title" hidden>
+          <p class="eyebrow">Inside an open shadow root</p>
+          <h2 id="pt-panel-title">The host leads here</h2>
+          <p>The outside buttons target the component. Its Reference Target identifies this native popover.</p>
+          <p>This is a manual popover: use Hide panel or the close button to dismiss it.</p>
+          <button id="pt-close" type="button" popovertarget="pt-panel" popovertargetaction="hide" disabled>Close panel</button>
+        </section>
+      </template>
+    </rt-popover-target-demo>
+  </div>
+  <p class="expected"><strong>Try:</strong> Toggle twice, then try Show and Hide.</p>
+  <div class="observation"><span>DOM observation</span><output id="pt-observation" role="status">Waiting for setup.</output></div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>Repeating Show or Hide keeps the same state. This manual popover closes through Hide or its internal close button.</p>
+    <p>The adapter requires the native Popover API. Event ordering and accessibility relationships can differ from native Reference Target.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Manual popover with an internal close button.</p>
+    <pre><code id="popover-targets-code-html" class="language-html" data-code-sample>&lt;button id="pt-toggle" type="button" popovertarget="pt-host"
+    popovertargetaction="toggle"&gt;Toggle panel&lt;/button&gt;
+&lt;rt-popover-target-demo id="pt-host" data-reference-target="pt-panel"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="pt-panel"&gt;
+    &lt;section id="pt-panel" popover="manual" role="dialog"
+        aria-labelledby="pt-panel-title"&gt;
+      &lt;h2 id="pt-panel-title"&gt;The host leads here&lt;/h2&gt;
+      &lt;button id="pt-close" type="button" popovertarget="pt-panel"
+          popovertargetaction="hide"&gt;Close panel&lt;/button&gt;
+    &lt;/section&gt;
+  &lt;/template&gt;
+&lt;/rt-popover-target-demo&gt;</code></pre>
+  </details>
+</section>

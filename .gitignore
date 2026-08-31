@@ -1,0 +1,19 @@
+# Dependencies and generated demo/Pages output
+/node_modules/
+/dist/
+*.tgz
+
+# Local caches, coverage, and logs
+/.npm/
+/coverage/
+*.log
+.DS_Store
+
+# Local environment and editor/agent state
+.env
+.env.*
+!.env.example
+/.idea/
+/.vscode/
+/.agents/
+/.codex/

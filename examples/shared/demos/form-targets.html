@@ -1,0 +1,109 @@
+<section class="scenario" id="form-targets" data-capability="form-targets" data-ready="loading" aria-labelledby="form-targets-title">
+  <p class="case-kind">Form actions</p>
+  <h2 id="form-targets-title">Submit and reset a form inside a component</h2>
+  <p>Outside submit and reset buttons target a form inside the component.</p>
+  <p class="expected"><strong>Try:</strong> Submit with Email empty, Save draft to skip validation, then edit a field and Reset.</p>
+
+  <div class="field-grid">
+    <article class="demo-card">
+      <h3>Inside the shadow root</h3>
+      <rt-profile-form id="profile-form" data-reference-target="inner-form">
+        <template shadowrootmode="open" shadowrootreferencetarget="inner-form">
+          <link rel="stylesheet" href="{{assets}}/components.css">
+          <form id="inner-form">
+            <fieldset id="form-fields" disabled>
+              <legend>Profile settings</legend>
+              <label class="field" for="display-name">
+                <span>Display name</span>
+                <input id="display-name" type="text" name="displayName" value="Alex Morgan" autocomplete="nickname">
+              </label>
+              <label class="field" for="email">
+                <span>Email · required</span>
+                <input id="email" type="email" name="email" required value="" placeholder="you@example.com" autocomplete="email">
+              </label>
+              <label class="field" for="digest">
+                <span>Digest frequency</span>
+                <select id="digest" name="digest">
+                  <option value="weekly" selected>Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="never">Never</option>
+                </select>
+              </label>
+              <label class="checkbox" for="updates">
+                <input id="updates" type="checkbox" name="updates" value="yes" checked>
+                <span>Send product updates</span>
+              </label>
+            </fieldset>
+          </form>
+        </template>
+        <p class="observation">This example requires a browser that parses declarative shadow DOM.</p>
+      </rt-profile-form>
+    </article>
+
+    <article class="demo-card">
+      <h3>Outside the shadow root</h3>
+      <div class="button-row" role="group" aria-label="Profile actions">
+        <button id="submit-profile" type="submit" form="profile-form" name="intent" value="submit" disabled>Submit</button>
+        <button id="save-draft" class="secondary" type="submit" form="profile-form" name="intent" value="draft" formnovalidate disabled>Save draft</button>
+        <button id="reset-profile" class="secondary" type="reset" form="profile-form" disabled>Reset</button>
+      </div>
+      <p class="observation" id="form-capability" role="status">Controls stay disabled until the form’s handlers are ready.</p>
+      <div class="observation">
+        <h4>Actual native <code>button.form</code> getters</h4>
+        <pre id="form-owner-output">Waiting for setup…</pre>
+      </div>
+    </article>
+  </div>
+
+  <div class="field-grid">
+    <article class="demo-card">
+      <h3>Submission data</h3>
+      <p class="observation" id="form-status" role="status">No submission yet. The submit handler cancels navigation and reads native FormData synchronously.</p>
+      <pre id="submission-output" aria-label="Latest submission JSON">No submit event yet.</pre>
+    </article>
+    <article class="demo-card">
+      <h3>Native form events</h3>
+      <ol id="event-log" aria-label="Recent form events" aria-live="polite" aria-relevant="additions">
+        <li class="empty">No events yet.</li>
+      </ol>
+      <p class="observation" id="reset-output">Reset restores the name, an empty email, a weekly digest, and the checked updates box.</p>
+    </article>
+  </div>
+
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>Submit validates; Save draft skips validation and includes <code>intent=draft</code>; Reset restores defaults. The demo cancels navigation and reads FormData synchronously, so no data leaves the page.</p>
+    <p>The fallback routes actions without associating external data controls or changing native <code>.form</code> getters. Its temporary internal submitter carries the outside button’s name, value and form overrides; submitter identity and event paths differ from native Reference Target.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Keep data controls inside the form; install submit handlers before enabling the buttons.</p>
+    <pre><code id="form-targets-code-html" class="language-html" data-code-sample>&lt;rt-profile-form id="profile-form" data-reference-target="inner-form"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="inner-form"&gt;
+    &lt;form id="inner-form"&gt;
+      &lt;label for="email"&gt;Email&lt;/label&gt;
+      &lt;input id="email" type="email" name="email" required&gt;
+    &lt;/form&gt;
+  &lt;/template&gt;
+&lt;/rt-profile-form&gt;
+&lt;button id="submit-profile" type="submit" form="profile-form"
+    name="intent" value="submit" disabled&gt;Submit&lt;/button&gt;
+&lt;button id="save-draft" type="submit" form="profile-form"
+    name="intent" value="draft" formnovalidate disabled&gt;Save draft&lt;/button&gt;
+&lt;button id="reset-profile" type="reset" form="profile-form" disabled&gt;Reset&lt;/button&gt;</code></pre>
+    <pre><code id="form-targets-code-javascript" class="language-javascript" data-code-sample>const form = document.getElementById('profile-form')
+  .shadowRoot.getElementById('inner-form');
+
+form.addEventListener('submit', event =&gt; {
+  event.preventDefault();
+  // Read synchronously: a fallback submitter exists only during dispatch.
+  const data = new FormData(form, event.submitter);
+  console.log([...data.entries()]);
+});
+for (const id of ['submit-profile', 'save-draft', 'reset-profile']) {
+  document.getElementById(id).disabled = false;
+}</code></pre>
+  </details>
+</section>

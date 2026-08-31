@@ -1,0 +1,74 @@
+<aside id="boundaries" class="scenario" aria-labelledby="bd-title">
+  <p class="case-kind boundary">Reference boundaries</p>
+  <h2 id="bd-title">What stays on each side of the shadow root</h2>
+  <p>Compare host attributes, outward string IDs and explicit element references.</p>
+  <article class="demo-card">
+    <h3>A name on the host stays on the host</h3>
+    <div class="try-it">
+      <rt-gallery-host-name id="bd-host-name" aria-label="Host-only accessible name" data-reference-target="control">
+        <template shadowrootmode="open" shadowrootreferencetarget="control">
+          <link rel="stylesheet" href="{{assets}}/components.css">
+          <button id="control" type="button" disabled>Inner button</button>
+        </template>
+      </rt-gallery-host-name>
+    </div>
+    <p class="expected">Inspect the inner button: its <code>aria-label</code> stays absent.</p>
+    <div class="observation"><span>DOM observation</span><output id="bd-host-observation">Waiting for setup.</output></div>
+  </article>
+  <article class="demo-card">
+    <h3>Outward string references stay in their own tree</h3>
+    <div class="try-it">
+      <rt-gallery-outward-string id="bd-negative-host" popovertarget="bd-negative-panel" data-reference-target="button">
+        <template shadowrootmode="open" shadowrootreferencetarget="button">
+          <link rel="stylesheet" href="{{assets}}/components.css">
+          <div class="button-row">
+            <button id="button" type="button" disabled>Try the host attribute</button>
+            <button id="string-button" type="button" popovertarget="bd-negative-panel" disabled>Try an outward string</button>
+          </div>
+        </template>
+      </rt-gallery-outward-string>
+      <section id="bd-negative-panel" class="popover-panel" popover role="dialog" aria-labelledby="bd-negative-title" hidden>
+        <h3 id="bd-negative-title">The outside panel</h3>
+        <p>Neither button in this negative example should open this panel.</p>
+        <button type="button" popovertarget="bd-negative-panel" popovertargetaction="hide" disabled>Close panel</button>
+      </section>
+    </div>
+    <p class="expected">Try both buttons; neither should open the outside panel.</p>
+    <div class="observation"><span>DOM observation</span><output id="bd-negative-observation">Waiting for setup.</output></div>
+  </article>
+  <article class="demo-card">
+    <h3>Pass an outside element explicitly</h3>
+    <div class="try-it">
+      <rt-gallery-outward-element id="bd-positive-host" data-reference-target="button">
+        <template shadowrootmode="open" shadowrootreferencetarget="button">
+          <link rel="stylesheet" href="{{assets}}/components.css">
+          <button id="button" type="button" aria-haspopup="dialog" disabled>Open the outside panel</button>
+        </template>
+      </rt-gallery-outward-element>
+      <section id="bd-positive-panel" class="popover-panel" popover role="dialog" aria-labelledby="bd-positive-title" hidden>
+        <h3 id="bd-positive-title">Connected explicitly</h3>
+        <p>The component’s script assigned this element to its inner button’s <code>popoverTargetElement</code>.</p>
+        <button type="button" popovertarget="bd-positive-panel" popovertargetaction="hide" disabled autofocus>Close panel</button>
+      </section>
+    </div>
+    <p class="expected">Open and close the panel, including with fallback off.</p>
+    <div class="observation"><span>DOM observation</span><output id="bd-positive-observation">Waiting for setup.</output></div>
+  </article>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>Reference Target does not copy a host’s attributes. String ID references stay in their own tree, so neither negative button reaches the outside panel.</p>
+    <p>The positive example assigns <code>popoverTargetElement</code> directly. This native outward element reflection works independently of Reference Target. Inspect the inner button’s accessible name separately from its host.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Assign the outside element directly.</p>
+    <pre><code id="boundaries-code-javascript" class="language-javascript" data-code-sample>const host = document.getElementById('bd-positive-host');
+const button = host.shadowRoot.getElementById('button');
+const panel = document.getElementById('bd-positive-panel');
+
+// An outward element reference, independent of Reference Target.
+button.popoverTargetElement = panel;</code></pre>
+  </details>
+</aside>

@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a fallback, demo, or documentation problem.
+body:
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include a small example or URL and the steps to reproduce it.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and observed behavior
+      description: Include any console errors or relevant DOM observations.
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and operating system
+      placeholder: Browser version, operating system, experimental flags if any
+    validations:
+      required: true
+  - type: input
+    id: selection
+    attributes:
+      label: Selected adapters and loading mode
+      placeholder: "For example: labels; forced fallback"
+  - type: input
+    id: revision
+    attributes:
+      label: Package version or commit

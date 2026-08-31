@@ -1,0 +1,45 @@
+<section class="scenario" id="dialog-commands" data-capability="dialog-commands" aria-labelledby="dc-title">
+  <p class="case-kind">Dialog commands</p>
+  <h2 id="dc-title">Reach a closed shadow root</h2>
+  <p>Send dialog commands into a closed shadow root.</p>
+  <div class="try-it">
+    <div class="button-row">
+      <button id="dc-show" type="button" commandfor="dc-host" command="show-modal" disabled>Show modal</button>
+      <button id="dc-close" type="button" commandfor="dc-host" command="close" value="closed-outside" disabled>Close from outside</button>
+      <button id="dc-request" type="button" commandfor="dc-host" command="request-close" value="requested-outside" disabled>Request close from outside</button>
+    </div>
+    <label class="checkbox-row" for="dc-cancel"><input id="dc-cancel" type="checkbox" disabled> Cancel the next close request</label>
+    <rt-closed-dialog-demo id="dc-host" data-components-styles="{{assets}}/components.css"></rt-closed-dialog-demo>
+  </div>
+  <p class="expected"><strong>Try:</strong> Open the modal. Use the non-modal preview for outside Close/Request close.</p>
+  <div class="observation"><span>Component-reported DOM state</span><output id="dc-observation" role="status">Waiting for setup.</output></div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>A modal makes outside controls inert; close it from inside before trying the non-modal preview. Arm cancellation before Request close to keep the dialog open. Close bypasses the cancel event.</p>
+    <p>The adapter uses native dialog methods. The component reports its state; its public <code>shadowRoot</code> remains <code>null</code>.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Outside command, private dialog, internal close handler.</p>
+    <pre><code id="dialog-commands-code-html" class="language-html" data-code-sample>&lt;button id="dc-show" type="button" commandfor="dc-host"
+    command="show-modal"&gt;Show modal&lt;/button&gt;
+&lt;rt-closed-dialog-demo id="dc-host"&gt;&lt;/rt-closed-dialog-demo&gt;</code></pre>
+    <pre><code id="dialog-commands-code-javascript" class="language-javascript" data-code-sample>// Run component code after any fallback setup has finished.
+const host = document.getElementById('dc-host');
+const root = host.attachShadow({
+  mode: 'closed', referenceTarget: 'dc-dialog',
+});
+root.innerHTML = `
+  &lt;dialog id="dc-dialog" aria-labelledby="dc-dialog-title"&gt;
+    &lt;h2 id="dc-dialog-title"&gt;A moment of focus&lt;/h2&gt;
+    &lt;button id="dc-internal-close" type="button"&gt;Close dialog&lt;/button&gt;
+  &lt;/dialog&gt;
+`;
+const dialog = root.getElementById('dc-dialog');
+root.getElementById('dc-internal-close').addEventListener('click', () =&gt; {
+  dialog.close('closed-inside');
+});</code></pre>
+  </details>
+</section>

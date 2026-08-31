@@ -1,6 +1,6 @@
 # Reference Target polyfill
 
-A `0.1.0` prototype that supplies selected Reference Target behaviors when the browser lacks the API, plus a cooperative combobox adapter for public listbox/options. It uses native Shadow DOM and has no runtime dependencies. It is a partial, component-aware fallback: JavaScript cannot recreate the browser's accessibility relationships, form association, event paths, or encapsulated reflection in full.
+A `0.1.0` prototype that supplies selected Reference Target behaviors when the browser lacks the API. It uses native Shadow DOM and has no runtime dependencies. It is a partial, component-aware fallback: JavaScript cannot recreate the browser's accessibility relationships, form association, event paths, or encapsulated reflection in full.
 
 [Consumption guide](https://westbrook.github.io/reference-target-polyfill/) · [Live demos](https://westbrook.github.io/reference-target-polyfill/examples/) · [Contributing](./CONTRIBUTING.md) · [MIT license](./LICENSE)
 
@@ -75,7 +75,7 @@ const support = probeReferenceTarget();
 // partial native implementation and retain an application-specific fallback.
 ```
 
-The bootstrap example skips loading this package whenever the native surface exists. For deployments including experimental browser implementations, inspect the probe results as part of your application's capability policy. The [combobox adapter](#combobox-relationships) has a different loading policy: Phase 1's single target does not replace its two-target provider contract, so keep that selected setup loaded even on native Phase 1 browsers.
+The bootstrap example skips loading this package whenever the native surface exists. For deployments including experimental browser implementations, inspect the probe results as part of your application's capability policy.
 
 `installReferenceTarget({ adapters = [], realm = globalThis, force = false, onDiagnostic })` requires a browser realm with Shadow DOM, `MutationObserver`, and `WeakRef`. It rejects duplicate adapter IDs and a second active installation in the same realm. `onDiagnostic`, if provided, receives `{ code, detail }`; built-in diagnostics use public source/host metadata rather than exposing the resolved private target.
 
@@ -85,14 +85,12 @@ The bootstrap example skips loading this package whenever the native surface exi
 | `reason` | Explanation on an inactive or unsupported handle, when applicable. |
 | `statuses` | Adapter ID → `fallback`, `unsupported`, `native`, or `inactive`. Missing native primitives can make individual adapters unsupported even when the handle's mode is `fallback`. |
 | `activeAdapters` | IDs of adapters currently installed in fallback mode. |
-| `register(root, { referenceTarget }?)` | Captures a known root from the installation's realm. Returns `{ dispose() }` to unregister that root. The optional value overrides its current target in the regular fallback. Native cooperation only observes roots and preserves native target values. |
-| `hydrate(container = document)` | Discovers accessible roots below the container, then refreshes adapters. The regular fallback also reads host `data-reference-target` metadata; native cooperation preserves native configuration. |
+| `register(root, { referenceTarget }?)` | Captures a known root from the installation's realm. Returns `{ dispose() }` to unregister that root. The optional value overrides its current target in fallback mode. |
+| `hydrate(container = document)` | Discovers accessible roots below the container, reads host `data-reference-target` metadata, then refreshes adapters. |
 | `refresh()` | Synchronously reconciles adapter state. Use after property-only or application-model changes that do not produce DOM mutations. |
 | `dispose()` | Disconnects observers/listeners, releases adapter changes it still owns, unregisters roots, and restores its `attachShadow` wrapper when it still owns it. |
 
 Native, unsupported, and inactive handles have no active adapters and their methods are no-ops. Even `mode: "native"` means only that the basic probes passed. The installer deliberately declines to layer fallback activation over detected partial native support.
-
-The combobox adapter explicitly opts into native cooperation. When selected with a native Reference Target surface, it remains active and the handle has `mode: "fallback"`; the other selected adapters report `native` or `unsupported` according to the basic probes. This mode leaves native `attachShadow()` and root target properties intact. The public-DOM combobox contract does not depend on native cross-root forwarding.
 
 `force: true` is for testing. It suppresses native Reference Target forwarding on captured roots while exercising the fallback, then restores the captured value when released. Do not use it to automatically override partially implemented native behavior in production.
 
@@ -106,7 +104,6 @@ The combobox adapter explicitly opts into native cooperation. When selected with
 | `adapters/popover-commands` → `popoverCommands()` | Forwarded button commands `show-popover`, `hide-popover`, and `toggle-popover`, using native popover methods. |
 | `adapters/text-names` → `textNames({ getText })` | Approximates inward `aria-labelledby` and `aria-describedby` references using component-provided plain text and hidden proxies in the source's own tree. |
 | `adapters/form-targets` → `formTargets()` | External submit/reset buttons and inputs with `form="host"` act on an inner native form. Submission uses a temporary native submitter; this does not establish cross-root form ownership. |
-| `adapters/combobox-targets` → `comboboxTargets({ getTargets })` | Connects an editable combobox's `aria-controls` and `aria-activedescendant` to a component-provided, real listbox and active option in the input's own DOM tree. |
 
 **Labels:** choose the activation policy for your controls and platform expectations. `focus-and-click` calls `.click()` and can change checkbox/radio state; this is synthetic activation. Existing native label associations are skipped, including form-associated custom elements (FACE), to avoid duplicate activation. Interactive descendants and unavailable controls are guarded. This adapter does not implement native `.control`, `.labels`, form association, or native label event behavior.
 
@@ -131,60 +128,9 @@ const names = textNames({
 // Include names in the adapters array when installing.
 ```
 
-Provide text through a component's public contract. This is not the Accessible Name and Description Computation algorithm: rich content, nested naming rules, localization, and model-derived values remain the component's responsibility. No generic `textContent` scraping is performed. The separate combobox adapter covers a cooperative subset of `aria-controls` and `aria-activedescendant`; arbitrary cross-root ARIA relations and `aria-owns` remain outside this package.
+Provide text through a component's public contract. This is not the Accessible Name and Description Computation algorithm: rich content, nested naming rules, localization, and model-derived values remain the component's responsibility. No generic `textContent` scraping is performed. Generic forwarding for `aria-controls`, `aria-activedescendant`, `aria-owns`, and other cross-root ARIA relations remains outside this package.
 
 The text adapter temporarily rewrites the source relation to hidden text proxies, preserving its original IDREF or supported native element-list binding. It observes author replacements, removes obsolete proxies, and restores the original binding on release only while it still owns the applied value. Invalid forwarded targets are omitted. For later native ARIA element-list assignments or provider-model changes, call `refresh()`; mutation observation cannot detect every such update. Reconciliation following ordinary DOM mutations is asynchronous. Author updates should supply public IDs or elements instead of extending the adapter's temporary proxy references. An author reassignment identical to the current value cannot be distinguished from an unchanged binding.
-
-### Combobox relationships
-
-The explainer's [combobox example](https://github.com/WICG/webcomponents/blob/gh-pages/proposals/reference-target-explainer.md#aria-activedescendant-and-comboboxes) needs two destinations: the popup listbox and its current option. A single `ShadowRoot.referenceTarget` cannot select both through the same host. The broader [Phase 2 design](https://github.com/WICG/webcomponents/blob/gh-pages/proposals/reference-target-explainer.md#phase-2-referring-to-specific-elements-within-a-shadow-root) remains separate from Phase 1.
-
-`comboboxTargets()` provides a structural fallback for cooperating components. Keep the actual listbox and options in the input's DOM tree, optionally rendered through a slot in the component's shadow root. Supply those public elements through a synchronous callback:
-
-```js
-// reference-target.setup.js
-import { installReferenceTarget } from "reference-target-fallback/core";
-import { comboboxTargets } from "reference-target-fallback/adapters/combobox-targets";
-
-export const referenceTarget = installReferenceTarget({
-  adapters: [comboboxTargets({
-    getTargets(host) {
-      // An application-defined public component method; null declines opt-in.
-      return host.getComboboxTargets?.() ?? null;
-    },
-  })],
-});
-referenceTarget.hydrate();
-```
-
-```js
-// bootstrap.js — this provider contract is also needed with native Phase 1.
-await import("./reference-target.setup.js");
-await import("./app.js");
-```
-
-The selected setup stays behind an asynchronous readiness boundary, and `app.js` still initializes when imported. Do not skip this setup based on `hasNativeReferenceTarget()` alone. Other adapters selected in the same setup retain their normal native checks.
-
-```html
-<label for="city">City</label>
-<input id="city" type="text" role="combobox" aria-autocomplete="list"
-       aria-expanded="false" aria-controls="cities" aria-activedescendant="cities">
-<x-cities id="cities">
-  <!-- Real light-DOM content; the component may render it through a slot. -->
-  <div id="city-options" role="listbox" aria-label="Cities" hidden>
-    <div id="city-oslo" role="option" aria-selected="false">Oslo</div>
-    <div id="city-tokyo" role="option" aria-selected="false">Tokyo</div>
-  </div>
-</x-cities>
-```
-
-The component's `getComboboxTargets()` returns `{ listbox, activeOption }`, where `activeOption` is an option element or `null`. The adapter accepts `input[type="text"]` and `input[type="search"]` with `role="combobox"` and a single host ID in `aria-controls`. The public host and listbox must be connected in the input's actual DOM tree; the listbox must be a descendant of that host with `role="listbox"` and a unique ID. An active option must have `role="option"`, a unique ID, and be a DOM descendant of that listbox. Private shadow descendants and hosts inside closed roots are not provider targets.
-
-The adapter binds `aria-controls` to the supplied listbox ID. It manages `aria-activedescendant` only when its authored value is the same host ID: while expanded with a usable, visible active option, the value becomes that option's ID; otherwise the effective attribute is removed. An absent active-descendant attribute or a direct author-provided option reference is left alone. The adapter handles content attributes, not explicit `ariaControlsElements` or `ariaActiveDescendantElement` assignments.
-
-The component owns rendering, filtering, `aria-expanded`, `aria-selected`, focus, keyboard and pointer interaction, and scrolling the active option into view. Call `referenceTarget.refresh()` synchronously after changes to the active option or popup state; DOM observation alone cannot meet the timing of every keyboard interaction. Keep the input focused while moving the active option. See the [combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) and [active-descendant requirements](https://w3c.github.io/aria/#aria-activedescendant).
-
-No hidden option copies, private-node reflection, `aria-owns`, or `referenceTargetMap` API are supplied. This does not transparently repair a component whose only listbox/options live in a private shadow tree. Author replacements are respected, and disposal restores only attributes still owned by the adapter. Return `null` to withdraw the provider. To retire this bridge, change the component's public reference contract to direct native relationships or a future supported multi-target API, then remove its setup; Phase 1 support by itself is insufficient.
 
 ### Form actions
 
@@ -366,4 +312,4 @@ The preparation command leaves the source checkout in place and preserves Pages 
 
 Native-surface tests may be skipped where that API is absent; force-mode simulations do not establish native interoperability. Browser behavior and accessibility outcomes require browser and assistive-technology validation. No cross-browser conformance claim is made here.
 
-Validation on 31 August 2026: **23 Node/package tests passed** and the Chromium 151 browser suite reported **126 passed, 0 failed, 1 skipped**. The skipped test needs a native Reference Target surface. Package checks verify that all seven renderers are isolated, compilers stay out of browser bundles, and adapters remain behind the setup boundary. Twenty-eight renderer cases cover target replacement, single activation, popover dismissal, automatic/forced/off loading, and supported reconnection behavior. Angular’s new cases intentionally exclude its documented same-instance reconnect limitation; Vue’s later attribute-update limitation after a full remount remains documented. Existing capability, gallery, combobox adapter, and Pages checks continue to pass. Renderer layout and source highlighting were checked in desktop Chromium. Firefox, Safari, and assistive-technology behavior remain unverified by this run.
+Validation on 31 August 2026: **22 Node/package tests passed** and the Chromium 151 browser suite reported **110 passed, 0 failed, 1 skipped**. The skipped test needs a native Reference Target surface. Package checks verify that all seven renderers are isolated, compilers stay out of browser bundles, and adapters remain behind the setup boundary. Renderer cases cover target replacement, single activation, popover dismissal, automatic/forced/off loading, and supported reconnection behavior. Angular’s cases intentionally exclude its documented same-instance reconnect limitation; Vue’s later attribute-update limitation after a full remount remains documented. Renderer layout and source highlighting were checked in desktop Chromium. Firefox, Safari, and assistive-technology behavior remain unverified by this run.

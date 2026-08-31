@@ -1300,10 +1300,6 @@ async function run() {
   registerFormTargetTests({
     test, assert, equal, throws, requirePrimitive, element, syntheticClick, uniqueId,
   });
-  const { registerComboboxTargetTests } = await import("./combobox-targets.js");
-  registerComboboxTargetTests({
-    test, assert, equal, throws, requirePrimitive, element, uniqueId, nativeTestRealm,
-  });
   const { registerGalleryTests } = await import("./gallery.js");
   registerGalleryTests({ test, assert, equal, requirePrimitive });
   const { registerRendererTests } = await import("./renderers.js");

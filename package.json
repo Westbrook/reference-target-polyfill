@@ -35,8 +35,7 @@
     "./adapters/dialog-commands": "./src/adapters/dialog-commands.js",
     "./adapters/popover-commands": "./src/adapters/popover-commands.js",
     "./adapters/text-names": "./src/adapters/text-names.js",
-    "./adapters/form-targets": "./src/adapters/form-targets.js",
-    "./adapters/combobox-targets": "./src/adapters/combobox-targets.js"
+    "./adapters/form-targets": "./src/adapters/form-targets.js"
   },
   "files": [
     "src",

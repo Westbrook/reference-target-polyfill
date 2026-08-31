@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" data-demo-page="labels" data-capabilities="labels" data-reference-target-ready="false">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Interactive Reference Target examples with conditional, modular fallbacks and measured JavaScript bundle sizes.">
+    <title>Reference Target · Labels</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script type="module" src="./main.js"></script>
+  <link rel="stylesheet" href="../shared/microlighter/themes/github.css">
+</head>
+  <body>
+    <a class="skip-link" href="#demos">Skip to the demos</a>
+    <main>
+      <header class="page-header">
+        <div class="masthead">
+          <a class="site-wordmark" href="../">reference <span aria-hidden="true">/</span> target</a>
+          <p class="masthead-note">Browser experiments &amp; working notes</p>
+        </div>
+        <nav class="site-nav" aria-label="Capability pages">
+          <a href="../">All capabilities</a>
+          <a href="../labels/" aria-current="page">Labels</a>
+          <a href="../popover-targets/">Popover targeting</a>
+          <a href="../dialog-commands/">Dialog commands</a>
+          <a href="../popover-commands/">Popover commands</a>
+          <a href="../text-names/">Text names</a>
+          <a href="../forms/">Form actions</a>
+          <a class="docs-link" href="../../">Use the polyfill ↗</a>
+        </nav>
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">01 / Labels</p>
+            <h1>An outside label.<br><em>An inside control.</em></h1>
+            <p class="intro">Activate an internal control from a label outside its component.</p>
+          </div>
+          <figure class="reference-map" role="img" aria-label="A reference to a host is forwarded to a target inside its shadow root.">
+            <div class="map-source"><span class="map-label">outside</span><code>for="host"</code></div>
+            <span class="map-arrow" aria-hidden="true">↘</span>
+            <div class="map-host">
+              <span class="map-label">host</span>
+              <div class="map-shadow">
+                <span class="map-label">shadow root</span>
+                <div class="map-target"><code>#control</code></div>
+              </div>
+            </div>
+            <figcaption>One public reference. An internal destination.</figcaption>
+          </figure>
+        </div>
+        <section class="runtime-panel" aria-label="Browser and fallback settings">
+          <nav class="mode-links" aria-label="Choose a loading mode">
+            <a href="?mode=auto" data-mode="auto">Automatic</a>
+            <a href="?mode=fallback" data-mode="fallback">Force fallback</a>
+            <a href="?mode=off" data-mode="off">Browser alone</a>
+          </nav>
+          <p id="ready-status" data-ready="false" role="status">Preparing the controls…</p>
+          <details class="runtime-details">
+            <summary>Browser details</summary>
+            <dl class="status-grid">
+              <div><dt>Current path</dt><dd id="mode-status">Checking browser support…</dd></div>
+              <div><dt>Native API surface</dt><dd id="surface-status">Checking…</dd></div>
+              <div class="adapters"><dt>Active adapters</dt><dd id="adapter-status">Waiting for setup…</dd></div>
+            </dl>
+            <p id="mode-note" class="mode-note">Automatic checks for the native property. Force fallback loads the selected adapters. Browser alone leaves them out.</p>
+          </details>
+          <p class="error" id="load-error" role="alert" hidden></p>
+          <noscript><p class="error">Enable JavaScript to try the controls.</p></noscript>
+        </section>
+      </header>
+
+      <div class="demo-stack" id="demos">
+        <section id="labels" class="scenario" data-capability="labels" aria-labelledby="lj-title">
+  <p class="case-kind">Labels</p>
+  <h2 id="lj-title">An outside label, an inside control</h2>
+  <p>A label reaches the checkbox selected by the component.</p>
+  <p class="expected"><strong>Try:</strong> Click either label, then its checkbox.</p>
+  <article class="demo-card">
+    <h3>Reference the host by ID</h3>
+    <div class="try-it button-row">
+      <label id="lj-checkbox-label" for="lj-checkbox-host">Send me release notes</label>
+      <rt-gallery-checkbox id="lj-checkbox-host" data-reference-target="control">
+        <template shadowrootmode="open" shadowrootreferencetarget="control">
+          <link rel="stylesheet" href="../shared/components.css">
+          <input id="control" type="checkbox" disabled>
+        </template>
+      </rt-gallery-checkbox>
+    </div>
+    <div class="observation"><span>DOM observation</span><output id="lj-checkbox-observation">Waiting for setup.</output></div>
+  </article>
+  <article class="demo-card">
+    <h3>Wrap the component in its label</h3>
+    <div class="try-it">
+      <label id="lj-wrapping-label" class="button-row">
+        <span>Remember this preference</span>
+        <rt-gallery-wrapped-checkbox id="lj-wrapped-host" data-reference-target="control">
+          <template shadowrootmode="open" shadowrootreferencetarget="control">
+            <link rel="stylesheet" href="../shared/components.css">
+            <input id="control" type="checkbox" disabled>
+          </template>
+        </rt-gallery-wrapped-checkbox>
+      </label>
+    </div>
+    <div class="observation"><span>DOM observation</span><output id="lj-wrapped-observation">Waiting for setup.</output></div>
+  </article>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The first label uses <code>for</code>; the second contains its component. The fallback applies a focus-and-click policy and requests outward ARIA naming where supported.</p>
+    <p>It does not create native <code>label.control</code> or <code>input.labels</code> links. DOM readouts do not verify accessible names or screen-reader behavior.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Explicit-label markup. Fallback setup hydrates <code>data-reference-target</code>; styling and readiness flags are omitted.</p>
+    <pre><code id="labels-code-html" class="language-html" data-code-sample>&lt;label id="lj-checkbox-label" for="lj-checkbox-host"&gt;Send me release notes&lt;/label&gt;
+&lt;rt-gallery-checkbox id="lj-checkbox-host" data-reference-target="control"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="control"&gt;
+    &lt;input id="control" type="checkbox"&gt;
+  &lt;/template&gt;
+&lt;/rt-gallery-checkbox&gt;</code></pre>
+  </details>
+</section>
+
+      </div>
+
+      <section class="metrics-panel" data-bundle-id="labels" aria-label="JavaScript delivery sizes">
+    <h2>JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="4448" data-gzip-bytes="2178">
+      <h3>Page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="4448">4.448 KB</strong>
+      <span data-size="gzip" data-bytes="2178">2.178 KB gzip</span>
+      <p>Always loaded.</p>
+    </article>
+<article class="size-card" data-size-kind="fallback" data-bytes="11786" data-gzip-bytes="4520">
+      <h3>Fallback additional</h3>
+      <strong data-size="bytes" data-bytes="11786">11.786 KB</strong>
+      <span data-size="gzip" data-bytes="4520">4.520 KB gzip</span>
+      <p>Core + selected adapters.</p>
+    </article>
+<article class="size-card" data-size-kind="total" data-bytes="16234" data-gzip-bytes="6698">
+      <h3>Total with fallback</h3>
+      <strong data-size="bytes" data-bytes="16234">16.234 KB</strong>
+      <span data-size="gzip" data-bytes="6698">6.698 KB gzip</span>
+      <p>Shared files counted once.</p>
+    </article></div>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <details>
+      <summary>Inspect the 4 generated JavaScript files</summary>
+      <p class="metric-note">Selected adapters: <code>labels</code>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. CSS, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <div class="table-scroll"><table class="files-table">
+        <caption>Files included in this page’s totals</caption>
+        <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
+        <tbody><tr data-file-path="labels/app-Q6QH5RKX.js" data-delivery="baseline">
+      <td><a data-bundle-file="labels/app-Q6QH5RKX.js" href="../labels/app-Q6QH5RKX.js"><code>labels/app-Q6QH5RKX.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="1040">1.040 KB</td>
+      <td data-size="gzip" data-bytes="574">0.574 KB</td>
+    </tr>
+<tr data-file-path="labels/chunk-32G5PXKY.js" data-delivery="baseline">
+      <td><a data-bundle-file="labels/chunk-32G5PXKY.js" href="../labels/chunk-32G5PXKY.js"><code>labels/chunk-32G5PXKY.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="924">0.924 KB</td>
+      <td data-size="gzip" data-bytes="464">0.464 KB</td>
+    </tr>
+<tr data-file-path="labels/main.js" data-delivery="baseline">
+      <td><a data-bundle-file="labels/main.js" href="../labels/main.js"><code>labels/main.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
+      <td data-size="gzip" data-bytes="1140">1.140 KB</td>
+    </tr>
+<tr data-file-path="labels/reference-target.setup-G6VGX556.js" data-delivery="fallback">
+      <td><a data-bundle-file="labels/reference-target.setup-G6VGX556.js" href="../labels/reference-target.setup-G6VGX556.js"><code>labels/reference-target.setup-G6VGX556.js</code></a></td>
+      <td>Fallback additional</td>
+      <td data-size="bytes" data-bytes="11786">11.786 KB</td>
+      <td data-size="gzip" data-bytes="4520">4.520 KB</td>
+    </tr></tbody>
+      </table></div>
+      <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>
+    </details>
+  </section>
+
+      <details class="reading-notes" aria-labelledby="reading-title">
+        <summary>Implementation notes &amp; limitations</summary>
+        <h2 id="reading-title">Fallback scope</h2>
+        <p>The adapter uses focus-and-click activation and optional outward ARIA reflection. It does not recreate native <code>label.control</code> or <code>control.labels</code> relationships.</p>
+        <p>Readouts describe DOM state. Check computed names, keyboard behavior and assistive technology separately.</p>
+      </details>
+      <footer class="page-footer">
+        <p>Inspired by <a href="https://microsoftedge.github.io/Demos/reference-target/">Edge’s Reference Target demos</a>. <a href="../scenarios/">Reference cases</a>.</p>
+      </footer>
+    </main>
+  <script type="module" src="../shared/code-highlighting.js"></script>
+</body>
+</html>

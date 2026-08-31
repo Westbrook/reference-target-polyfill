@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en" data-demo-page="text-names" data-capabilities="text-names" data-reference-target-ready="false">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Interactive Reference Target examples with conditional, modular fallbacks and measured JavaScript bundle sizes.">
+    <title>Reference Target · Text names</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script type="module" src="./main.js"></script>
+  <link rel="stylesheet" href="../shared/microlighter/themes/github.css">
+</head>
+  <body>
+    <a class="skip-link" href="#demos">Skip to the demos</a>
+    <main>
+      <header class="page-header">
+        <div class="masthead">
+          <a class="site-wordmark" href="../">reference <span aria-hidden="true">/</span> target</a>
+          <p class="masthead-note">Browser experiments &amp; working notes</p>
+        </div>
+        <nav class="site-nav" aria-label="Capability pages">
+          <a href="../">All capabilities</a>
+          <a href="../labels/">Labels</a>
+          <a href="../popover-targets/">Popover targeting</a>
+          <a href="../dialog-commands/">Dialog commands</a>
+          <a href="../popover-commands/">Popover commands</a>
+          <a href="../text-names/" aria-current="page">Text names</a>
+          <a href="../forms/">Form actions</a>
+          <a class="docs-link" href="../../">Use the polyfill ↗</a>
+        </nav>
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">05 / Text names</p>
+            <h1>Publish the text<br><em>your component means.</em></h1>
+            <p class="intro">Use component-provided text for names and descriptions.</p>
+          </div>
+          <figure class="reference-map" role="img" aria-label="A reference to a host is forwarded to a target inside its shadow root.">
+            <div class="map-source"><span class="map-label">outside</span><code>aria-labelledby="host"</code></div>
+            <span class="map-arrow" aria-hidden="true">↘</span>
+            <div class="map-host">
+              <span class="map-label">host</span>
+              <div class="map-shadow">
+                <span class="map-label">shadow root</span>
+                <div class="map-target"><code>#label</code></div>
+              </div>
+            </div>
+            <figcaption>One public reference. An internal destination.</figcaption>
+          </figure>
+        </div>
+        <section class="runtime-panel" aria-label="Browser and fallback settings">
+          <nav class="mode-links" aria-label="Choose a loading mode">
+            <a href="?mode=auto" data-mode="auto">Automatic</a>
+            <a href="?mode=fallback" data-mode="fallback">Force fallback</a>
+            <a href="?mode=off" data-mode="off">Browser alone</a>
+          </nav>
+          <p id="ready-status" data-ready="false" role="status">Preparing the controls…</p>
+          <details class="runtime-details">
+            <summary>Browser details</summary>
+            <dl class="status-grid">
+              <div><dt>Current path</dt><dd id="mode-status">Checking browser support…</dd></div>
+              <div><dt>Native API surface</dt><dd id="surface-status">Checking…</dd></div>
+              <div class="adapters"><dt>Active adapters</dt><dd id="adapter-status">Waiting for setup…</dd></div>
+            </dl>
+            <p id="mode-note" class="mode-note">Automatic checks for the native property. Force fallback loads the selected adapters. Browser alone leaves them out.</p>
+          </details>
+          <p class="error" id="load-error" role="alert" hidden></p>
+          <noscript><p class="error">Enable JavaScript to try the controls.</p></noscript>
+        </section>
+      </header>
+
+      <div class="demo-stack" id="demos">
+        <section id="text-names" class="scenario" data-capability="text-names" aria-labelledby="tn-title">
+  <p class="case-kind">Text names and descriptions</p>
+  <h2 id="tn-title">Choose the text a reference supplies</h2>
+  <p>Let components supply an input’s name and description.</p>
+  <div class="try-it field-grid">
+    <rt-gallery-label id="tn-label-host" data-reference-target="text" data-label-text="Delivery preference">
+      <template shadowrootmode="open" shadowrootreferencetarget="text">
+        <link rel="stylesheet" href="../shared/components.css">
+        <strong id="text">Delivery preference</strong>
+        <p class="extra">This extra component text is outside the selected name.</p>
+      </template>
+    </rt-gallery-label>
+    <input id="tn-input" type="text" aria-labelledby="tn-label-host" aria-describedby="tn-description-host" placeholder="For example, leave at reception" disabled>
+    <rt-gallery-description id="tn-description-host" data-reference-target="text" data-description-text="Tell us where the parcel should be left.">
+      <template shadowrootmode="open" shadowrootreferencetarget="text">
+        <link rel="stylesheet" href="../shared/components.css">
+        <p id="text">Tell us where the parcel should be left.</p>
+        <p class="extra">This extra component text is outside the selected description.</p>
+      </template>
+    </rt-gallery-description>
+    <div class="button-row"><button id="tn-update" type="button" disabled>Change the component text</button></div>
+  </div>
+  <p class="expected"><strong>Try:</strong> Change the text, then inspect the input’s name and description in your accessibility tools.</p>
+  <div class="observation"><span>DOM references and text proxies — not computed accessibility</span><output id="tn-observation">Waiting for setup.</output></div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The fallback creates hidden text references from <code>data-label-text</code> and <code>data-description-text</code>. Components keep those public values in sync with their visible text.</p>
+    <p>This plain-text approximation does not compute accessible names from arbitrary markup. The readout shows DOM references, not computed accessibility.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Publish text on the hosts; select a provider during fallback setup.</p>
+    <pre><code id="text-names-code-html" class="language-html" data-code-sample>&lt;input id="tn-input" type="text" aria-labelledby="tn-label-host"
+    aria-describedby="tn-description-host"&gt;
+&lt;rt-gallery-label id="tn-label-host" data-reference-target="text"
+    data-label-text="Delivery preference"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="text"&gt;
+    &lt;strong id="text"&gt;Delivery preference&lt;/strong&gt;
+    &lt;p&gt;This extra component text is outside the selected name.&lt;/p&gt;
+  &lt;/template&gt;
+&lt;/rt-gallery-label&gt;
+&lt;rt-gallery-description id="tn-description-host" data-reference-target="text"
+    data-description-text="Tell us where the parcel should be left."&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="text"&gt;
+    &lt;p id="text"&gt;Tell us where the parcel should be left.&lt;/p&gt;
+  &lt;/template&gt;
+&lt;/rt-gallery-description&gt;</code></pre>
+    <pre><code id="text-names-code-javascript" class="language-javascript" data-code-sample>// In the conditionally loaded setup module (package imports):
+import { installReferenceTarget } from 'reference-target-fallback/core';
+import { textNames } from 'reference-target-fallback/adapters/text-names';
+
+const fallback = installReferenceTarget({
+  adapters: [textNames({
+    getText(host, kind) {
+      return host.getAttribute(kind === 'label'
+        ? 'data-label-text' : 'data-description-text');
+    },
+  })],
+});
+fallback.hydrate(document);</code></pre>
+  </details>
+</section>
+
+      </div>
+
+      <section class="metrics-panel" data-bundle-id="text-names" aria-label="JavaScript delivery sizes">
+    <h2>JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="4806" data-gzip-bytes="2316">
+      <h3>Page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="4806">4.806 KB</strong>
+      <span data-size="gzip" data-bytes="2316">2.316 KB gzip</span>
+      <p>Always loaded.</p>
+    </article>
+<article class="size-card" data-size-kind="fallback" data-bytes="12118" data-gzip-bytes="4636">
+      <h3>Fallback additional</h3>
+      <strong data-size="bytes" data-bytes="12118">12.118 KB</strong>
+      <span data-size="gzip" data-bytes="4636">4.636 KB gzip</span>
+      <p>Core + selected adapters.</p>
+    </article>
+<article class="size-card" data-size-kind="total" data-bytes="16924" data-gzip-bytes="6952">
+      <h3>Total with fallback</h3>
+      <strong data-size="bytes" data-bytes="16924">16.924 KB</strong>
+      <span data-size="gzip" data-bytes="6952">6.952 KB gzip</span>
+      <p>Shared files counted once.</p>
+    </article></div>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <details>
+      <summary>Inspect the 4 generated JavaScript files</summary>
+      <p class="metric-note">Selected adapters: <code>text-names</code>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. CSS, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <div class="table-scroll"><table class="files-table">
+        <caption>Files included in this page’s totals</caption>
+        <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
+        <tbody><tr data-file-path="text-names/app-QSED5Z7M.js" data-delivery="baseline">
+      <td><a data-bundle-file="text-names/app-QSED5Z7M.js" href="../text-names/app-QSED5Z7M.js"><code>text-names/app-QSED5Z7M.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="1398">1.398 KB</td>
+      <td data-size="gzip" data-bytes="712">0.712 KB</td>
+    </tr>
+<tr data-file-path="text-names/chunk-32G5PXKY.js" data-delivery="baseline">
+      <td><a data-bundle-file="text-names/chunk-32G5PXKY.js" href="../text-names/chunk-32G5PXKY.js"><code>text-names/chunk-32G5PXKY.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="924">0.924 KB</td>
+      <td data-size="gzip" data-bytes="464">0.464 KB</td>
+    </tr>
+<tr data-file-path="text-names/main.js" data-delivery="baseline">
+      <td><a data-bundle-file="text-names/main.js" href="../text-names/main.js"><code>text-names/main.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
+      <td data-size="gzip" data-bytes="1140">1.140 KB</td>
+    </tr>
+<tr data-file-path="text-names/reference-target.setup-TGP4BUUT.js" data-delivery="fallback">
+      <td><a data-bundle-file="text-names/reference-target.setup-TGP4BUUT.js" href="../text-names/reference-target.setup-TGP4BUUT.js"><code>text-names/reference-target.setup-TGP4BUUT.js</code></a></td>
+      <td>Fallback additional</td>
+      <td data-size="bytes" data-bytes="12118">12.118 KB</td>
+      <td data-size="gzip" data-bytes="4636">4.636 KB</td>
+    </tr></tbody>
+      </table></div>
+      <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>
+    </details>
+  </section>
+
+      <details class="reading-notes" aria-labelledby="reading-title">
+        <summary>Implementation notes &amp; limitations</summary>
+        <h2 id="reading-title">Fallback scope</h2>
+        <p>Names and descriptions come from explicit public text. The adapter does not compute accessible names from arbitrary shadow content.</p>
+        <p>Readouts describe DOM state. Check computed names, keyboard behavior and assistive technology separately.</p>
+      </details>
+      <footer class="page-footer">
+        <p>Inspired by <a href="https://microsoftedge.github.io/Demos/reference-target/">Edge’s Reference Target demos</a>. <a href="../scenarios/">Reference cases</a>.</p>
+      </footer>
+    </main>
+  <script type="module" src="../shared/code-highlighting.js"></script>
+</body>
+</html>

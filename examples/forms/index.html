@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en" data-demo-page="form-targets" data-capabilities="form-targets" data-reference-target-ready="false">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Interactive Reference Target examples with conditional, modular fallbacks and measured JavaScript bundle sizes.">
+    <title>Reference Target · Form actions</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script type="module" src="./main.js"></script>
+  <link rel="stylesheet" href="../shared/microlighter/themes/github.css">
+</head>
+  <body>
+    <a class="skip-link" href="#demos">Skip to the demos</a>
+    <main>
+      <header class="page-header">
+        <div class="masthead">
+          <a class="site-wordmark" href="../">reference <span aria-hidden="true">/</span> target</a>
+          <p class="masthead-note">Browser experiments &amp; working notes</p>
+        </div>
+        <nav class="site-nav" aria-label="Capability pages">
+          <a href="../">All capabilities</a>
+          <a href="../labels/">Labels</a>
+          <a href="../popover-targets/">Popover targeting</a>
+          <a href="../dialog-commands/">Dialog commands</a>
+          <a href="../popover-commands/">Popover commands</a>
+          <a href="../text-names/">Text names</a>
+          <a href="../forms/" aria-current="page">Form actions</a>
+          <a class="docs-link" href="../../">Use the polyfill ↗</a>
+        </nav>
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">06 / Form actions</p>
+            <h1>A form inside.<br><em>Actions outside.</em></h1>
+            <p class="intro">Submit or reset an internal form from outside its component.</p>
+          </div>
+          <figure class="reference-map" role="img" aria-label="A reference to a host is forwarded to a target inside its shadow root.">
+            <div class="map-source"><span class="map-label">outside</span><code>form="host"</code></div>
+            <span class="map-arrow" aria-hidden="true">↘</span>
+            <div class="map-host">
+              <span class="map-label">host</span>
+              <div class="map-shadow">
+                <span class="map-label">shadow root</span>
+                <div class="map-target"><code>#form</code></div>
+              </div>
+            </div>
+            <figcaption>One public reference. An internal destination.</figcaption>
+          </figure>
+        </div>
+        <section class="runtime-panel" aria-label="Browser and fallback settings">
+          <nav class="mode-links" aria-label="Choose a loading mode">
+            <a href="?mode=auto" data-mode="auto">Automatic</a>
+            <a href="?mode=fallback" data-mode="fallback">Force fallback</a>
+            <a href="?mode=off" data-mode="off">Browser alone</a>
+          </nav>
+          <p id="ready-status" data-ready="false" role="status">Preparing the controls…</p>
+          <details class="runtime-details">
+            <summary>Browser details</summary>
+            <dl class="status-grid">
+              <div><dt>Current path</dt><dd id="mode-status">Checking browser support…</dd></div>
+              <div><dt>Native API surface</dt><dd id="surface-status">Checking…</dd></div>
+              <div class="adapters"><dt>Active adapters</dt><dd id="adapter-status">Waiting for setup…</dd></div>
+            </dl>
+            <p id="mode-note" class="mode-note">Automatic checks for the native property. Force fallback loads the selected adapters. Browser alone leaves them out.</p>
+          </details>
+          <p class="error" id="load-error" role="alert" hidden></p>
+          <noscript><p class="error">Enable JavaScript to try the controls.</p></noscript>
+        </section>
+      </header>
+
+      <div class="demo-stack" id="demos">
+        <section class="scenario" id="form-targets" data-capability="form-targets" data-ready="loading" aria-labelledby="form-targets-title">
+  <p class="case-kind">Form actions</p>
+  <h2 id="form-targets-title">Submit and reset a form inside a component</h2>
+  <p>Outside submit and reset buttons target a form inside the component.</p>
+  <p class="expected"><strong>Try:</strong> Submit with Email empty, Save draft to skip validation, then edit a field and Reset.</p>
+
+  <div class="field-grid">
+    <article class="demo-card">
+      <h3>Inside the shadow root</h3>
+      <rt-profile-form id="profile-form" data-reference-target="inner-form">
+        <template shadowrootmode="open" shadowrootreferencetarget="inner-form">
+          <link rel="stylesheet" href="../shared/components.css">
+          <form id="inner-form">
+            <fieldset id="form-fields" disabled>
+              <legend>Profile settings</legend>
+              <label class="field" for="display-name">
+                <span>Display name</span>
+                <input id="display-name" type="text" name="displayName" value="Alex Morgan" autocomplete="nickname">
+              </label>
+              <label class="field" for="email">
+                <span>Email · required</span>
+                <input id="email" type="email" name="email" required value="" placeholder="you@example.com" autocomplete="email">
+              </label>
+              <label class="field" for="digest">
+                <span>Digest frequency</span>
+                <select id="digest" name="digest">
+                  <option value="weekly" selected>Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="never">Never</option>
+                </select>
+              </label>
+              <label class="checkbox" for="updates">
+                <input id="updates" type="checkbox" name="updates" value="yes" checked>
+                <span>Send product updates</span>
+              </label>
+            </fieldset>
+          </form>
+        </template>
+        <p class="observation">This example requires a browser that parses declarative shadow DOM.</p>
+      </rt-profile-form>
+    </article>
+
+    <article class="demo-card">
+      <h3>Outside the shadow root</h3>
+      <div class="button-row" role="group" aria-label="Profile actions">
+        <button id="submit-profile" type="submit" form="profile-form" name="intent" value="submit" disabled>Submit</button>
+        <button id="save-draft" class="secondary" type="submit" form="profile-form" name="intent" value="draft" formnovalidate disabled>Save draft</button>
+        <button id="reset-profile" class="secondary" type="reset" form="profile-form" disabled>Reset</button>
+      </div>
+      <p class="observation" id="form-capability" role="status">Controls stay disabled until the form’s handlers are ready.</p>
+      <div class="observation">
+        <h4>Actual native <code>button.form</code> getters</h4>
+        <pre id="form-owner-output">Waiting for setup…</pre>
+      </div>
+    </article>
+  </div>
+
+  <div class="field-grid">
+    <article class="demo-card">
+      <h3>Submission data</h3>
+      <p class="observation" id="form-status" role="status">No submission yet. The submit handler cancels navigation and reads native FormData synchronously.</p>
+      <pre id="submission-output" aria-label="Latest submission JSON">No submit event yet.</pre>
+    </article>
+    <article class="demo-card">
+      <h3>Native form events</h3>
+      <ol id="event-log" aria-label="Recent form events" aria-live="polite" aria-relevant="additions">
+        <li class="empty">No events yet.</li>
+      </ol>
+      <p class="observation" id="reset-output">Reset restores the name, an empty email, a weekly digest, and the checked updates box.</p>
+    </article>
+  </div>
+
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>Submit validates; Save draft skips validation and includes <code>intent=draft</code>; Reset restores defaults. The demo cancels navigation and reads FormData synchronously, so no data leaves the page.</p>
+    <p>The fallback routes actions without associating external data controls or changing native <code>.form</code> getters. Its temporary internal submitter carries the outside button’s name, value and form overrides; submitter identity and event paths differ from native Reference Target.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Keep data controls inside the form; install submit handlers before enabling the buttons.</p>
+    <pre><code id="form-targets-code-html" class="language-html" data-code-sample>&lt;rt-profile-form id="profile-form" data-reference-target="inner-form"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="inner-form"&gt;
+    &lt;form id="inner-form"&gt;
+      &lt;label for="email"&gt;Email&lt;/label&gt;
+      &lt;input id="email" type="email" name="email" required&gt;
+    &lt;/form&gt;
+  &lt;/template&gt;
+&lt;/rt-profile-form&gt;
+&lt;button id="submit-profile" type="submit" form="profile-form"
+    name="intent" value="submit" disabled&gt;Submit&lt;/button&gt;
+&lt;button id="save-draft" type="submit" form="profile-form"
+    name="intent" value="draft" formnovalidate disabled&gt;Save draft&lt;/button&gt;
+&lt;button id="reset-profile" type="reset" form="profile-form" disabled&gt;Reset&lt;/button&gt;</code></pre>
+    <pre><code id="form-targets-code-javascript" class="language-javascript" data-code-sample>const form = document.getElementById('profile-form')
+  .shadowRoot.getElementById('inner-form');
+
+form.addEventListener('submit', event =&gt; {
+  event.preventDefault();
+  // Read synchronously: a fallback submitter exists only during dispatch.
+  const data = new FormData(form, event.submitter);
+  console.log([...data.entries()]);
+});
+for (const id of ['submit-profile', 'save-draft', 'reset-profile']) {
+  document.getElementById(id).disabled = false;
+}</code></pre>
+  </details>
+</section>
+
+      </div>
+
+      <section class="metrics-panel" data-bundle-id="form-targets" aria-label="JavaScript delivery sizes">
+    <h2>JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="7707" data-gzip-bytes="3490">
+      <h3>Page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="7707">7.707 KB</strong>
+      <span data-size="gzip" data-bytes="3490">3.490 KB gzip</span>
+      <p>Always loaded.</p>
+    </article>
+<article class="size-card" data-size-kind="fallback" data-bytes="11105" data-gzip-bytes="4229">
+      <h3>Fallback additional</h3>
+      <strong data-size="bytes" data-bytes="11105">11.105 KB</strong>
+      <span data-size="gzip" data-bytes="4229">4.229 KB gzip</span>
+      <p>Core + selected adapters.</p>
+    </article>
+<article class="size-card" data-size-kind="total" data-bytes="18812" data-gzip-bytes="7719">
+      <h3>Total with fallback</h3>
+      <strong data-size="bytes" data-bytes="18812">18.812 KB</strong>
+      <span data-size="gzip" data-bytes="7719">7.719 KB gzip</span>
+      <p>Shared files counted once.</p>
+    </article></div>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <details>
+      <summary>Inspect the 4 generated JavaScript files</summary>
+      <p class="metric-note">Selected adapters: <code>form-targets</code>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. CSS, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <div class="table-scroll"><table class="files-table">
+        <caption>Files included in this page’s totals</caption>
+        <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
+        <tbody><tr data-file-path="forms/app-6X5CZ273.js" data-delivery="baseline">
+      <td><a data-bundle-file="forms/app-6X5CZ273.js" href="../forms/app-6X5CZ273.js"><code>forms/app-6X5CZ273.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="4299">4.299 KB</td>
+      <td data-size="gzip" data-bytes="1885">1.885 KB</td>
+    </tr>
+<tr data-file-path="forms/chunk-32G5PXKY.js" data-delivery="baseline">
+      <td><a data-bundle-file="forms/chunk-32G5PXKY.js" href="../forms/chunk-32G5PXKY.js"><code>forms/chunk-32G5PXKY.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="924">0.924 KB</td>
+      <td data-size="gzip" data-bytes="464">0.464 KB</td>
+    </tr>
+<tr data-file-path="forms/main.js" data-delivery="baseline">
+      <td><a data-bundle-file="forms/main.js" href="../forms/main.js"><code>forms/main.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
+      <td data-size="gzip" data-bytes="1141">1.141 KB</td>
+    </tr>
+<tr data-file-path="forms/reference-target.setup-OKMB4SY5.js" data-delivery="fallback">
+      <td><a data-bundle-file="forms/reference-target.setup-OKMB4SY5.js" href="../forms/reference-target.setup-OKMB4SY5.js"><code>forms/reference-target.setup-OKMB4SY5.js</code></a></td>
+      <td>Fallback additional</td>
+      <td data-size="bytes" data-bytes="11105">11.105 KB</td>
+      <td data-size="gzip" data-bytes="4229">4.229 KB</td>
+    </tr></tbody>
+      </table></div>
+      <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>
+    </details>
+  </section>
+
+      <details class="reading-notes" aria-labelledby="reading-title">
+        <summary>Implementation notes &amp; limitations</summary>
+        <h2 id="reading-title">Fallback scope</h2>
+        <p>Forwards submit and reset actions only. External data controls remain unassociated; a temporary inner submitter changes submitter identity and event paths.</p>
+        <p>Readouts describe DOM state. Check computed names, keyboard behavior and assistive technology separately.</p>
+      </details>
+      <footer class="page-footer">
+        <p>Inspired by <a href="https://microsoftedge.github.io/Demos/reference-target/">Edge’s Reference Target demos</a>. <a href="../scenarios/">Reference cases</a>.</p>
+      </footer>
+    </main>
+  <script type="module" src="../shared/code-highlighting.js"></script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en" data-page="docs">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Install and use a modular Reference Target fallback: choose adapters for labels, popovers, dialogs, text names, and form actions.">
+    <title>Reference Target · Use the fallback</title>
+    <link rel="stylesheet" href="./examples/shared/microlighter/themes/github.css">
+    <link rel="stylesheet" href="./examples/shared/styles.css">
+    <link rel="stylesheet" href="./docs.css">
+    <script type="module" src="./examples/shared/code-highlighting.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#install">Skip to installation</a>
+    <main>
+      <header class="page-header">
+        <div class="masthead">
+          <a class="site-wordmark" href="./">reference <span aria-hidden="true">/</span> target</a>
+          <p class="masthead-note">Browser experiments &amp; working notes</p>
+        </div>
+        <nav class="site-nav" aria-label="Site">
+          <a href="./" aria-current="page">Use the fallback</a>
+          <a href="./examples/">Try all capabilities</a>
+          <a href="./examples/scenarios/">Reference cases</a>
+          <a href="https://github.com/Westbrook/reference-target-polyfill">Source on GitHub ↗</a>
+        </nav>
+        <div class="hero docs-hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Reference Target fallback / v0.1.0 prototype</p>
+            <h1>Wire up<br><em>what you need.</em></h1>
+            <p class="intro">Give references to a component a destination inside its shadow root. Choose the fallback behaviors your application uses.</p>
+            <p class="hero-link"><a href="./examples/">Try the six capabilities <span aria-hidden="true">↗</span></a></p>
+          </div>
+          <aside class="margin-note" aria-label="Package at a glance">
+            <p class="note-label">A small, deliberate fallback</p>
+            <dl>
+              <div><dt>Delivery</dt><dd>ES modules</dd></div>
+              <div><dt>Runtime dependencies</dt><dd>Zero</dd></div>
+              <div><dt>Adapters</dt><dd>Six, all opt-in</dd></div>
+            </dl>
+            <p>Selected behaviors only. JavaScript cannot recreate every native relationship across a shadow boundary.</p>
+          </aside>
+        </div>
+      </header>
+
+      <nav class="jump-links" aria-label="On this page">
+        <a href="#install">Install</a>
+        <a href="#startup">Load conditionally</a>
+        <a href="#adapters">Choose adapters</a>
+        <a href="#forms">Form actions</a>
+        <a href="#roots">Existing roots</a>
+        <a href="#scope">Scope &amp; cleanup</a>
+      </nav>
+
+      <div class="docs-stack">
+        <section class="doc-section" id="install" aria-labelledby="install-title">
+          <div class="section-label">01 / Get the files</div>
+          <div class="doc-body">
+            <h2 id="install-title">Install from GitHub</h2>
+            <pre class="command"><code>npm install git+https://github.com/Westbrook/reference-target-polyfill.git#main</code></pre>
+            <p>The package is named <code>reference-target-fallback</code>; it is not published to npm. Replace <code>main</code> with a commit SHA for a repeatable install. The package-import examples below assume a bundler; use URL imports for plain browser modules.</p>
+            <details class="code-example">
+              <summary>Using browser modules without a bundler</summary>
+              <p>Use the hosted module URLs in place of package imports in the recipes below:</p>
+              <pre><code class="language-javascript" data-code-sample>import { hasNativeReferenceTarget } from
+  "https://westbrook.github.io/reference-target-polyfill/src/detect.js";
+
+// In reference-target.setup.js:
+import { installReferenceTarget } from
+  "https://westbrook.github.io/reference-target-polyfill/src/core.js";
+import { labels } from
+  "https://westbrook.github.io/reference-target-polyfill/src/adapters/labels.js";</code></pre>
+              <p>The files are ordinary ES modules: <a href="./src/detect.js">detection</a>, <a href="./src/core.js">core</a>, and <a href="./src/adapters/labels.js">a label adapter</a>. The hosted copies follow this repository; for a version you control, vendor the complete <a href="https://github.com/Westbrook/reference-target-polyfill/tree/main/src">src directory</a> at a pinned commit and import from your own paths.</p>
+            </details>
+          </div>
+        </section>
+
+        <section class="doc-section" id="startup" aria-labelledby="startup-title">
+          <div class="section-label">02 / Before components</div>
+          <div class="doc-body">
+            <h2 id="startup-title">Load the fallback, then your app</h2>
+            <p>Load <code>bootstrap.js</code> with <code>&lt;script type="module"&gt;</code>. Keep installation in its own module so a supporting browser can skip it.</p>
+            <figure class="source-example">
+              <figcaption>bootstrap.js</figcaption>
+              <pre><code class="language-javascript" data-code-sample>import { hasNativeReferenceTarget } from "reference-target-fallback/detect";
+
+if (!hasNativeReferenceTarget()) {
+  await import("./reference-target.setup.js");
+}
+
+await import("./app.js");</code></pre>
+            </figure>
+            <figure class="source-example">
+              <figcaption>reference-target.setup.js</figcaption>
+              <pre><code class="language-javascript" data-code-sample>import { installReferenceTarget } from "reference-target-fallback/core";
+import { labels } from "reference-target-fallback/adapters/labels";
+import { popoverTargets } from "reference-target-fallback/adapters/popover-targets";
+
+export const referenceTarget = installReferenceTarget({
+  adapters: [labels({ activation: "focus" }), popoverTargets()],
+});
+
+referenceTarget.hydrate();</code></pre>
+            </figure>
+            <p><code>app.js</code> defines components and initializes normally when imported. The installer captures later <code>attachShadow()</code> calls, including closed roots:</p>
+            <pre><code class="language-javascript" data-code-sample>const root = this.attachShadow({
+  mode: "closed",
+  referenceTarget: "control",
+});
+root.innerHTML = '&lt;input id="control" type="email"&gt;';</code></pre>
+            <p class="small-note">If your bundler uses <code>sideEffects: false</code>, preserve the setup module as side-effectful. Install once per browser realm.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="adapters" aria-labelledby="adapters-title">
+          <div class="section-label">03 / Choose capabilities</div>
+          <div class="doc-body">
+            <h2 id="adapters-title">Only the adapters you select</h2>
+            <p>Import each factory from <code>reference-target-fallback/adapters/&lt;module&gt;</code> and add it to the same <code>adapters</code> array. There is no “all adapters” entry point.</p>
+            <div class="table-scroll">
+              <table class="adapter-table">
+                <caption>Open a demo to try the behavior and inspect its measured JavaScript size.</caption>
+                <thead><tr><th scope="col">Capability / module</th><th scope="col">Factory</th><th scope="col">What it supplies</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row"><a href="./examples/labels/">Labels ↗</a><code>labels</code></th><td><code>labels({ activation: "focus" })</code></td><td>External label activation. Choose <code>"focus-and-click"</code> to also activate a control; <code>naming: true</code> opts into outward label naming.</td></tr>
+                  <tr><th scope="row"><a href="./examples/popover-targets/">Popover targeting ↗</a><code>popover-targets</code></th><td><code>popoverTargets()</code></td><td>Show, hide, or toggle an inner popover through <code>popovertarget</code>.</td></tr>
+                  <tr><th scope="row"><a href="./examples/dialog-commands/">Dialog commands ↗</a><code>dialog-commands</code></th><td><code>dialogCommands()</code></td><td><code>show-modal</code>, <code>close</code>, and <code>request-close</code> through <code>commandfor</code>.</td></tr>
+                  <tr><th scope="row"><a href="./examples/popover-commands/">Popover commands ↗</a><code>popover-commands</code></th><td><code>popoverCommands()</code></td><td><code>show-popover</code>, <code>hide-popover</code>, and <code>toggle-popover</code> commands.</td></tr>
+                  <tr><th scope="row"><a href="./examples/text-names/">Text names ↗</a><code>text-names</code></th><td><code>textNames({ getText })</code></td><td>Plain-text approximations for inward <code>aria-labelledby</code> and <code>aria-describedby</code>, using a component’s public text.</td></tr>
+                  <tr><th scope="row"><a href="./examples/forms/">Form actions ↗</a><code>form-targets</code></th><td><code>formTargets()</code></td><td>Outside submit and reset controls act on an inner native form.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <details class="code-example">
+              <summary>Providing public text for names and descriptions</summary>
+              <pre><code class="language-javascript" data-code-sample>import { textNames } from "reference-target-fallback/adapters/text-names";
+
+const names = textNames({
+  getText(host, kind) {
+    return host.getAttribute(
+      kind === "label" ? "data-label-text" : "data-description-text",
+    );
+  },
+});
+// Add names to the installation's adapters array.</code></pre>
+              <p>Return a string to opt in, or <code>null</code> to leave a reference alone. The provider receives the public host, never its private target. Call <code>referenceTarget.refresh()</code> after text changes held only in your application’s model.</p>
+            </details>
+          </div>
+        </section>
+
+        <section class="doc-section" id="forms" aria-labelledby="forms-title">
+          <div class="section-label">04 / Submit &amp; reset</div>
+          <div class="doc-body">
+            <h2 id="forms-title">Keep the fields inside the form</h2>
+            <p>For a forms-only setup, select <code>formTargets()</code>. Use the same conditional bootstrap from above.</p>
+            <figure class="source-example">
+              <figcaption>reference-target.setup.js — forms only</figcaption>
+              <pre><code class="language-javascript" data-code-sample>import { installReferenceTarget } from "reference-target-fallback/core";
+import { formTargets } from "reference-target-fallback/adapters/form-targets";
+
+export const referenceTarget = installReferenceTarget({
+  adapters: [formTargets()],
+});
+referenceTarget.hydrate();</code></pre>
+            </figure>
+            <pre><code class="language-html" data-code-sample>&lt;x-profile id="profile" data-reference-target="form"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="form"&gt;
+    &lt;form id="form"&gt;
+      &lt;label&gt;Email &lt;input name="email" type="email" required&gt;&lt;/label&gt;
+    &lt;/form&gt;
+  &lt;/template&gt;
+&lt;/x-profile&gt;
+&lt;button type="submit" form="profile" name="intent" value="save" disabled&gt;
+  Save
+&lt;/button&gt;
+&lt;button type="reset" form="profile" disabled&gt;Reset&lt;/button&gt;</code></pre>
+            <figure class="source-example">
+              <figcaption>app.js — collect the data before doing asynchronous work</figcaption>
+              <pre><code class="language-javascript" data-code-sample>const form = document.getElementById("profile")
+  .shadowRoot.getElementById("form");
+
+form.addEventListener("submit", (event) =&gt; {
+  event.preventDefault();
+  const data = new FormData(form, event.submitter);
+  console.log([...data.entries()]); // Includes intent=save.
+});
+
+for (const button of document.querySelectorAll('[form="profile"]')) {
+  button.disabled = false;
+}</code></pre>
+            </figure>
+            <p>Native validation, submit/reset events, and the form’s own fields remain in use. In fallback mode, <code>event.submitter</code> is a temporary inner submitter carrying the outside control’s name, value, and form overrides. Read <code>FormData</code> synchronously while it exists.</p>
+            <p class="small-note">This forwards actions; it does not associate external data controls or change <code>.form</code> and <code>.elements</code>. Image submitters are unsupported. <a href="./examples/forms/">Try validation, submitter data, and reset ↗</a></p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="roots" aria-labelledby="roots-title">
+          <div class="section-label">05 / Declarative markup</div>
+          <div class="doc-body">
+            <h2 id="roots-title">Leave a hint on the host</h2>
+            <p>For declarative Shadow DOM, keep <code>data-reference-target</code> on the host. Call <code>referenceTarget.hydrate()</code> after the markup is available to discover open roots and read that hint.</p>
+            <pre><code class="language-html" data-code-sample>&lt;label for="email"&gt;Email&lt;/label&gt;
+&lt;x-email id="email" data-reference-target="control"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="control"&gt;
+    &lt;input id="control" type="email"&gt;
+  &lt;/template&gt;
+&lt;/x-email&gt;</code></pre>
+            <p>The browser must already support declarative Shadow DOM. Hydrate again after changing the host metadata. Existing closed roots need cooperation from code that already holds the root:</p>
+            <pre><code class="language-javascript" data-code-sample>const registration = referenceTarget.register(rootKnownToTheComponent, {
+  referenceTarget: "control",
+});
+
+// When the component no longer participates:
+registration.dispose();</code></pre>
+          </div>
+        </section>
+
+        <section class="doc-section" id="scope" aria-labelledby="scope-title">
+          <div class="section-label">06 / Know the boundary</div>
+          <div class="doc-body">
+            <h2 id="scope-title">A fallback with a defined scope</h2>
+            <ul class="scope-list">
+              <li><strong>Accessibility:</strong> label naming and text proxies are approximations. Other ARIA relationships and full accessible-name computation are outside this package. Test with your browsers and assistive technology.</li>
+              <li><strong>Native primitives:</strong> Shadow DOM, <code>MutationObserver</code>, and <code>WeakRef</code> are required. Action adapters use the browser’s existing popover, dialog, and form methods.</li>
+              <li><strong>Encapsulation:</strong> the handle exposes no private target resolver. Native reflection, event paths, and full form ownership cannot be recreated here.</li>
+              <li><strong>Detection:</strong> <code>hasNativeReferenceTarget()</code> checks the API surface. <code>probeReferenceTarget()</code> adds basic nullable-value and label tests; neither certifies every behavior. The installer declines detected partial native support. <code>force: true</code> is for testing.</li>
+            </ul>
+            <p>Inspect <code>referenceTarget.mode</code>, <code>.statuses</code>, and <code>.activeAdapters</code> for the installed state. To release listeners, observers, adapter changes, and the owned <code>attachShadow()</code> wrapper:</p>
+            <pre><code class="language-javascript" data-code-sample>referenceTarget.dispose();</code></pre>
+            <p><a href="https://github.com/Westbrook/reference-target-polyfill#readme">Full API and behavior notes ↗</a> · <a href="https://github.com/Westbrook/reference-target-polyfill/blob/main/REFERENCE-TARGET-PROPOSAL.md">Research &amp; design proposal ↗</a></p>
+          </div>
+        </section>
+      </div>
+
+      <footer class="page-footer">
+        <p>A Reference Target experiment by <a href="https://github.com/Westbrook">Westbrook</a>. <a href="./LICENSE">MIT license</a> · <a href="https://github.com/Westbrook/reference-target-polyfill/issues">Report a problem</a> · <a href="https://github.com/mdn/mdn/issues/832">MDN documentation request</a> · <a href="https://microsoftedge.github.io/Demos/reference-target/">Edge’s original demos</a>.</p>
+      </footer>
+    </main>
+  </body>
+</html>

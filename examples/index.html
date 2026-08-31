@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="en" data-demo-page="all" data-capabilities="labels popover-targets dialog-commands popover-commands text-names form-targets" data-reference-target-ready="false">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Interactive Reference Target examples with conditional, modular fallbacks and measured JavaScript bundle sizes.">
+    <title>Reference Target · All capabilities</title>
+    <link rel="stylesheet" href="./shared/styles.css">
+    <script type="module" src="./main.js"></script>
+  <link rel="stylesheet" href="./shared/microlighter/themes/github.css">
+</head>
+  <body>
+    <a class="skip-link" href="#demos">Skip to the demos</a>
+    <main>
+      <header class="page-header">
+        <div class="masthead">
+          <a class="site-wordmark" href="./">reference <span aria-hidden="true">/</span> target</a>
+          <p class="masthead-note">Browser experiments &amp; working notes</p>
+        </div>
+        <nav class="site-nav" aria-label="Capability pages">
+          <a href="./" aria-current="page">All capabilities</a>
+          <a href="./labels/">Labels</a>
+          <a href="./popover-targets/">Popover targeting</a>
+          <a href="./dialog-commands/">Dialog commands</a>
+          <a href="./popover-commands/">Popover commands</a>
+          <a href="./text-names/">Text names</a>
+          <a href="./forms/">Form actions</a>
+          <a class="docs-link" href="../">Use the polyfill ↗</a>
+        </nav>
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Shadow DOM / six small experiments</p>
+            <h1>Reference<br><em>Target.</em></h1>
+            <p class="intro">Six Reference Target capabilities, with opt-in fallback adapters.</p>
+          </div>
+          <figure class="reference-map" role="img" aria-label="A reference to a host is forwarded to a target inside its shadow root.">
+            <div class="map-source"><span class="map-label">outside</span><code>for="host"</code></div>
+            <span class="map-arrow" aria-hidden="true">↘</span>
+            <div class="map-host">
+              <span class="map-label">host</span>
+              <div class="map-shadow">
+                <span class="map-label">shadow root</span>
+                <div class="map-target"><code>#control</code></div>
+              </div>
+            </div>
+            <figcaption>One public reference. An internal destination.</figcaption>
+          </figure>
+        </div>
+        <section class="runtime-panel" aria-label="Browser and fallback settings">
+          <nav class="mode-links" aria-label="Choose a loading mode">
+            <a href="?mode=auto" data-mode="auto">Automatic</a>
+            <a href="?mode=fallback" data-mode="fallback">Force fallback</a>
+            <a href="?mode=off" data-mode="off">Browser alone</a>
+          </nav>
+          <p id="ready-status" data-ready="false" role="status">Preparing the controls…</p>
+          <details class="runtime-details">
+            <summary>Browser details</summary>
+            <dl class="status-grid">
+              <div><dt>Current path</dt><dd id="mode-status">Checking browser support…</dd></div>
+              <div><dt>Native API surface</dt><dd id="surface-status">Checking…</dd></div>
+              <div class="adapters"><dt>Active adapters</dt><dd id="adapter-status">Waiting for setup…</dd></div>
+            </dl>
+            <p id="mode-note" class="mode-note">Automatic checks for the native property. Force fallback loads the selected adapters. Browser alone leaves them out.</p>
+          </details>
+          <p class="error" id="load-error" role="alert" hidden></p>
+          <noscript><p class="error">Enable JavaScript to try the controls.</p></noscript>
+        </section>
+      </header>
+
+      <nav class="jump-links" aria-label="Jump to a demo"><a href="#labels">Labels</a><a href="#popover-targets">Popover targeting</a><a href="#dialog-commands">Dialog commands</a><a href="#popover-commands">Popover commands</a><a href="#text-names">Text names</a><a href="#form-targets">Form actions</a><a href="#boundaries">Reference boundaries</a></nav>
+      <div class="demo-stack" id="demos">
+        <section id="labels" class="scenario" data-capability="labels" aria-labelledby="lj-title">
+  <p class="case-kind">Labels</p>
+  <h2 id="lj-title">An outside label, an inside control</h2>
+  <p>A label reaches the checkbox selected by the component.</p>
+  <p class="expected"><strong>Try:</strong> Click either label, then its checkbox.</p>
+  <article class="demo-card">
+    <h3>Reference the host by ID</h3>
+    <div class="try-it button-row">
+      <label id="lj-checkbox-label" for="lj-checkbox-host">Send me release notes</label>
+      <rt-gallery-checkbox id="lj-checkbox-host" data-reference-target="control">
+        <template shadowrootmode="open" shadowrootreferencetarget="control">
+          <link rel="stylesheet" href="./shared/components.css">
+          <input id="control" type="checkbox" disabled>
+        </template>
+      </rt-gallery-checkbox>
+    </div>
+    <div class="observation"><span>DOM observation</span><output id="lj-checkbox-observation">Waiting for setup.</output></div>
+  </article>
+  <article class="demo-card">
+    <h3>Wrap the component in its label</h3>
+    <div class="try-it">
+      <label id="lj-wrapping-label" class="button-row">
+        <span>Remember this preference</span>
+        <rt-gallery-wrapped-checkbox id="lj-wrapped-host" data-reference-target="control">
+          <template shadowrootmode="open" shadowrootreferencetarget="control">
+            <link rel="stylesheet" href="./shared/components.css">
+            <input id="control" type="checkbox" disabled>
+          </template>
+        </rt-gallery-wrapped-checkbox>
+      </label>
+    </div>
+    <div class="observation"><span>DOM observation</span><output id="lj-wrapped-observation">Waiting for setup.</output></div>
+  </article>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The first label uses <code>for</code>; the second contains its component. The fallback applies a focus-and-click policy and requests outward ARIA naming where supported.</p>
+    <p>It does not create native <code>label.control</code> or <code>input.labels</code> links. DOM readouts do not verify accessible names or screen-reader behavior.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Explicit-label markup. Fallback setup hydrates <code>data-reference-target</code>; styling and readiness flags are omitted.</p>
+    <pre><code id="labels-code-html" class="language-html" data-code-sample>&lt;label id="lj-checkbox-label" for="lj-checkbox-host"&gt;Send me release notes&lt;/label&gt;
+&lt;rt-gallery-checkbox id="lj-checkbox-host" data-reference-target="control"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="control"&gt;
+    &lt;input id="control" type="checkbox"&gt;
+  &lt;/template&gt;
+&lt;/rt-gallery-checkbox&gt;</code></pre>
+  </details>
+</section>
+
+        <section class="scenario" id="popover-targets" data-capability="popover-targets" aria-labelledby="pt-title">
+  <p class="case-kind">Popover targets</p>
+  <h2 id="pt-title">One panel, three actions</h2>
+  <p>Outside buttons use <code>popovertarget</code> to reach the component’s panel.</p>
+  <div class="try-it">
+    <div class="button-row">
+      <button id="pt-toggle" type="button" popovertarget="pt-host" popovertargetaction="toggle" disabled>Toggle panel</button>
+      <button id="pt-show" type="button" popovertarget="pt-host" popovertargetaction="show" disabled>Show panel</button>
+      <button id="pt-hide" type="button" popovertarget="pt-host" popovertargetaction="hide" disabled>Hide panel</button>
+    </div>
+    <rt-popover-target-demo id="pt-host" data-reference-target="pt-panel">
+      <template shadowrootmode="open" shadowrootreferencetarget="pt-panel">
+        <link rel="stylesheet" href="./shared/components.css">
+        <section id="pt-panel" popover="manual" role="dialog" aria-labelledby="pt-panel-title" hidden>
+          <p class="eyebrow">Inside an open shadow root</p>
+          <h2 id="pt-panel-title">The host leads here</h2>
+          <p>The outside buttons target the component. Its Reference Target identifies this native popover.</p>
+          <p>This is a manual popover: use Hide panel or the close button to dismiss it.</p>
+          <button id="pt-close" type="button" popovertarget="pt-panel" popovertargetaction="hide" disabled>Close panel</button>
+        </section>
+      </template>
+    </rt-popover-target-demo>
+  </div>
+  <p class="expected"><strong>Try:</strong> Toggle twice, then try Show and Hide.</p>
+  <div class="observation"><span>DOM observation</span><output id="pt-observation" role="status">Waiting for setup.</output></div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>Repeating Show or Hide keeps the same state. This manual popover closes through Hide or its internal close button.</p>
+    <p>The adapter requires the native Popover API. Event ordering and accessibility relationships can differ from native Reference Target.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Manual popover with an internal close button.</p>
+    <pre><code id="popover-targets-code-html" class="language-html" data-code-sample>&lt;button id="pt-toggle" type="button" popovertarget="pt-host"
+    popovertargetaction="toggle"&gt;Toggle panel&lt;/button&gt;
+&lt;rt-popover-target-demo id="pt-host" data-reference-target="pt-panel"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="pt-panel"&gt;
+    &lt;section id="pt-panel" popover="manual" role="dialog"
+        aria-labelledby="pt-panel-title"&gt;
+      &lt;h2 id="pt-panel-title"&gt;The host leads here&lt;/h2&gt;
+      &lt;button id="pt-close" type="button" popovertarget="pt-panel"
+          popovertargetaction="hide"&gt;Close panel&lt;/button&gt;
+    &lt;/section&gt;
+  &lt;/template&gt;
+&lt;/rt-popover-target-demo&gt;</code></pre>
+  </details>
+</section>
+
+        <section class="scenario" id="dialog-commands" data-capability="dialog-commands" aria-labelledby="dc-title">
+  <p class="case-kind">Dialog commands</p>
+  <h2 id="dc-title">Reach a closed shadow root</h2>
+  <p>Send dialog commands into a closed shadow root.</p>
+  <div class="try-it">
+    <div class="button-row">
+      <button id="dc-show" type="button" commandfor="dc-host" command="show-modal" disabled>Show modal</button>
+      <button id="dc-close" type="button" commandfor="dc-host" command="close" value="closed-outside" disabled>Close from outside</button>
+      <button id="dc-request" type="button" commandfor="dc-host" command="request-close" value="requested-outside" disabled>Request close from outside</button>
+    </div>
+    <label class="checkbox-row" for="dc-cancel"><input id="dc-cancel" type="checkbox" disabled> Cancel the next close request</label>
+    <rt-closed-dialog-demo id="dc-host" data-components-styles="./shared/components.css"></rt-closed-dialog-demo>
+  </div>
+  <p class="expected"><strong>Try:</strong> Open the modal. Use the non-modal preview for outside Close/Request close.</p>
+  <div class="observation"><span>Component-reported DOM state</span><output id="dc-observation" role="status">Waiting for setup.</output></div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>A modal makes outside controls inert; close it from inside before trying the non-modal preview. Arm cancellation before Request close to keep the dialog open. Close bypasses the cancel event.</p>
+    <p>The adapter uses native dialog methods. The component reports its state; its public <code>shadowRoot</code> remains <code>null</code>.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Outside command, private dialog, internal close handler.</p>
+    <pre><code id="dialog-commands-code-html" class="language-html" data-code-sample>&lt;button id="dc-show" type="button" commandfor="dc-host"
+    command="show-modal"&gt;Show modal&lt;/button&gt;
+&lt;rt-closed-dialog-demo id="dc-host"&gt;&lt;/rt-closed-dialog-demo&gt;</code></pre>
+    <pre><code id="dialog-commands-code-javascript" class="language-javascript" data-code-sample>// Run component code after any fallback setup has finished.
+const host = document.getElementById('dc-host');
+const root = host.attachShadow({
+  mode: 'closed', referenceTarget: 'dc-dialog',
+});
+root.innerHTML = `
+  &lt;dialog id="dc-dialog" aria-labelledby="dc-dialog-title"&gt;
+    &lt;h2 id="dc-dialog-title"&gt;A moment of focus&lt;/h2&gt;
+    &lt;button id="dc-internal-close" type="button"&gt;Close dialog&lt;/button&gt;
+  &lt;/dialog&gt;
+`;
+const dialog = root.getElementById('dc-dialog');
+root.getElementById('dc-internal-close').addEventListener('click', () =&gt; {
+  dialog.close('closed-inside');
+});</code></pre>
+  </details>
+</section>
+
+        <section class="scenario" id="popover-commands" data-capability="popover-commands" aria-labelledby="pc-title">
+  <p class="case-kind">Popover commands</p>
+  <h2 id="pc-title">Commands can be canceled</h2>
+  <p>Send built-in popover commands to an internal panel.</p>
+  <div class="try-it">
+    <div class="button-row">
+      <button id="pc-toggle" type="button" commandfor="pc-host" command="toggle-popover" disabled>Toggle with a command</button>
+      <button id="pc-show" type="button" commandfor="pc-host" command="show-popover" disabled>Show with a command</button>
+      <button id="pc-hide" type="button" commandfor="pc-host" command="hide-popover" disabled>Hide with a command</button>
+    </div>
+    <label class="checkbox-row" for="pc-cancel"><input id="pc-cancel" type="checkbox" disabled> Cancel the next command</label>
+    <rt-popover-command-demo id="pc-host" data-reference-target="pc-panel">
+      <template shadowrootmode="open" shadowrootreferencetarget="pc-panel">
+        <link rel="stylesheet" href="./shared/components.css">
+        <section id="pc-panel" popover="manual" role="dialog" aria-labelledby="pc-panel-title" hidden>
+          <p class="eyebrow">A command reached the component</p>
+          <h2 id="pc-panel-title">A panel with a say</h2>
+          <p>The component can cancel a <code>command</code> event before the corresponding native popover operation runs.</p>
+          <p>This manual popover stays open until a hide or toggle action closes it.</p>
+          <button id="pc-close" type="button" disabled>Close from inside</button>
+        </section>
+      </template>
+    </rt-popover-command-demo>
+  </div>
+  <p class="expected"><strong>Try:</strong> Select “Cancel the next command,” then Show twice.</p>
+  <div class="observation"><span>DOM observation</span><output id="pc-observation" role="status">Waiting for setup.</output></div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The first Show is canceled; the second opens the panel. Hide and Toggle exercise the other built-in commands.</p>
+    <p>The fallback uses native popover methods after dispatching a synthetic cancelable command event. Event trust, paths and source handling can differ from native behavior.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Three commands share one target. The demo also listens for cancellation.</p>
+    <pre><code id="popover-commands-code-html" class="language-html" data-code-sample>&lt;button id="pc-toggle" type="button" commandfor="pc-host"
+    command="toggle-popover"&gt;Toggle with a command&lt;/button&gt;
+&lt;button id="pc-show" type="button" commandfor="pc-host"
+    command="show-popover"&gt;Show with a command&lt;/button&gt;
+&lt;button id="pc-hide" type="button" commandfor="pc-host"
+    command="hide-popover"&gt;Hide with a command&lt;/button&gt;
+&lt;rt-popover-command-demo id="pc-host" data-reference-target="pc-panel"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="pc-panel"&gt;
+    &lt;section id="pc-panel" popover="manual" role="dialog"
+        aria-labelledby="pc-panel-title"&gt;
+      &lt;h2 id="pc-panel-title"&gt;A panel with a say&lt;/h2&gt;
+    &lt;/section&gt;
+  &lt;/template&gt;
+&lt;/rt-popover-command-demo&gt;</code></pre>
+  </details>
+</section>
+
+        <section id="text-names" class="scenario" data-capability="text-names" aria-labelledby="tn-title">
+  <p class="case-kind">Text names and descriptions</p>
+  <h2 id="tn-title">Choose the text a reference supplies</h2>
+  <p>Let components supply an input’s name and description.</p>
+  <div class="try-it field-grid">
+    <rt-gallery-label id="tn-label-host" data-reference-target="text" data-label-text="Delivery preference">
+      <template shadowrootmode="open" shadowrootreferencetarget="text">
+        <link rel="stylesheet" href="./shared/components.css">
+        <strong id="text">Delivery preference</strong>
+        <p class="extra">This extra component text is outside the selected name.</p>
+      </template>
+    </rt-gallery-label>
+    <input id="tn-input" type="text" aria-labelledby="tn-label-host" aria-describedby="tn-description-host" placeholder="For example, leave at reception" disabled>
+    <rt-gallery-description id="tn-description-host" data-reference-target="text" data-description-text="Tell us where the parcel should be left.">
+      <template shadowrootmode="open" shadowrootreferencetarget="text">
+        <link rel="stylesheet" href="./shared/components.css">
+        <p id="text">Tell us where the parcel should be left.</p>
+        <p class="extra">This extra component text is outside the selected description.</p>
+      </template>
+    </rt-gallery-description>
+    <div class="button-row"><button id="tn-update" type="button" disabled>Change the component text</button></div>
+  </div>
+  <p class="expected"><strong>Try:</strong> Change the text, then inspect the input’s name and description in your accessibility tools.</p>
+  <div class="observation"><span>DOM references and text proxies — not computed accessibility</span><output id="tn-observation">Waiting for setup.</output></div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The fallback creates hidden text references from <code>data-label-text</code> and <code>data-description-text</code>. Components keep those public values in sync with their visible text.</p>
+    <p>This plain-text approximation does not compute accessible names from arbitrary markup. The readout shows DOM references, not computed accessibility.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Publish text on the hosts; select a provider during fallback setup.</p>
+    <pre><code id="text-names-code-html" class="language-html" data-code-sample>&lt;input id="tn-input" type="text" aria-labelledby="tn-label-host"
+    aria-describedby="tn-description-host"&gt;
+&lt;rt-gallery-label id="tn-label-host" data-reference-target="text"
+    data-label-text="Delivery preference"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="text"&gt;
+    &lt;strong id="text"&gt;Delivery preference&lt;/strong&gt;
+    &lt;p&gt;This extra component text is outside the selected name.&lt;/p&gt;
+  &lt;/template&gt;
+&lt;/rt-gallery-label&gt;
+&lt;rt-gallery-description id="tn-description-host" data-reference-target="text"
+    data-description-text="Tell us where the parcel should be left."&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="text"&gt;
+    &lt;p id="text"&gt;Tell us where the parcel should be left.&lt;/p&gt;
+  &lt;/template&gt;
+&lt;/rt-gallery-description&gt;</code></pre>
+    <pre><code id="text-names-code-javascript" class="language-javascript" data-code-sample>// In the conditionally loaded setup module (package imports):
+import { installReferenceTarget } from 'reference-target-fallback/core';
+import { textNames } from 'reference-target-fallback/adapters/text-names';
+
+const fallback = installReferenceTarget({
+  adapters: [textNames({
+    getText(host, kind) {
+      return host.getAttribute(kind === 'label'
+        ? 'data-label-text' : 'data-description-text');
+    },
+  })],
+});
+fallback.hydrate(document);</code></pre>
+  </details>
+</section>
+
+        <section class="scenario" id="form-targets" data-capability="form-targets" data-ready="loading" aria-labelledby="form-targets-title">
+  <p class="case-kind">Form actions</p>
+  <h2 id="form-targets-title">Submit and reset a form inside a component</h2>
+  <p>Outside submit and reset buttons target a form inside the component.</p>
+  <p class="expected"><strong>Try:</strong> Submit with Email empty, Save draft to skip validation, then edit a field and Reset.</p>
+
+  <div class="field-grid">
+    <article class="demo-card">
+      <h3>Inside the shadow root</h3>
+      <rt-profile-form id="profile-form" data-reference-target="inner-form">
+        <template shadowrootmode="open" shadowrootreferencetarget="inner-form">
+          <link rel="stylesheet" href="./shared/components.css">
+          <form id="inner-form">
+            <fieldset id="form-fields" disabled>
+              <legend>Profile settings</legend>
+              <label class="field" for="display-name">
+                <span>Display name</span>
+                <input id="display-name" type="text" name="displayName" value="Alex Morgan" autocomplete="nickname">
+              </label>
+              <label class="field" for="email">
+                <span>Email · required</span>
+                <input id="email" type="email" name="email" required value="" placeholder="you@example.com" autocomplete="email">
+              </label>
+              <label class="field" for="digest">
+                <span>Digest frequency</span>
+                <select id="digest" name="digest">
+                  <option value="weekly" selected>Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="never">Never</option>
+                </select>
+              </label>
+              <label class="checkbox" for="updates">
+                <input id="updates" type="checkbox" name="updates" value="yes" checked>
+                <span>Send product updates</span>
+              </label>
+            </fieldset>
+          </form>
+        </template>
+        <p class="observation">This example requires a browser that parses declarative shadow DOM.</p>
+      </rt-profile-form>
+    </article>
+
+    <article class="demo-card">
+      <h3>Outside the shadow root</h3>
+      <div class="button-row" role="group" aria-label="Profile actions">
+        <button id="submit-profile" type="submit" form="profile-form" name="intent" value="submit" disabled>Submit</button>
+        <button id="save-draft" class="secondary" type="submit" form="profile-form" name="intent" value="draft" formnovalidate disabled>Save draft</button>
+        <button id="reset-profile" class="secondary" type="reset" form="profile-form" disabled>Reset</button>
+      </div>
+      <p class="observation" id="form-capability" role="status">Controls stay disabled until the form’s handlers are ready.</p>
+      <div class="observation">
+        <h4>Actual native <code>button.form</code> getters</h4>
+        <pre id="form-owner-output">Waiting for setup…</pre>
+      </div>
+    </article>
+  </div>
+
+  <div class="field-grid">
+    <article class="demo-card">
+      <h3>Submission data</h3>
+      <p class="observation" id="form-status" role="status">No submission yet. The submit handler cancels navigation and reads native FormData synchronously.</p>
+      <pre id="submission-output" aria-label="Latest submission JSON">No submit event yet.</pre>
+    </article>
+    <article class="demo-card">
+      <h3>Native form events</h3>
+      <ol id="event-log" aria-label="Recent form events" aria-live="polite" aria-relevant="additions">
+        <li class="empty">No events yet.</li>
+      </ol>
+      <p class="observation" id="reset-output">Reset restores the name, an empty email, a weekly digest, and the checked updates box.</p>
+    </article>
+  </div>
+
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>Submit validates; Save draft skips validation and includes <code>intent=draft</code>; Reset restores defaults. The demo cancels navigation and reads FormData synchronously, so no data leaves the page.</p>
+    <p>The fallback routes actions without associating external data controls or changing native <code>.form</code> getters. Its temporary internal submitter carries the outside button’s name, value and form overrides; submitter identity and event paths differ from native Reference Target.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Keep data controls inside the form; install submit handlers before enabling the buttons.</p>
+    <pre><code id="form-targets-code-html" class="language-html" data-code-sample>&lt;rt-profile-form id="profile-form" data-reference-target="inner-form"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="inner-form"&gt;
+    &lt;form id="inner-form"&gt;
+      &lt;label for="email"&gt;Email&lt;/label&gt;
+      &lt;input id="email" type="email" name="email" required&gt;
+    &lt;/form&gt;
+  &lt;/template&gt;
+&lt;/rt-profile-form&gt;
+&lt;button id="submit-profile" type="submit" form="profile-form"
+    name="intent" value="submit" disabled&gt;Submit&lt;/button&gt;
+&lt;button id="save-draft" type="submit" form="profile-form"
+    name="intent" value="draft" formnovalidate disabled&gt;Save draft&lt;/button&gt;
+&lt;button id="reset-profile" type="reset" form="profile-form" disabled&gt;Reset&lt;/button&gt;</code></pre>
+    <pre><code id="form-targets-code-javascript" class="language-javascript" data-code-sample>const form = document.getElementById('profile-form')
+  .shadowRoot.getElementById('inner-form');
+
+form.addEventListener('submit', event =&gt; {
+  event.preventDefault();
+  // Read synchronously: a fallback submitter exists only during dispatch.
+  const data = new FormData(form, event.submitter);
+  console.log([...data.entries()]);
+});
+for (const id of ['submit-profile', 'save-draft', 'reset-profile']) {
+  document.getElementById(id).disabled = false;
+}</code></pre>
+  </details>
+</section>
+
+        <aside id="boundaries" class="scenario" aria-labelledby="bd-title">
+  <p class="case-kind boundary">Reference boundaries</p>
+  <h2 id="bd-title">What stays on each side of the shadow root</h2>
+  <p>Compare host attributes, outward string IDs and explicit element references.</p>
+  <article class="demo-card">
+    <h3>A name on the host stays on the host</h3>
+    <div class="try-it">
+      <rt-gallery-host-name id="bd-host-name" aria-label="Host-only accessible name" data-reference-target="control">
+        <template shadowrootmode="open" shadowrootreferencetarget="control">
+          <link rel="stylesheet" href="./shared/components.css">
+          <button id="control" type="button" disabled>Inner button</button>
+        </template>
+      </rt-gallery-host-name>
+    </div>
+    <p class="expected">Inspect the inner button: its <code>aria-label</code> stays absent.</p>
+    <div class="observation"><span>DOM observation</span><output id="bd-host-observation">Waiting for setup.</output></div>
+  </article>
+  <article class="demo-card">
+    <h3>Outward string references stay in their own tree</h3>
+    <div class="try-it">
+      <rt-gallery-outward-string id="bd-negative-host" popovertarget="bd-negative-panel" data-reference-target="button">
+        <template shadowrootmode="open" shadowrootreferencetarget="button">
+          <link rel="stylesheet" href="./shared/components.css">
+          <div class="button-row">
+            <button id="button" type="button" disabled>Try the host attribute</button>
+            <button id="string-button" type="button" popovertarget="bd-negative-panel" disabled>Try an outward string</button>
+          </div>
+        </template>
+      </rt-gallery-outward-string>
+      <section id="bd-negative-panel" class="popover-panel" popover role="dialog" aria-labelledby="bd-negative-title" hidden>
+        <h3 id="bd-negative-title">The outside panel</h3>
+        <p>Neither button in this negative example should open this panel.</p>
+        <button type="button" popovertarget="bd-negative-panel" popovertargetaction="hide" disabled>Close panel</button>
+      </section>
+    </div>
+    <p class="expected">Try both buttons; neither should open the outside panel.</p>
+    <div class="observation"><span>DOM observation</span><output id="bd-negative-observation">Waiting for setup.</output></div>
+  </article>
+  <article class="demo-card">
+    <h3>Pass an outside element explicitly</h3>
+    <div class="try-it">
+      <rt-gallery-outward-element id="bd-positive-host" data-reference-target="button">
+        <template shadowrootmode="open" shadowrootreferencetarget="button">
+          <link rel="stylesheet" href="./shared/components.css">
+          <button id="button" type="button" aria-haspopup="dialog" disabled>Open the outside panel</button>
+        </template>
+      </rt-gallery-outward-element>
+      <section id="bd-positive-panel" class="popover-panel" popover role="dialog" aria-labelledby="bd-positive-title" hidden>
+        <h3 id="bd-positive-title">Connected explicitly</h3>
+        <p>The component’s script assigned this element to its inner button’s <code>popoverTargetElement</code>.</p>
+        <button type="button" popovertarget="bd-positive-panel" popovertargetaction="hide" disabled autofocus>Close panel</button>
+      </section>
+    </div>
+    <p class="expected">Open and close the panel, including with fallback off.</p>
+    <div class="observation"><span>DOM observation</span><output id="bd-positive-observation">Waiting for setup.</output></div>
+  </article>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>Reference Target does not copy a host’s attributes. String ID references stay in their own tree, so neither negative button reaches the outside panel.</p>
+    <p>The positive example assigns <code>popoverTargetElement</code> directly. This native outward element reflection works independently of Reference Target. Inspect the inner button’s accessible name separately from its host.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Assign the outside element directly.</p>
+    <pre><code id="boundaries-code-javascript" class="language-javascript" data-code-sample>const host = document.getElementById('bd-positive-host');
+const button = host.shadowRoot.getElementById('button');
+const panel = document.getElementById('bd-positive-panel');
+
+// An outward element reference, independent of Reference Target.
+button.popoverTargetElement = panel;</code></pre>
+  </details>
+</aside>
+
+      </div>
+
+      <section class="metrics-panel" data-bundle-id="all" aria-label="JavaScript delivery sizes">
+    <h2>JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="16587" data-gzip-bytes="5997">
+      <h3>Page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="16587">16.587 KB</strong>
+      <span data-size="gzip" data-bytes="5997">5.997 KB gzip</span>
+      <p>Always loaded.</p>
+    </article>
+<article class="size-card" data-size-kind="fallback" data-bytes="22810" data-gzip-bytes="7872">
+      <h3>Fallback additional</h3>
+      <strong data-size="bytes" data-bytes="22810">22.810 KB</strong>
+      <span data-size="gzip" data-bytes="7872">7.872 KB gzip</span>
+      <p>Core + selected adapters.</p>
+    </article>
+<article class="size-card" data-size-kind="total" data-bytes="39397" data-gzip-bytes="13869">
+      <h3>Total with fallback</h3>
+      <strong data-size="bytes" data-bytes="39397">39.397 KB</strong>
+      <span data-size="gzip" data-bytes="13869">13.869 KB gzip</span>
+      <p>Shared files counted once.</p>
+    </article></div>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <details>
+      <summary>Inspect the 4 generated JavaScript files</summary>
+      <p class="metric-note">Selected adapters: <code>labels</code>, <code>popover-targets</code>, <code>dialog-commands</code>, <code>popover-commands</code>, <code>text-names</code>, <code>form-targets</code>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. CSS, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Transfer sizes depend on compression and caching. <a href="./shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <div class="table-scroll"><table class="files-table">
+        <caption>Files included in this page’s totals</caption>
+        <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
+        <tbody><tr data-file-path="app-YOONO5DP.js" data-delivery="baseline">
+      <td><a data-bundle-file="app-YOONO5DP.js" href="./app-YOONO5DP.js"><code>app-YOONO5DP.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="13179">13.179 KB</td>
+      <td data-size="gzip" data-bytes="4395">4.395 KB</td>
+    </tr>
+<tr data-file-path="chunk-BAUPV3FJ.js" data-delivery="baseline">
+      <td><a data-bundle-file="chunk-BAUPV3FJ.js" href="./chunk-BAUPV3FJ.js"><code>chunk-BAUPV3FJ.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="924">0.924 KB</td>
+      <td data-size="gzip" data-bytes="463">0.463 KB</td>
+    </tr>
+<tr data-file-path="main.js" data-delivery="baseline">
+      <td><a data-bundle-file="main.js" href="./main.js"><code>main.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
+      <td data-size="gzip" data-bytes="1139">1.139 KB</td>
+    </tr>
+<tr data-file-path="reference-target.setup-767JWZHE.js" data-delivery="fallback">
+      <td><a data-bundle-file="reference-target.setup-767JWZHE.js" href="./reference-target.setup-767JWZHE.js"><code>reference-target.setup-767JWZHE.js</code></a></td>
+      <td>Fallback additional</td>
+      <td data-size="bytes" data-bytes="22810">22.810 KB</td>
+      <td data-size="gzip" data-bytes="7872">7.872 KB</td>
+    </tr></tbody>
+      </table></div>
+      <p><a href="./bundle-sizes.json">Inspect the size manifest</a></p>
+    </details>
+  </section>
+
+      <section class="metrics-panel" aria-label="Individual capability sizes">
+    <h2>One adapter at a time</h2>
+    <p>Independent page builds. Each fallback includes the core; the rows are not additive.</p>
+    <div class="table-scroll"><table class="size-table">
+      <caption>Minified JavaScript and the sum of per-file gzip sizes; 1 KB = 1,000 bytes</caption>
+      <thead><tr><th scope="col">Capability</th><th scope="col">Page JavaScript</th><th scope="col">Fallback additional</th><th scope="col">Total with fallback</th></tr></thead>
+      <tbody><tr data-capability-size="labels">
+      <th scope="row"><a href="./labels/">Labels and activation</a></th>
+      <td>4.448 KB <small>(2.178 KB gzip)</small></td>
+      <td>11.786 KB <small>(4.520 KB gzip)</small></td>
+      <td>16.234 KB <small>(6.698 KB gzip)</small></td>
+    </tr>
+<tr data-capability-size="popover-targets">
+      <th scope="row"><a href="./popover-targets/">Popover targets</a></th>
+      <td>4.286 KB <small>(2.100 KB gzip)</small></td>
+      <td>10.572 KB <small>(4.113 KB gzip)</small></td>
+      <td>14.858 KB <small>(6.213 KB gzip)</small></td>
+    </tr>
+<tr data-capability-size="dialog-commands">
+      <th scope="row"><a href="./dialog-commands/">Dialog commands</a></th>
+      <td>6.170 KB <small>(2.750 KB gzip)</small></td>
+      <td>10.852 KB <small>(4.215 KB gzip)</small></td>
+      <td>17.022 KB <small>(6.965 KB gzip)</small></td>
+    </tr>
+<tr data-capability-size="popover-commands">
+      <th scope="row"><a href="./popover-commands/">Popover commands</a></th>
+      <td>4.467 KB <small>(2.146 KB gzip)</small></td>
+      <td>10.790 KB <small>(4.182 KB gzip)</small></td>
+      <td>15.257 KB <small>(6.328 KB gzip)</small></td>
+    </tr>
+<tr data-capability-size="text-names">
+      <th scope="row"><a href="./text-names/">Text names and descriptions</a></th>
+      <td>4.806 KB <small>(2.316 KB gzip)</small></td>
+      <td>12.118 KB <small>(4.636 KB gzip)</small></td>
+      <td>16.924 KB <small>(6.952 KB gzip)</small></td>
+    </tr>
+<tr data-capability-size="form-targets">
+      <th scope="row"><a href="./forms/">Form submission and reset</a></th>
+      <td>7.707 KB <small>(3.490 KB gzip)</small></td>
+      <td>11.105 KB <small>(4.229 KB gzip)</small></td>
+      <td>18.812 KB <small>(7.719 KB gzip)</small></td>
+    </tr></tbody>
+    </table></div>
+  </section>
+
+      <details class="reading-notes" aria-labelledby="reading-title">
+        <summary>Implementation notes &amp; limitations</summary>
+        <h2 id="reading-title">Fallback scope</h2>
+        <p>Adapters cover selected behaviors; they do not replace native accessibility relationships, form ownership or event semantics.</p>
+        <p>Readouts describe DOM state. Check computed names, keyboard behavior and assistive technology separately.</p>
+      </details>
+      <footer class="page-footer">
+        <p>Inspired by <a href="https://microsoftedge.github.io/Demos/reference-target/">Edge’s Reference Target demos</a>. <a href="./scenarios/">Reference cases</a>.</p>
+      </footer>
+    </main>
+  <script type="module" src="./shared/code-highlighting.js"></script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en" data-demo-page="popover-commands" data-capabilities="popover-commands" data-reference-target-ready="false">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Interactive Reference Target examples with conditional, modular fallbacks and measured JavaScript bundle sizes.">
+    <title>Reference Target · Popover commands</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script type="module" src="./main.js"></script>
+  <link rel="stylesheet" href="../shared/microlighter/themes/github.css">
+</head>
+  <body>
+    <a class="skip-link" href="#demos">Skip to the demos</a>
+    <main>
+      <header class="page-header">
+        <div class="masthead">
+          <a class="site-wordmark" href="../">reference <span aria-hidden="true">/</span> target</a>
+          <p class="masthead-note">Browser experiments &amp; working notes</p>
+        </div>
+        <nav class="site-nav" aria-label="Capability pages">
+          <a href="../">All capabilities</a>
+          <a href="../labels/">Labels</a>
+          <a href="../popover-targets/">Popover targeting</a>
+          <a href="../dialog-commands/">Dialog commands</a>
+          <a href="../popover-commands/" aria-current="page">Popover commands</a>
+          <a href="../text-names/">Text names</a>
+          <a href="../forms/">Form actions</a>
+          <a class="docs-link" href="../../">Use the polyfill ↗</a>
+        </nav>
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">04 / Popover commands</p>
+            <h1>One command.<br><em>An internal popover.</em></h1>
+            <p class="intro">Show, hide or toggle a popover inside a component.</p>
+          </div>
+          <figure class="reference-map" role="img" aria-label="A reference to a host is forwarded to a target inside its shadow root.">
+            <div class="map-source"><span class="map-label">outside</span><code>commandfor="host"</code></div>
+            <span class="map-arrow" aria-hidden="true">↘</span>
+            <div class="map-host">
+              <span class="map-label">host</span>
+              <div class="map-shadow">
+                <span class="map-label">shadow root</span>
+                <div class="map-target"><code>#panel</code></div>
+              </div>
+            </div>
+            <figcaption>One public reference. An internal destination.</figcaption>
+          </figure>
+        </div>
+        <section class="runtime-panel" aria-label="Browser and fallback settings">
+          <nav class="mode-links" aria-label="Choose a loading mode">
+            <a href="?mode=auto" data-mode="auto">Automatic</a>
+            <a href="?mode=fallback" data-mode="fallback">Force fallback</a>
+            <a href="?mode=off" data-mode="off">Browser alone</a>
+          </nav>
+          <p id="ready-status" data-ready="false" role="status">Preparing the controls…</p>
+          <details class="runtime-details">
+            <summary>Browser details</summary>
+            <dl class="status-grid">
+              <div><dt>Current path</dt><dd id="mode-status">Checking browser support…</dd></div>
+              <div><dt>Native API surface</dt><dd id="surface-status">Checking…</dd></div>
+              <div class="adapters"><dt>Active adapters</dt><dd id="adapter-status">Waiting for setup…</dd></div>
+            </dl>
+            <p id="mode-note" class="mode-note">Automatic checks for the native property. Force fallback loads the selected adapters. Browser alone leaves them out.</p>
+          </details>
+          <p class="error" id="load-error" role="alert" hidden></p>
+          <noscript><p class="error">Enable JavaScript to try the controls.</p></noscript>
+        </section>
+      </header>
+
+      <div class="demo-stack" id="demos">
+        <section class="scenario" id="popover-commands" data-capability="popover-commands" aria-labelledby="pc-title">
+  <p class="case-kind">Popover commands</p>
+  <h2 id="pc-title">Commands can be canceled</h2>
+  <p>Send built-in popover commands to an internal panel.</p>
+  <div class="try-it">
+    <div class="button-row">
+      <button id="pc-toggle" type="button" commandfor="pc-host" command="toggle-popover" disabled>Toggle with a command</button>
+      <button id="pc-show" type="button" commandfor="pc-host" command="show-popover" disabled>Show with a command</button>
+      <button id="pc-hide" type="button" commandfor="pc-host" command="hide-popover" disabled>Hide with a command</button>
+    </div>
+    <label class="checkbox-row" for="pc-cancel"><input id="pc-cancel" type="checkbox" disabled> Cancel the next command</label>
+    <rt-popover-command-demo id="pc-host" data-reference-target="pc-panel">
+      <template shadowrootmode="open" shadowrootreferencetarget="pc-panel">
+        <link rel="stylesheet" href="../shared/components.css">
+        <section id="pc-panel" popover="manual" role="dialog" aria-labelledby="pc-panel-title" hidden>
+          <p class="eyebrow">A command reached the component</p>
+          <h2 id="pc-panel-title">A panel with a say</h2>
+          <p>The component can cancel a <code>command</code> event before the corresponding native popover operation runs.</p>
+          <p>This manual popover stays open until a hide or toggle action closes it.</p>
+          <button id="pc-close" type="button" disabled>Close from inside</button>
+        </section>
+      </template>
+    </rt-popover-command-demo>
+  </div>
+  <p class="expected"><strong>Try:</strong> Select “Cancel the next command,” then Show twice.</p>
+  <div class="observation"><span>DOM observation</span><output id="pc-observation" role="status">Waiting for setup.</output></div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The first Show is canceled; the second opens the panel. Hide and Toggle exercise the other built-in commands.</p>
+    <p>The fallback uses native popover methods after dispatching a synthetic cancelable command event. Event trust, paths and source handling can differ from native behavior.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <p class="expected">Three commands share one target. The demo also listens for cancellation.</p>
+    <pre><code id="popover-commands-code-html" class="language-html" data-code-sample>&lt;button id="pc-toggle" type="button" commandfor="pc-host"
+    command="toggle-popover"&gt;Toggle with a command&lt;/button&gt;
+&lt;button id="pc-show" type="button" commandfor="pc-host"
+    command="show-popover"&gt;Show with a command&lt;/button&gt;
+&lt;button id="pc-hide" type="button" commandfor="pc-host"
+    command="hide-popover"&gt;Hide with a command&lt;/button&gt;
+&lt;rt-popover-command-demo id="pc-host" data-reference-target="pc-panel"&gt;
+  &lt;template shadowrootmode="open" shadowrootreferencetarget="pc-panel"&gt;
+    &lt;section id="pc-panel" popover="manual" role="dialog"
+        aria-labelledby="pc-panel-title"&gt;
+      &lt;h2 id="pc-panel-title"&gt;A panel with a say&lt;/h2&gt;
+    &lt;/section&gt;
+  &lt;/template&gt;
+&lt;/rt-popover-command-demo&gt;</code></pre>
+  </details>
+</section>
+
+      </div>
+
+      <section class="metrics-panel" data-bundle-id="popover-commands" aria-label="JavaScript delivery sizes">
+    <h2>JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="4467" data-gzip-bytes="2146">
+      <h3>Page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="4467">4.467 KB</strong>
+      <span data-size="gzip" data-bytes="2146">2.146 KB gzip</span>
+      <p>Always loaded.</p>
+    </article>
+<article class="size-card" data-size-kind="fallback" data-bytes="10790" data-gzip-bytes="4182">
+      <h3>Fallback additional</h3>
+      <strong data-size="bytes" data-bytes="10790">10.790 KB</strong>
+      <span data-size="gzip" data-bytes="4182">4.182 KB gzip</span>
+      <p>Core + selected adapters.</p>
+    </article>
+<article class="size-card" data-size-kind="total" data-bytes="15257" data-gzip-bytes="6328">
+      <h3>Total with fallback</h3>
+      <strong data-size="bytes" data-bytes="15257">15.257 KB</strong>
+      <span data-size="gzip" data-bytes="6328">6.328 KB gzip</span>
+      <p>Shared files counted once.</p>
+    </article></div>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <details>
+      <summary>Inspect the 4 generated JavaScript files</summary>
+      <p class="metric-note">Selected adapters: <code>popover-commands</code>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. CSS, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <div class="table-scroll"><table class="files-table">
+        <caption>Files included in this page’s totals</caption>
+        <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
+        <tbody><tr data-file-path="popover-commands/app-TCGQHJQH.js" data-delivery="baseline">
+      <td><a data-bundle-file="popover-commands/app-TCGQHJQH.js" href="../popover-commands/app-TCGQHJQH.js"><code>popover-commands/app-TCGQHJQH.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="1059">1.059 KB</td>
+      <td data-size="gzip" data-bytes="543">0.543 KB</td>
+    </tr>
+<tr data-file-path="popover-commands/chunk-32G5PXKY.js" data-delivery="baseline">
+      <td><a data-bundle-file="popover-commands/chunk-32G5PXKY.js" href="../popover-commands/chunk-32G5PXKY.js"><code>popover-commands/chunk-32G5PXKY.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="924">0.924 KB</td>
+      <td data-size="gzip" data-bytes="464">0.464 KB</td>
+    </tr>
+<tr data-file-path="popover-commands/main.js" data-delivery="baseline">
+      <td><a data-bundle-file="popover-commands/main.js" href="../popover-commands/main.js"><code>popover-commands/main.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
+      <td data-size="gzip" data-bytes="1139">1.139 KB</td>
+    </tr>
+<tr data-file-path="popover-commands/reference-target.setup-2UW36AFD.js" data-delivery="fallback">
+      <td><a data-bundle-file="popover-commands/reference-target.setup-2UW36AFD.js" href="../popover-commands/reference-target.setup-2UW36AFD.js"><code>popover-commands/reference-target.setup-2UW36AFD.js</code></a></td>
+      <td>Fallback additional</td>
+      <td data-size="bytes" data-bytes="10790">10.790 KB</td>
+      <td data-size="gzip" data-bytes="4182">4.182 KB</td>
+    </tr></tbody>
+      </table></div>
+      <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>
+    </details>
+  </section>
+
+      <details class="reading-notes" aria-labelledby="reading-title">
+        <summary>Implementation notes &amp; limitations</summary>
+        <h2 id="reading-title">Fallback scope</h2>
+        <p>Requires the browser’s Popover API. Custom commands and complete native event semantics are outside this adapter’s scope.</p>
+        <p>Readouts describe DOM state. Check computed names, keyboard behavior and assistive technology separately.</p>
+      </details>
+      <footer class="page-footer">
+        <p>Inspired by <a href="https://microsoftedge.github.io/Demos/reference-target/">Edge’s Reference Target demos</a>. <a href="../scenarios/">Reference cases</a>.</p>
+      </footer>
+    </main>
+  <script type="module" src="../shared/code-highlighting.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+/* The companion uses the same notebook; only its six-case layout differs. */
+.scenario-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 38px; margin: 28px 0 25px; }
+.scenario-grid .scenario { padding: 28px 0 35px; }
+.scenario-grid .scenario h2 { font-size: 1.8rem; }
+.scenario-grid .try-it { min-height: 90px; }
+.scenario-grid .checkbox-row { gap: 16px; }
+.scenario-grid .case-kind { max-width: none; }
+.example-links { display: flex; flex-wrap: wrap; gap: 20px; font: .75rem/1.6 var(--mono-font); }
+@media (max-width: 760px) {
+  .scenario-grid { grid-template-columns: 1fr; }
+  .scenario-grid .try-it { min-height: 0; }
+}

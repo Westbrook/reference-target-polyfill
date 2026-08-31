@@ -1,0 +1,494 @@
+{
+  "version": 1,
+  "unit": "KB",
+  "bytesPerKB": 1000,
+  "pages": [
+    {
+      "id": "all",
+      "directory": "",
+      "title": "All Reference Target demos",
+      "adapters": [
+        "labels",
+        "popover-targets",
+        "dialog-commands",
+        "popover-commands",
+        "text-names",
+        "form-targets"
+      ],
+      "baseline": {
+        "bytes": 16587,
+        "gzipBytes": 5997,
+        "files": [
+          "app-YOONO5DP.js",
+          "chunk-BAUPV3FJ.js",
+          "main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 22810,
+        "gzipBytes": 7872,
+        "files": [
+          "reference-target.setup-767JWZHE.js"
+        ]
+      },
+      "total": {
+        "bytes": 39397,
+        "gzipBytes": 13869,
+        "files": [
+          "app-YOONO5DP.js",
+          "chunk-BAUPV3FJ.js",
+          "main.js",
+          "reference-target.setup-767JWZHE.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "app-YOONO5DP.js",
+          "bytes": 13179,
+          "gzipBytes": 4395,
+          "delivery": "baseline"
+        },
+        {
+          "path": "chunk-BAUPV3FJ.js",
+          "bytes": 924,
+          "gzipBytes": 463,
+          "delivery": "baseline"
+        },
+        {
+          "path": "main.js",
+          "bytes": 2484,
+          "gzipBytes": 1139,
+          "delivery": "baseline"
+        },
+        {
+          "path": "reference-target.setup-767JWZHE.js",
+          "bytes": 22810,
+          "gzipBytes": 7872,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "labels",
+      "directory": "labels",
+      "title": "Labels and activation",
+      "adapters": [
+        "labels"
+      ],
+      "baseline": {
+        "bytes": 4448,
+        "gzipBytes": 2178,
+        "files": [
+          "labels/app-Q6QH5RKX.js",
+          "labels/chunk-32G5PXKY.js",
+          "labels/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 11786,
+        "gzipBytes": 4520,
+        "files": [
+          "labels/reference-target.setup-G6VGX556.js"
+        ]
+      },
+      "total": {
+        "bytes": 16234,
+        "gzipBytes": 6698,
+        "files": [
+          "labels/app-Q6QH5RKX.js",
+          "labels/chunk-32G5PXKY.js",
+          "labels/main.js",
+          "labels/reference-target.setup-G6VGX556.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "labels/app-Q6QH5RKX.js",
+          "bytes": 1040,
+          "gzipBytes": 574,
+          "delivery": "baseline"
+        },
+        {
+          "path": "labels/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "labels/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1140,
+          "delivery": "baseline"
+        },
+        {
+          "path": "labels/reference-target.setup-G6VGX556.js",
+          "bytes": 11786,
+          "gzipBytes": 4520,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "popover-targets",
+      "directory": "popover-targets",
+      "title": "Popover targets",
+      "adapters": [
+        "popover-targets"
+      ],
+      "baseline": {
+        "bytes": 4286,
+        "gzipBytes": 2100,
+        "files": [
+          "popover-targets/app-LAV5U27U.js",
+          "popover-targets/chunk-32G5PXKY.js",
+          "popover-targets/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 10572,
+        "gzipBytes": 4113,
+        "files": [
+          "popover-targets/reference-target.setup-52XL4GCC.js"
+        ]
+      },
+      "total": {
+        "bytes": 14858,
+        "gzipBytes": 6213,
+        "files": [
+          "popover-targets/app-LAV5U27U.js",
+          "popover-targets/chunk-32G5PXKY.js",
+          "popover-targets/main.js",
+          "popover-targets/reference-target.setup-52XL4GCC.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "popover-targets/app-LAV5U27U.js",
+          "bytes": 878,
+          "gzipBytes": 496,
+          "delivery": "baseline"
+        },
+        {
+          "path": "popover-targets/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "popover-targets/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1140,
+          "delivery": "baseline"
+        },
+        {
+          "path": "popover-targets/reference-target.setup-52XL4GCC.js",
+          "bytes": 10572,
+          "gzipBytes": 4113,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "dialog-commands",
+      "directory": "dialog-commands",
+      "title": "Dialog commands",
+      "adapters": [
+        "dialog-commands"
+      ],
+      "baseline": {
+        "bytes": 6170,
+        "gzipBytes": 2750,
+        "files": [
+          "dialog-commands/app-DXTGRU4R.js",
+          "dialog-commands/chunk-32G5PXKY.js",
+          "dialog-commands/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 10852,
+        "gzipBytes": 4215,
+        "files": [
+          "dialog-commands/reference-target.setup-WFWR7XWN.js"
+        ]
+      },
+      "total": {
+        "bytes": 17022,
+        "gzipBytes": 6965,
+        "files": [
+          "dialog-commands/app-DXTGRU4R.js",
+          "dialog-commands/chunk-32G5PXKY.js",
+          "dialog-commands/main.js",
+          "dialog-commands/reference-target.setup-WFWR7XWN.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "dialog-commands/app-DXTGRU4R.js",
+          "bytes": 2762,
+          "gzipBytes": 1146,
+          "delivery": "baseline"
+        },
+        {
+          "path": "dialog-commands/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "dialog-commands/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1140,
+          "delivery": "baseline"
+        },
+        {
+          "path": "dialog-commands/reference-target.setup-WFWR7XWN.js",
+          "bytes": 10852,
+          "gzipBytes": 4215,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "popover-commands",
+      "directory": "popover-commands",
+      "title": "Popover commands",
+      "adapters": [
+        "popover-commands"
+      ],
+      "baseline": {
+        "bytes": 4467,
+        "gzipBytes": 2146,
+        "files": [
+          "popover-commands/app-TCGQHJQH.js",
+          "popover-commands/chunk-32G5PXKY.js",
+          "popover-commands/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 10790,
+        "gzipBytes": 4182,
+        "files": [
+          "popover-commands/reference-target.setup-2UW36AFD.js"
+        ]
+      },
+      "total": {
+        "bytes": 15257,
+        "gzipBytes": 6328,
+        "files": [
+          "popover-commands/app-TCGQHJQH.js",
+          "popover-commands/chunk-32G5PXKY.js",
+          "popover-commands/main.js",
+          "popover-commands/reference-target.setup-2UW36AFD.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "popover-commands/app-TCGQHJQH.js",
+          "bytes": 1059,
+          "gzipBytes": 543,
+          "delivery": "baseline"
+        },
+        {
+          "path": "popover-commands/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "popover-commands/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1139,
+          "delivery": "baseline"
+        },
+        {
+          "path": "popover-commands/reference-target.setup-2UW36AFD.js",
+          "bytes": 10790,
+          "gzipBytes": 4182,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "text-names",
+      "directory": "text-names",
+      "title": "Text names and descriptions",
+      "adapters": [
+        "text-names"
+      ],
+      "baseline": {
+        "bytes": 4806,
+        "gzipBytes": 2316,
+        "files": [
+          "text-names/app-QSED5Z7M.js",
+          "text-names/chunk-32G5PXKY.js",
+          "text-names/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 12118,
+        "gzipBytes": 4636,
+        "files": [
+          "text-names/reference-target.setup-TGP4BUUT.js"
+        ]
+      },
+      "total": {
+        "bytes": 16924,
+        "gzipBytes": 6952,
+        "files": [
+          "text-names/app-QSED5Z7M.js",
+          "text-names/chunk-32G5PXKY.js",
+          "text-names/main.js",
+          "text-names/reference-target.setup-TGP4BUUT.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "text-names/app-QSED5Z7M.js",
+          "bytes": 1398,
+          "gzipBytes": 712,
+          "delivery": "baseline"
+        },
+        {
+          "path": "text-names/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "text-names/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1140,
+          "delivery": "baseline"
+        },
+        {
+          "path": "text-names/reference-target.setup-TGP4BUUT.js",
+          "bytes": 12118,
+          "gzipBytes": 4636,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "form-targets",
+      "directory": "forms",
+      "title": "Form submission and reset",
+      "adapters": [
+        "form-targets"
+      ],
+      "baseline": {
+        "bytes": 7707,
+        "gzipBytes": 3490,
+        "files": [
+          "forms/app-6X5CZ273.js",
+          "forms/chunk-32G5PXKY.js",
+          "forms/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 11105,
+        "gzipBytes": 4229,
+        "files": [
+          "forms/reference-target.setup-OKMB4SY5.js"
+        ]
+      },
+      "total": {
+        "bytes": 18812,
+        "gzipBytes": 7719,
+        "files": [
+          "forms/app-6X5CZ273.js",
+          "forms/chunk-32G5PXKY.js",
+          "forms/main.js",
+          "forms/reference-target.setup-OKMB4SY5.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "forms/app-6X5CZ273.js",
+          "bytes": 4299,
+          "gzipBytes": 1885,
+          "delivery": "baseline"
+        },
+        {
+          "path": "forms/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "forms/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1141,
+          "delivery": "baseline"
+        },
+        {
+          "path": "forms/reference-target.setup-OKMB4SY5.js",
+          "bytes": 11105,
+          "gzipBytes": 4229,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "scenarios",
+      "directory": "scenarios",
+      "title": "Declarative boundary comparisons",
+      "adapters": [
+        "labels",
+        "popover-targets",
+        "text-names"
+      ],
+      "baseline": {
+        "bytes": 6253,
+        "gzipBytes": 2622,
+        "files": [
+          "scenarios/app-FS777VM2.js",
+          "scenarios/chunk-32G5PXKY.js",
+          "scenarios/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 18810,
+        "gzipBytes": 6825,
+        "files": [
+          "scenarios/reference-target.setup-YED7OLV2.js"
+        ]
+      },
+      "total": {
+        "bytes": 25063,
+        "gzipBytes": 9447,
+        "files": [
+          "scenarios/app-FS777VM2.js",
+          "scenarios/chunk-32G5PXKY.js",
+          "scenarios/main.js",
+          "scenarios/reference-target.setup-YED7OLV2.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "scenarios/app-FS777VM2.js",
+          "bytes": 3487,
+          "gzipBytes": 1261,
+          "delivery": "baseline"
+        },
+        {
+          "path": "scenarios/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "scenarios/main.js",
+          "bytes": 1842,
+          "gzipBytes": 897,
+          "delivery": "baseline"
+        },
+        {
+          "path": "scenarios/reference-target.setup-YED7OLV2.js",
+          "bytes": 18810,
+          "gzipBytes": 6825,
+          "delivery": "fallback"
+        }
+      ]
+    }
+  ]
+}

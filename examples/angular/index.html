@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en" data-demo-page="fast" data-renderer="fast" data-capabilities="labels popover-targets" data-reference-target-ready="false">
+<html lang="en" data-demo-page="angular" data-renderer="angular" data-capabilities="labels popover-targets" data-reference-target-ready="false">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="description" content="Reference Target with FAST custom elements: label activation, rendered target replacement, and popover targeting.">
-    <title>Reference Target · FAST custom elements</title>
+    <meta name="description" content="Reference Target with Angular Elements custom elements: label activation, rendered target replacement, and popover targeting.">
+    <title>Reference Target · Angular Elements</title>
     <link rel="stylesheet" href="../shared/styles.css">
     <script type="module" src="./main.js"></script>
   <link rel="stylesheet" href="../shared/microlighter/themes/github.css">
@@ -21,27 +21,27 @@
         <nav class="site-nav" aria-label="Renderer examples">
           <a href="../">All capabilities</a>
           <a href="../lit/">Lit</a>
-          <a href="../fast/" aria-current="page">FAST</a>
+          <a href="../fast/">FAST</a>
           <a href="../stencil/">Stencil</a>
           <a href="../preact/">Preact</a>
           <a href="../vue/">Vue</a>
           <a href="../svelte/">Svelte</a>
-          <a href="../angular/">Angular Elements</a>
+          <a href="../angular/" aria-current="page">Angular Elements</a>
           <a class="docs-link" href="../../">Use the polyfill ↗</a>
         </nav>
         <div class="hero">
           <div class="hero-copy">
-            <p class="eyebrow">Renderer examples / FAST</p>
-            <h1>FAST templates.<br><em>Native targets.</em></h1>
-            <p class="intro">Custom elements built with FASTElement and observable template bindings.</p>
+            <p class="eyebrow">Renderer examples / Angular Elements</p>
+            <h1>Angular components.<br><em>Native targets.</em></h1>
+            <p class="intro">Angular components exposed as custom elements, with native Shadow DOM and reactive inputs.</p>
           </div>
-          <figure class="reference-map" role="img" aria-label="An outside reference reaches a target inside a shadow root rendered by FAST.">
+          <figure class="reference-map" role="img" aria-label="An outside reference reaches a target inside a shadow root rendered by Angular Elements.">
             <div class="map-source"><span class="map-label">outside</span><code>for="host"</code></div>
             <span class="map-arrow" aria-hidden="true">↘</span>
             <div class="map-host">
               <span class="map-label">custom element</span>
               <div class="map-shadow">
-                <span class="map-label">FAST render</span>
+                <span class="map-label">Angular Elements render</span>
                 <div class="map-target"><code>#control</code></div>
               </div>
             </div>
@@ -54,7 +54,7 @@
             <a href="?mode=fallback" data-mode="fallback">Force fallback</a>
             <a href="?mode=off" data-mode="off">Browser alone</a>
           </nav>
-          <p id="ready-status" data-ready="false" role="status">Waiting for FAST to render…</p>
+          <p id="ready-status" data-ready="false" role="status">Waiting for Angular Elements to render…</p>
           <details class="runtime-details">
             <summary>Browser details</summary>
             <dl class="status-grid">
@@ -73,25 +73,25 @@
         <section id="renderer-labels" class="scenario" data-capability="labels" aria-labelledby="renderer-labels-title">
   <p class="case-kind">Labels &amp; rendering</p>
   <h2 id="renderer-labels-title">A new control. The same reference.</h2>
-  <p>The outside label references the component. FAST renders the checkbox inside its shadow root.</p>
+  <p>The outside label references the component. Angular Elements renders the checkbox inside its shadow root.</p>
   <p class="expected"><strong>Try:</strong> Click the label, replace the checkbox, then click the label again. Each replacement starts unchecked.</p>
   <article class="demo-card">
     <h3>Follow a rendered target</h3>
     <div class="try-it button-row">
       <label id="renderer-label" for="renderer-checkbox">Send me release notes</label>
-      <rt-fast-checkbox id="renderer-checkbox" revision="0"></rt-fast-checkbox>
+      <rt-angular-checkbox id="renderer-checkbox" revision="0"></rt-angular-checkbox>
     </div>
     <div class="toolbar">
       <button id="renderer-replace" class="secondary" type="button" disabled>Replace checkbox</button>
     </div>
-    <div class="observation"><span>DOM observation</span><output id="renderer-checkbox-observation">Waiting for FAST to render.</output></div>
+    <div class="observation"><span>DOM observation</span><output id="renderer-checkbox-observation">Waiting for Angular Elements to render.</output></div>
   </article>
 </section>
 
 <section id="renderer-popovers" class="scenario" data-capability="popover-targets" aria-labelledby="renderer-popovers-title">
   <p class="case-kind">Popover targeting</p>
   <h2 id="renderer-popovers-title">An outside button. A rendered panel.</h2>
-  <p>FAST creates a native popover inside another component. The outside buttons reference its host.</p>
+  <p>Angular Elements creates a native popover inside another component. The outside buttons reference its host.</p>
   <p class="expected"><strong>Try:</strong> Open the popover, then dismiss it with its close button or Escape.</p>
   <article class="demo-card">
     <h3>Open an internal popover</h3>
@@ -99,8 +99,8 @@
       <button id="renderer-open" type="button" popovertarget="renderer-popover" popovertargetaction="show" disabled>Open popover</button>
       <button id="renderer-hide" class="secondary" type="button" popovertarget="renderer-popover" popovertargetaction="hide" disabled>Hide popover</button>
     </div>
-    <rt-fast-popover id="renderer-popover"></rt-fast-popover>
-    <div class="observation"><span>DOM observation</span><output id="renderer-popover-observation">Waiting for FAST to render.</output></div>
+    <rt-angular-popover id="renderer-popover"></rt-angular-popover>
+    <div class="observation"><span>DOM observation</span><output id="renderer-popover-observation">Waiting for Angular Elements to render.</output></div>
   </article>
 </section>
 
@@ -109,95 +109,125 @@
   <p>Each component sets its shadow root’s <code>referenceTarget</code> to the internal target ID. The fallback loads before the component definitions, so it can capture the roots when the renderer creates them and observe later DOM changes.</p>
   <p>The page waits for the renderer’s first update before enabling its buttons. Replacing the checkbox changes the component’s <code>revision</code> attribute; the renderer creates a new input with the same ID.</p>
   <pre><code class="language-html" data-code-sample>&lt;label for="renderer-checkbox"&gt;Send me release notes&lt;/label&gt;
-&lt;rt-fast-checkbox id="renderer-checkbox" revision="0"&gt;&lt;/rt-fast-checkbox&gt;
+&lt;rt-angular-checkbox id="renderer-checkbox" revision="0"&gt;&lt;/rt-angular-checkbox&gt;
 
 &lt;button type="button" popovertarget="renderer-popover"&gt;Open popover&lt;/button&gt;
-&lt;rt-fast-popover id="renderer-popover"&gt;&lt;/rt-fast-popover&gt;</code></pre>
+&lt;rt-angular-popover id="renderer-popover"&gt;&lt;/rt-angular-popover&gt;</code></pre>
   <p>The selected setup uses <code>labels({ activation: "focus-and-click", naming: true })</code> and <code>popoverTargets()</code>. The page’s event listeners only display state; they do not forward label or popover actions.</p>
 </details>
 
-<details class="reading-notes"><summary>Component source</summary><h3>components.js</h3><pre><code class="language-javascript" data-code-sample>import { FASTElement, Updates, html, repeat } from &quot;@microsoft/fast-element&quot;;
-import componentStyles from &quot;../shared/components.css&quot;;
+<details class="reading-notes"><summary>Component source</summary><h3>components.ts</h3><pre><code class="language-typescript" data-code-sample>import {
+  type AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  enableProdMode,
+  inject,
+  input,
+  numberAttribute,
+  ViewEncapsulation,
+} from &quot;@angular/core&quot;;
+import { createCustomElement } from &quot;@angular/elements&quot;;
+import { createApplication } from &quot;@angular/platform-browser&quot;;
 
-class FastCheckbox extends FASTElement {
-  constructor() {
-    super();
-    this.revision = 0;
-    this.shadowRoot.referenceTarget = &quot;control&quot;;
-  }
+function setReferenceTarget(host: HTMLElement, target: string) {
+  const root = host.shadowRoot as ShadowRoot &amp; { referenceTarget: string };
+  root.referenceTarget = target;
 }
 
-const checkboxDefinition = FastCheckbox.define({
-  name: &quot;rt-fast-checkbox&quot;,
-  shadowOptions: { mode: &quot;open&quot; },
-  attributes: [{
-    property: &quot;revision&quot;,
-    converter: {
-      fromView: value =&gt; Number(value) || 0,
-      toView: value =&gt; String(value),
-    },
-  }],
-  styles: componentStyles,
-  template: html`
+@Component({
+  selector: &quot;angular-checkbox-view&quot;,
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.ShadowDom,
+  styleUrl: &quot;../shared/components.css&quot;,
+  template: `
     &lt;div class=&quot;component-preview&quot;&gt;
-      ${repeat(
-        host =&gt; [host.revision],
-        html`&lt;input id=&quot;control&quot; type=&quot;checkbox&quot; data-revision=${revision =&gt; revision}&gt;`,
-        { recycle: false },
-      )}
+      @for (current of [revision()]; track current) {
+        &lt;input id=&quot;control&quot; type=&quot;checkbox&quot; [attr.data-revision]=&quot;current&quot;&gt;
+      }
       &lt;span aria-hidden=&quot;true&quot;&gt;Native checkbox&lt;/span&gt;
     &lt;/div&gt;
-    &lt;p class=&quot;hint&quot;&gt;Render revision ${host =&gt; host.revision}&lt;/p&gt;
+    &lt;p class=&quot;hint&quot;&gt;Render revision {{ revision() }}&lt;/p&gt;
   `,
-});
+})
+class AngularCheckbox implements AfterViewInit {
+  readonly revision = input(0, { transform: (value: unknown) =&gt; numberAttribute(value, 0) });
+  private readonly host = inject&lt;ElementRef&lt;HTMLElement&gt;&gt;(ElementRef);
 
-class FastPopover extends FASTElement {
-  constructor() {
-    super();
-    this.shadowRoot.referenceTarget = &quot;panel&quot;;
+  ngAfterViewInit() {
+    setReferenceTarget(this.host.nativeElement, &quot;control&quot;);
   }
 }
 
-const popoverDefinition = FastPopover.define({
-  name: &quot;rt-fast-popover&quot;,
-  shadowOptions: { mode: &quot;open&quot; },
-  styles: componentStyles,
-  template: html`
+@Component({
+  selector: &quot;angular-popover-view&quot;,
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.ShadowDom,
+  styleUrl: &quot;../shared/components.css&quot;,
+  template: `
     &lt;div id=&quot;panel&quot; popover=&quot;auto&quot;&gt;
-      &lt;p class=&quot;eyebrow&quot;&gt;FASTElement · shadow DOM&lt;/p&gt;
-      &lt;h2&gt;Rendered with FAST&lt;/h2&gt;
-      &lt;p&gt;This native popover lives inside a FASTElement shadow root.&lt;/p&gt;
+      &lt;p class=&quot;eyebrow&quot;&gt;Angular Elements · shadow DOM&lt;/p&gt;
+      &lt;h2&gt;Rendered with Angular&lt;/h2&gt;
+      &lt;p&gt;This native popover lives inside an Angular component shadow root.&lt;/p&gt;
       &lt;button type=&quot;button&quot; popovertarget=&quot;panel&quot; popovertargetaction=&quot;hide&quot;&gt;Close popover&lt;/button&gt;
     &lt;/div&gt;
   `,
+})
+class AngularPopover implements AfterViewInit {
+  private readonly host = inject&lt;ElementRef&lt;HTMLElement&gt;&gt;(ElementRef);
+
+  ngAfterViewInit() {
+    setReferenceTarget(this.host.nativeElement, &quot;panel&quot;);
+  }
+}
+
+enableProdMode();
+// Angular 22 is zoneless. Both component templates and their styles are compiled
+// during the build, so this page needs neither Zone.js nor a runtime compiler.
+const application = createApplication().then(app =&gt; {
+  // Keep Angular Elements' standard lifecycle. Its documented limitation on
+  // reconnecting a destroyed element also applies here; create a new instance
+  // after removal instead of reusing the old host after Angular tears it down.
+  customElements.define(&quot;rt-angular-checkbox&quot;, createCustomElement(AngularCheckbox, { injector: app.injector }));
+  customElements.define(&quot;rt-angular-popover&quot;, createCustomElement(AngularPopover, { injector: app.injector }));
+  return app;
 });
 
 export async function whenReady() {
-  await Promise.all([checkboxDefinition, popoverDefinition]);
-  await Updates.next();
+  const app = await application;
+  await app.whenStable();
+  for (const [id, target] of [[&quot;renderer-checkbox&quot;, &quot;control&quot;], [&quot;renderer-popover&quot;, &quot;panel&quot;]]) {
+    if (!document.getElementById(id)?.shadowRoot?.getElementById(target)) {
+      throw new Error(`Angular did not finish rendering ${id}`);
+    }
+  }
 }
+</code></pre>
+<h3>components.js</h3><pre><code class="language-javascript" data-code-sample>export { whenReady } from &quot;../../dist/angular/components.js&quot;;
 </code></pre></details>
 
       </div>
 
-      <section class="metrics-panel" data-bundle-id="fast" aria-label="JavaScript delivery sizes">
+      <section class="metrics-panel" data-bundle-id="angular" aria-label="JavaScript delivery sizes">
     <h2>JavaScript sizes</h2>
-    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="66115" data-gzip-bytes="20928">
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="328980" data-gzip-bytes="107692">
       <h3>Page JavaScript</h3>
-      <strong data-size="bytes" data-bytes="66115">66.115 KB</strong>
-      <span data-size="gzip" data-bytes="20928">20.928 KB gzip</span>
+      <strong data-size="bytes" data-bytes="328980">328.980 KB</strong>
+      <span data-size="gzip" data-bytes="107692">107.692 KB gzip</span>
       <p>Always loaded.</p>
     </article>
-<article class="size-card" data-size-kind="fallback" data-bytes="14704" data-gzip-bytes="5446">
+<article class="size-card" data-size-kind="fallback" data-bytes="14704" data-gzip-bytes="5447">
       <h3>Fallback additional</h3>
       <strong data-size="bytes" data-bytes="14704">14.704 KB</strong>
-      <span data-size="gzip" data-bytes="5446">5.446 KB gzip</span>
+      <span data-size="gzip" data-bytes="5447">5.447 KB gzip</span>
       <p>Core + selected adapters.</p>
     </article>
-<article class="size-card" data-size-kind="total" data-bytes="80819" data-gzip-bytes="26374">
+<article class="size-card" data-size-kind="total" data-bytes="343684" data-gzip-bytes="113139">
       <h3>Total with fallback</h3>
-      <strong data-size="bytes" data-bytes="80819">80.819 KB</strong>
-      <span data-size="gzip" data-bytes="26374">26.374 KB gzip</span>
+      <strong data-size="bytes" data-bytes="343684">343.684 KB</strong>
+      <span data-size="gzip" data-bytes="113139">113.139 KB gzip</span>
       <p>Shared files counted once.</p>
     </article></div>
     <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
@@ -208,29 +238,29 @@ export async function whenReady() {
       <div class="table-scroll"><table class="files-table">
         <caption>Files included in this page’s totals</caption>
         <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
-        <tbody><tr data-file-path="fast/app-UMDRO7CV.js" data-delivery="baseline">
-      <td><a data-bundle-file="fast/app-UMDRO7CV.js" href="../fast/app-UMDRO7CV.js"><code>fast/app-UMDRO7CV.js</code></a></td>
+        <tbody><tr data-file-path="angular/app-EX3SMUCG.js" data-delivery="baseline">
+      <td><a data-bundle-file="angular/app-EX3SMUCG.js" href="../angular/app-EX3SMUCG.js"><code>angular/app-EX3SMUCG.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="62707">62.707 KB</td>
-      <td data-size="gzip" data-bytes="19325">19.325 KB</td>
+      <td data-size="bytes" data-bytes="325572">325.572 KB</td>
+      <td data-size="gzip" data-bytes="106089">106.089 KB</td>
     </tr>
-<tr data-file-path="fast/chunk-32G5PXKY.js" data-delivery="baseline">
-      <td><a data-bundle-file="fast/chunk-32G5PXKY.js" href="../fast/chunk-32G5PXKY.js"><code>fast/chunk-32G5PXKY.js</code></a></td>
+<tr data-file-path="angular/chunk-32G5PXKY.js" data-delivery="baseline">
+      <td><a data-bundle-file="angular/chunk-32G5PXKY.js" href="../angular/chunk-32G5PXKY.js"><code>angular/chunk-32G5PXKY.js</code></a></td>
       <td>Page</td>
       <td data-size="bytes" data-bytes="924">0.924 KB</td>
       <td data-size="gzip" data-bytes="464">0.464 KB</td>
     </tr>
-<tr data-file-path="fast/main.js" data-delivery="baseline">
-      <td><a data-bundle-file="fast/main.js" href="../fast/main.js"><code>fast/main.js</code></a></td>
+<tr data-file-path="angular/main.js" data-delivery="baseline">
+      <td><a data-bundle-file="angular/main.js" href="../angular/main.js"><code>angular/main.js</code></a></td>
       <td>Page</td>
       <td data-size="bytes" data-bytes="2484">2.484 KB</td>
       <td data-size="gzip" data-bytes="1139">1.139 KB</td>
     </tr>
-<tr data-file-path="fast/reference-target.setup-SS3IPAE5.js" data-delivery="fallback">
-      <td><a data-bundle-file="fast/reference-target.setup-SS3IPAE5.js" href="../fast/reference-target.setup-SS3IPAE5.js"><code>fast/reference-target.setup-SS3IPAE5.js</code></a></td>
+<tr data-file-path="angular/reference-target.setup-6ERRB6O7.js" data-delivery="fallback">
+      <td><a data-bundle-file="angular/reference-target.setup-6ERRB6O7.js" href="../angular/reference-target.setup-6ERRB6O7.js"><code>angular/reference-target.setup-6ERRB6O7.js</code></a></td>
       <td>Fallback additional</td>
       <td data-size="bytes" data-bytes="14704">14.704 KB</td>
-      <td data-size="gzip" data-bytes="5446">5.446 KB</td>
+      <td data-size="gzip" data-bytes="5447">5.447 KB</td>
     </tr></tbody>
       </table></div>
       <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>
@@ -239,11 +269,12 @@ export async function whenReady() {
 
       <details class="reading-notes" aria-labelledby="reading-title">
         <summary>Renderer integration &amp; limitations</summary>
-        <h2 id="reading-title">FAST and Reference Target</h2>
-        <p>FAST creates the shadow roots and binds a numeric revision attribute. A repeat directive with recycling disabled replaces the checkbox when its revision changes; the page waits for FAST’s update queue before enabling the controls.</p>
+        <h2 id="reading-title">Angular Elements and Reference Target</h2>
+        <p>Angular’s createCustomElement exposes standalone components with ViewEncapsulation.ShadowDom. A numeric signal input drives a tracked block that replaces the checkbox. The page waits for the application to become stable and for its targets to exist. Templates and Angular libraries are compiled and linked during the build; the browser loads no compiler or Zone.js.</p>
+        <p>Angular Elements does not reliably support reattaching the same element after its destruction delay. These cases update mounted components; create a fresh element after removal and teardown. This is a renderer lifecycle limitation, independent of reference forwarding.</p>
         <p>The library and its component code are included in Page JavaScript above. Each renderer is built as an independent page with only the labels and popover-targets adapters in its optional fallback bundle.</p>
         <p>These examples use open, client-rendered roots. They do not test server rendering or hydration. The label fallback does not recreate native label.control or input.labels relationships. Readouts describe DOM state; computed names and assistive technology need separate validation.</p>
-        <p><a href="https://fast.design/">FAST documentation ↗</a></p>
+        <p><a href="https://angular.dev/guide/elements">Angular Elements documentation ↗</a></p>
       </details>
       <footer class="page-footer">
         <p><a href="../">Explore every capability</a> · <a href="../scenarios/">Declarative reference cases</a></p>

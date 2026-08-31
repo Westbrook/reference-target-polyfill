@@ -277,6 +277,9 @@ The public installation handle does not expose a raw target resolver. Scripts mu
 | [FAST custom elements](http://127.0.0.1:4173/examples/fast/) | Labels and popover targets |
 | [Stencil custom elements](http://127.0.0.1:4173/examples/stencil/) | Labels and popover targets |
 | [Preact custom element base class](http://127.0.0.1:4173/examples/preact/) | Labels and popover targets |
+| [Vue custom elements](http://127.0.0.1:4173/examples/vue/) | Labels and popover targets |
+| [Svelte custom elements](http://127.0.0.1:4173/examples/svelte/) | Labels and popover targets |
+| [Angular Elements](http://127.0.0.1:4173/examples/angular/) | Labels and popover targets |
 | [Original six-scenario companion](http://127.0.0.1:4173/examples/scenarios/) | Labels, popover targets, and text names for the retained declarative comparisons. |
 
 The main page contains working examples for six adapters. Each demonstrated capability also has an independent page and bundle, allowing behavior and loading cost to be compared with only that adapter selected. The boundary comparisons use existing adapters.
@@ -287,9 +290,13 @@ Every page supports `?mode=auto`, `?mode=fallback`, and `?mode=off`. Automatic m
 
 The form demo keeps native inputs, a checkbox, and a select inside its declarative form. Outside Submit, Save draft (`formnovalidate`), and Reset buttons exercise validation, submitter data, and native defaults. Its component-local listeners cancel navigation, capture `FormData` synchronously, and display events and actual `.form` getters; the example sends no form data.
 
-The four renderer pages use the actual [Lit](https://lit.dev/), [FAST](https://fast.design/), [Stencil](https://stenciljs.com/), and [Preact](https://preactjs.com/) libraries. Each demonstrates an outside label, a checkbox replaced by a reactive attribute update, and an outside popover invoker. Components set `referenceTarget` on their framework-created shadow roots and wait for their first render before the page becomes ready. The fallback observes subsequent target replacements; the application does not forward actions itself. These are client-rendered examples, not server-rendering or hydration tests.
+The seven renderer pages use the actual [Lit](https://lit.dev/), [FAST](https://fast.design/), [Stencil](https://stenciljs.com/), [Preact](https://preactjs.com/), [Vue](https://vuejs.org/guide/extras/web-components.html), [Svelte](https://svelte.dev/docs/svelte/custom-elements), and [Angular Elements](https://angular.dev/guide/elements) libraries. Each demonstrates an outside label, a checkbox replaced by a reactive attribute update, and an outside popover invoker. Components set `referenceTarget` on their framework-created shadow roots and wait for their first render before the page becomes ready. The fallback observes subsequent target replacements; the application does not forward actions itself. These are client-rendered examples, not server-rendering or hydration tests.
 
 Lit uses `LitElement` and `keyed`; FAST uses `FASTElement` and a non-recycling `repeat`; Stencil compiles keyed JSX into custom elements. The Preact page includes a small `PreactElement` base class that owns the shadow root, batches attribute updates, unmounts on disconnection, and renders again on reconnection. Expand Component source on a built page to inspect the actual source, including the Preact base class and Stencil TSX.
+
+Vue uses `defineCustomElement`, a numeric prop, and keyed render functions from its runtime-only entry point. Svelte compiles `.svelte` files into custom elements, with a numeric prop and keyed block. Angular uses `createCustomElement`, `ViewEncapsulation.ShadowDom`, and a tracked block driven by a signal input; its templates and package code are compiled and linked before bundling. Neither template compilers nor Zone.js are delivered to the new pages.
+
+Renderer lifecycle limits are separate from forwarding behavior. Vue 3.5.42 remounts after a full disconnect/reconnect but stops observing subsequent attribute updates; create a fresh element after teardown. Angular Elements has a [documented same-instance reconnection limitation](https://angular.dev/guide/elements#limitations) after destruction. Its tests cover connected target replacement and popovers without claiming reconnection support. The pages retain the standard framework lifecycles and document these limits instead of modifying framework internals.
 
 The retained six-scenario companion contains original examples inspired by [Microsoft Edge's Reference Target demos](https://microsoftedge.github.io/Demos/reference-target/). All six use parser-created Declarative Shadow DOM and retained `data-reference-target` metadata:
 
@@ -306,7 +313,7 @@ The retained six-scenario companion contains original examples inspired by [Micr
 
 Capability application modules import only their selected `examples/shared/features/*.js` initializers. Renderer application modules import their own components and shared observation controls. A page's `main.js` awaits its optional setup and then its application; the shared bootstrap imports no adapters. Each renderer has an independent bundle; visiting the gallery or another renderer never loads that library. The package API and application initialization contract are unchanged.
 
-Code samples use [Microlighter](https://davatron5000.github.io/microlighter/) with its GitHub theme. It highlights HTML, JavaScript, and Stencil TSX using the CSS Custom Highlight API without adding token elements to the samples. The build copies the pinned development dependency, required grammars, theme, and MIT license into a separate shared demo asset directory. Highlighting runs independently of application setup; browsers without that API keep readable plain-text samples. The highlighter is neither a polyfill dependency nor part of the size figures below.
+Code samples use [Microlighter](https://davatron5000.github.io/microlighter/) with its GitHub theme. It highlights HTML, JavaScript, TypeScript, Stencil TSX, and Svelte using the CSS Custom Highlight API without adding token elements to the samples. The build copies the pinned development dependency, required grammars, theme, and MIT license into a separate shared demo asset directory. Highlighting runs independently of application setup; browsers without that API keep readable plain-text samples. The highlighter is neither a polyfill dependency nor part of the size figures below.
 
 ## JavaScript sizes
 
@@ -324,7 +331,7 @@ An independent capability's fallback cost includes the core installer and its re
 
 ## Run locally
 
-Use Node.js 22 or newer (`.nvmrc` selects 24). Package runtime modules use only browser APIs. The rendering libraries, Stencil compiler, esbuild, and Microlighter are development dependencies used to build the examples; the published fallback has no runtime dependencies.
+For example builds, use Node.js 24.15+ on the 24.x line (`.nvmrc` selects 24), or 22.22.3+ on the 22.x line, to meet Angular 22’s compiler requirements. Package runtime modules use only browser APIs. The rendering libraries, their compilers and build tools, esbuild, and Microlighter are development dependencies; the published fallback has no runtime dependencies.
 
 ```sh
 npm install
@@ -335,7 +342,7 @@ npm run build:example
 
 `npm start` builds the complete site through `prestart`, then serves the consumption guide at `/`, the gallery and capability pages under `/examples/`, and the [browser tests](http://127.0.0.1:4173/tests/browser.html). `/dist/examples/` is an alias for the same built output. Set `RT_PORT` to change the default port of 4173.
 
-`npm run build:example` first compiles the Stencil sources into `dist/stencil`, then builds every cataloged page independently into `dist/examples`, including its capability and renderer subdirectories and the original scenarios companion. Stencil’s generated runtime chunks are bundled into its page, with no browser-time compiler or CDN imports. The build generates static demo HTML, component source samples, current size reports, gzip JavaScript sidecars, `bundle-sizes.json`, and a combined esbuild dependency report in `dist/metafile.json`. Run it again after edits; the server does not automatically rebuild.
+`npm run build:example` first compiles Stencil sources into `dist/stencil` and Angular sources into `dist/angular`, then builds every cataloged page independently into `dist/examples`. Svelte components compile through an esbuild plugin; Angular’s package code passes through its official linker. The generated runtime code is included in the relevant page’s size report, with no browser-time compilers or CDN imports. The build generates static demo HTML, component source samples, current size reports, gzip JavaScript sidecars, `bundle-sizes.json`, and a combined esbuild dependency report in `dist/metafile.json`. Run it again after edits; the server does not automatically rebuild.
 
 For source inspection, `/source/examples/` serves the original files and `/source/src/` maps their runtime imports. The gallery and capability source HTML are unexpanded templates, so those debug URLs are not the complete interactive pages. Use `/examples/` for the rendered demos and measured bundles.
 
@@ -359,4 +366,4 @@ The preparation command leaves the source checkout in place and preserves Pages 
 
 Native-surface tests may be skipped where that API is absent; force-mode simulations do not establish native interoperability. Browser behavior and accessibility outcomes require browser and assistive-technology validation. No cross-browser conformance claim is made here.
 
-Validation on 31 August 2026: **20 Node/package tests passed** and the Chromium 151 browser suite reported **114 passed, 0 failed, 1 skipped**. The skipped test needs a native Reference Target surface. Package checks verify that each renderer is isolated and adapters stay behind the setup boundary. Sixteen renderer cases cover actual target replacement, single activation, checkbox and popover reconnection, internal popover dismissal, and automatic/forced/off loading. Existing gallery tests cover six capability pages, their shared gallery, interactions, size reports, and syntax highlighting. Combobox adapter checks cover public relationships, ownership and cleanup, scope/privacy guards, and simulated native Phase 1 coexistence. Pages checks cover project-relative links and branch preparation. Renderer layout and source highlighting were also checked in desktop Chromium. Firefox, Safari, and assistive-technology behavior remain unverified by this run.
+Validation on 31 August 2026: **23 Node/package tests passed** and the Chromium 151 browser suite reported **126 passed, 0 failed, 1 skipped**. The skipped test needs a native Reference Target surface. Package checks verify that all seven renderers are isolated, compilers stay out of browser bundles, and adapters remain behind the setup boundary. Twenty-eight renderer cases cover target replacement, single activation, popover dismissal, automatic/forced/off loading, and supported reconnection behavior. Angular’s new cases intentionally exclude its documented same-instance reconnect limitation; Vue’s later attribute-update limitation after a full remount remains documented. Existing capability, gallery, combobox adapter, and Pages checks continue to pass. Renderer layout and source highlighting were checked in desktop Chromium. Firefox, Safari, and assistive-technology behavior remain unverified by this run.

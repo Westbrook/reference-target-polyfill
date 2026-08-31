@@ -673,6 +673,189 @@
       ]
     },
     {
+      "id": "vue",
+      "directory": "vue",
+      "title": "Vue custom elements",
+      "adapters": [
+        "labels",
+        "popover-targets"
+      ],
+      "baseline": {
+        "bytes": 69739,
+        "gzipBytes": 27233,
+        "files": [
+          "vue/app-DN6JRKTO.js",
+          "vue/chunk-32G5PXKY.js",
+          "vue/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 14704,
+        "gzipBytes": 5445,
+        "files": [
+          "vue/reference-target.setup-CCMIASOO.js"
+        ]
+      },
+      "total": {
+        "bytes": 84443,
+        "gzipBytes": 32678,
+        "files": [
+          "vue/app-DN6JRKTO.js",
+          "vue/chunk-32G5PXKY.js",
+          "vue/main.js",
+          "vue/reference-target.setup-CCMIASOO.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "vue/app-DN6JRKTO.js",
+          "bytes": 66331,
+          "gzipBytes": 25631,
+          "delivery": "baseline"
+        },
+        {
+          "path": "vue/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "vue/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "vue/reference-target.setup-CCMIASOO.js",
+          "bytes": 14704,
+          "gzipBytes": 5445,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "svelte",
+      "directory": "svelte",
+      "title": "Svelte custom elements",
+      "adapters": [
+        "labels",
+        "popover-targets"
+      ],
+      "baseline": {
+        "bytes": 62976,
+        "gzipBytes": 23597,
+        "files": [
+          "svelte/app-DN6T3ZEW.js",
+          "svelte/chunk-32G5PXKY.js",
+          "svelte/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 14704,
+        "gzipBytes": 5446,
+        "files": [
+          "svelte/reference-target.setup-AH57T32X.js"
+        ]
+      },
+      "total": {
+        "bytes": 77680,
+        "gzipBytes": 29043,
+        "files": [
+          "svelte/app-DN6T3ZEW.js",
+          "svelte/chunk-32G5PXKY.js",
+          "svelte/main.js",
+          "svelte/reference-target.setup-AH57T32X.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "svelte/app-DN6T3ZEW.js",
+          "bytes": 59568,
+          "gzipBytes": 21992,
+          "delivery": "baseline"
+        },
+        {
+          "path": "svelte/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "svelte/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1141,
+          "delivery": "baseline"
+        },
+        {
+          "path": "svelte/reference-target.setup-AH57T32X.js",
+          "bytes": 14704,
+          "gzipBytes": 5446,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "angular",
+      "directory": "angular",
+      "title": "Angular Elements custom elements",
+      "adapters": [
+        "labels",
+        "popover-targets"
+      ],
+      "baseline": {
+        "bytes": 328980,
+        "gzipBytes": 107692,
+        "files": [
+          "angular/app-EX3SMUCG.js",
+          "angular/chunk-32G5PXKY.js",
+          "angular/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 14704,
+        "gzipBytes": 5447,
+        "files": [
+          "angular/reference-target.setup-6ERRB6O7.js"
+        ]
+      },
+      "total": {
+        "bytes": 343684,
+        "gzipBytes": 113139,
+        "files": [
+          "angular/app-EX3SMUCG.js",
+          "angular/chunk-32G5PXKY.js",
+          "angular/main.js",
+          "angular/reference-target.setup-6ERRB6O7.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "angular/app-EX3SMUCG.js",
+          "bytes": 325572,
+          "gzipBytes": 106089,
+          "delivery": "baseline"
+        },
+        {
+          "path": "angular/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "angular/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1139,
+          "delivery": "baseline"
+        },
+        {
+          "path": "angular/reference-target.setup-6ERRB6O7.js",
+          "bytes": 14704,
+          "gzipBytes": 5447,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
       "id": "scenarios",
       "directory": "scenarios",
       "title": "Declarative boundary comparisons",

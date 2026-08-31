@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en" data-demo-page="preact" data-renderer="preact" data-capabilities="labels popover-targets" data-reference-target-ready="false">
+<html lang="en" data-demo-page="svelte" data-renderer="svelte" data-capabilities="labels popover-targets" data-reference-target-ready="false">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="description" content="Reference Target with Preact custom elements: label activation, rendered target replacement, and popover targeting.">
-    <title>Reference Target · Preact custom elements</title>
+    <meta name="description" content="Reference Target with Svelte custom elements: label activation, rendered target replacement, and popover targeting.">
+    <title>Reference Target · Svelte custom elements</title>
     <link rel="stylesheet" href="../shared/styles.css">
     <script type="module" src="./main.js"></script>
   <link rel="stylesheet" href="../shared/microlighter/themes/github.css">
@@ -23,25 +23,25 @@
           <a href="../lit/">Lit</a>
           <a href="../fast/">FAST</a>
           <a href="../stencil/">Stencil</a>
-          <a href="../preact/" aria-current="page">Preact</a>
+          <a href="../preact/">Preact</a>
           <a href="../vue/">Vue</a>
-          <a href="../svelte/">Svelte</a>
+          <a href="../svelte/" aria-current="page">Svelte</a>
           <a href="../angular/">Angular Elements</a>
           <a class="docs-link" href="../../">Use the polyfill ↗</a>
         </nav>
         <div class="hero">
           <div class="hero-copy">
-            <p class="eyebrow">Renderer examples / Preact</p>
-            <h1>A custom base.<br><em>Preact rendering.</em></h1>
-            <p class="intro">An HTMLElement base class that uses Preact to render into its own shadow root.</p>
+            <p class="eyebrow">Renderer examples / Svelte</p>
+            <h1>Svelte components.<br><em>Native targets.</em></h1>
+            <p class="intro">Custom elements compiled from Svelte components with reactive props and native Shadow DOM.</p>
           </div>
-          <figure class="reference-map" role="img" aria-label="An outside reference reaches a target inside a shadow root rendered by Preact.">
+          <figure class="reference-map" role="img" aria-label="An outside reference reaches a target inside a shadow root rendered by Svelte.">
             <div class="map-source"><span class="map-label">outside</span><code>for="host"</code></div>
             <span class="map-arrow" aria-hidden="true">↘</span>
             <div class="map-host">
               <span class="map-label">custom element</span>
               <div class="map-shadow">
-                <span class="map-label">Preact render</span>
+                <span class="map-label">Svelte render</span>
                 <div class="map-target"><code>#control</code></div>
               </div>
             </div>
@@ -54,7 +54,7 @@
             <a href="?mode=fallback" data-mode="fallback">Force fallback</a>
             <a href="?mode=off" data-mode="off">Browser alone</a>
           </nav>
-          <p id="ready-status" data-ready="false" role="status">Waiting for Preact to render…</p>
+          <p id="ready-status" data-ready="false" role="status">Waiting for Svelte to render…</p>
           <details class="runtime-details">
             <summary>Browser details</summary>
             <dl class="status-grid">
@@ -73,25 +73,25 @@
         <section id="renderer-labels" class="scenario" data-capability="labels" aria-labelledby="renderer-labels-title">
   <p class="case-kind">Labels &amp; rendering</p>
   <h2 id="renderer-labels-title">A new control. The same reference.</h2>
-  <p>The outside label references the component. Preact renders the checkbox inside its shadow root.</p>
+  <p>The outside label references the component. Svelte renders the checkbox inside its shadow root.</p>
   <p class="expected"><strong>Try:</strong> Click the label, replace the checkbox, then click the label again. Each replacement starts unchecked.</p>
   <article class="demo-card">
     <h3>Follow a rendered target</h3>
     <div class="try-it button-row">
       <label id="renderer-label" for="renderer-checkbox">Send me release notes</label>
-      <rt-preact-checkbox id="renderer-checkbox" revision="0"></rt-preact-checkbox>
+      <rt-svelte-checkbox id="renderer-checkbox" revision="0"></rt-svelte-checkbox>
     </div>
     <div class="toolbar">
       <button id="renderer-replace" class="secondary" type="button" disabled>Replace checkbox</button>
     </div>
-    <div class="observation"><span>DOM observation</span><output id="renderer-checkbox-observation">Waiting for Preact to render.</output></div>
+    <div class="observation"><span>DOM observation</span><output id="renderer-checkbox-observation">Waiting for Svelte to render.</output></div>
   </article>
 </section>
 
 <section id="renderer-popovers" class="scenario" data-capability="popover-targets" aria-labelledby="renderer-popovers-title">
   <p class="case-kind">Popover targeting</p>
   <h2 id="renderer-popovers-title">An outside button. A rendered panel.</h2>
-  <p>Preact creates a native popover inside another component. The outside buttons reference its host.</p>
+  <p>Svelte creates a native popover inside another component. The outside buttons reference its host.</p>
   <p class="expected"><strong>Try:</strong> Open the popover, then dismiss it with its close button or Escape.</p>
   <article class="demo-card">
     <h3>Open an internal popover</h3>
@@ -99,8 +99,8 @@
       <button id="renderer-open" type="button" popovertarget="renderer-popover" popovertargetaction="show" disabled>Open popover</button>
       <button id="renderer-hide" class="secondary" type="button" popovertarget="renderer-popover" popovertargetaction="hide" disabled>Hide popover</button>
     </div>
-    <rt-preact-popover id="renderer-popover"></rt-preact-popover>
-    <div class="observation"><span>DOM observation</span><output id="renderer-popover-observation">Waiting for Preact to render.</output></div>
+    <rt-svelte-popover id="renderer-popover"></rt-svelte-popover>
+    <div class="observation"><span>DOM observation</span><output id="renderer-popover-observation">Waiting for Svelte to render.</output></div>
   </article>
 </section>
 
@@ -109,120 +109,108 @@
   <p>Each component sets its shadow root’s <code>referenceTarget</code> to the internal target ID. The fallback loads before the component definitions, so it can capture the roots when the renderer creates them and observe later DOM changes.</p>
   <p>The page waits for the renderer’s first update before enabling its buttons. Replacing the checkbox changes the component’s <code>revision</code> attribute; the renderer creates a new input with the same ID.</p>
   <pre><code class="language-html" data-code-sample>&lt;label for="renderer-checkbox"&gt;Send me release notes&lt;/label&gt;
-&lt;rt-preact-checkbox id="renderer-checkbox" revision="0"&gt;&lt;/rt-preact-checkbox&gt;
+&lt;rt-svelte-checkbox id="renderer-checkbox" revision="0"&gt;&lt;/rt-svelte-checkbox&gt;
 
 &lt;button type="button" popovertarget="renderer-popover"&gt;Open popover&lt;/button&gt;
-&lt;rt-preact-popover id="renderer-popover"&gt;&lt;/rt-preact-popover&gt;</code></pre>
+&lt;rt-svelte-popover id="renderer-popover"&gt;&lt;/rt-svelte-popover&gt;</code></pre>
   <p>The selected setup uses <code>labels({ activation: "focus-and-click", naming: true })</code> and <code>popoverTargets()</code>. The page’s event listeners only display state; they do not forward label or popover actions.</p>
 </details>
 
-<details class="reading-notes"><summary>Component source</summary><h3>preact-element.js</h3><pre><code class="language-javascript" data-code-sample>import { render } from &quot;preact&quot;;
+<details class="reading-notes"><summary>Component source</summary><h3>checkbox.svelte</h3><pre><code class="language-svelte" data-code-sample>&lt;svelte:options customElement={{
+  shadow: &quot;open&quot;,
+  props: { revision: { type: &quot;Number&quot;, reflect: true } },
+  extend: Base =&gt; class extends Base {
+    constructor() {
+      super();
+      this.shadowRoot.referenceTarget = &quot;control&quot;;
+    }
+  },
+}} /&gt;
 
-// The custom element owns its lifecycle and shadow root; Preact owns rendering.
-export class PreactElement extends HTMLElement {
-  static referenceTarget = null;
+&lt;script&gt;
+  import { onMount } from &quot;svelte&quot;;
+  import componentStyles from &quot;../shared/components.css&quot;;
 
-  constructor() {
-    super();
-    this.renderRoot = this.attachShadow({ mode: &quot;open&quot; });
-    this.renderRoot.referenceTarget = this.constructor.referenceTarget;
-    this.updateComplete = Promise.resolve(false);
-    this.updatePending = false;
-  }
+  let { revision = 0 } = $props();
 
-  connectedCallback() {
-    this.requestUpdate();
-  }
+  onMount(() =&gt; {
+    const host = $host();
+    host.setAttribute(&quot;data-renderer-ready&quot;, &quot;&quot;);
+    host.dispatchEvent(new Event(&quot;renderer-ready&quot;));
+    return () =&gt; host.removeAttribute(&quot;data-renderer-ready&quot;);
+  });
+&lt;/script&gt;
 
-  disconnectedCallback() {
-    render(null, this.renderRoot);
-  }
-
-  attributeChangedCallback(name, previousValue, value) {
-    if (previousValue !== value) this.requestUpdate();
-  }
-
-  requestUpdate() {
-    if (this.updatePending) return this.updateComplete;
-    this.updatePending = true;
-    this.updateComplete = Promise.resolve().then(() =&gt; {
-      this.updatePending = false;
-      // A queued update may outlive a removal. Reconnection schedules a new one.
-      if (!this.isConnected) return false;
-      render(this.render(), this.renderRoot);
-      return true;
-    });
-    return this.updateComplete;
-  }
-
-  render() {
-    return null;
-  }
-}
+&lt;svelte:element this={&quot;style&quot;}&gt;{componentStyles}&lt;/svelte:element&gt;
+&lt;div class=&quot;component-preview&quot;&gt;
+  {#key revision}
+    &lt;input id=&quot;control&quot; type=&quot;checkbox&quot; data-revision={revision}&gt;
+  {/key}
+  &lt;span aria-hidden=&quot;true&quot;&gt;Native checkbox&lt;/span&gt;
+&lt;/div&gt;
+&lt;p class=&quot;hint&quot;&gt;Render revision {revision}&lt;/p&gt;
 </code></pre>
-<h3>components.js</h3><pre><code class="language-javascript" data-code-sample>import { Fragment, h } from &quot;preact&quot;;
-import { PreactElement } from &quot;./preact-element.js&quot;;
-import componentStyles from &quot;../shared/components.css&quot;;
+<h3>popover.svelte</h3><pre><code class="language-svelte" data-code-sample>&lt;svelte:options customElement={{
+  shadow: &quot;open&quot;,
+  extend: Base =&gt; class extends Base {
+    constructor() {
+      super();
+      this.shadowRoot.referenceTarget = &quot;panel&quot;;
+    }
+  },
+}} /&gt;
 
-class PreactCheckbox extends PreactElement {
-  static referenceTarget = &quot;control&quot;;
-  static observedAttributes = [&quot;revision&quot;];
+&lt;script&gt;
+  import { onMount } from &quot;svelte&quot;;
+  import componentStyles from &quot;../shared/components.css&quot;;
 
-  get revision() {
-    return Number(this.getAttribute(&quot;revision&quot;)) || 0;
-  }
+  onMount(() =&gt; {
+    const host = $host();
+    host.setAttribute(&quot;data-renderer-ready&quot;, &quot;&quot;);
+    host.dispatchEvent(new Event(&quot;renderer-ready&quot;));
+    return () =&gt; host.removeAttribute(&quot;data-renderer-ready&quot;);
+  });
+&lt;/script&gt;
 
-  set revision(value) {
-    this.setAttribute(&quot;revision&quot;, String(value));
-  }
+&lt;svelte:element this={&quot;style&quot;}&gt;{componentStyles}&lt;/svelte:element&gt;
+&lt;div id=&quot;panel&quot; popover=&quot;auto&quot;&gt;
+  &lt;p class=&quot;eyebrow&quot;&gt;Svelte custom element · shadow DOM&lt;/p&gt;
+  &lt;h2&gt;Rendered with Svelte&lt;/h2&gt;
+  &lt;p&gt;This native popover lives inside a compiler-generated Svelte custom element.&lt;/p&gt;
+  &lt;button type=&quot;button&quot; popovertarget=&quot;panel&quot; popovertargetaction=&quot;hide&quot;&gt;Close popover&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+<h3>components.js</h3><pre><code class="language-javascript" data-code-sample>import Checkbox from &quot;./checkbox.svelte&quot;;
+import Popover from &quot;./popover.svelte&quot;;
 
-  render() {
-    return h(Fragment, null,
-      h(&quot;style&quot;, null, componentStyles),
-      h(&quot;div&quot;, { class: &quot;component-preview&quot; },
-        h(&quot;input&quot;, { key: this.revision, id: &quot;control&quot;, type: &quot;checkbox&quot;, &quot;data-revision&quot;: this.revision }),
-        h(&quot;span&quot;, { &quot;aria-hidden&quot;: &quot;true&quot; }, &quot;Native checkbox&quot;),
-      ),
-      h(&quot;p&quot;, { class: &quot;hint&quot; }, `Render revision ${this.revision}`),
-    );
-  }
+customElements.define(&quot;rt-svelte-checkbox&quot;, Checkbox.element);
+customElements.define(&quot;rt-svelte-popover&quot;, Popover.element);
+
+function whenRendered(host) {
+  if (host.hasAttribute(&quot;data-renderer-ready&quot;)) return Promise.resolve();
+  return new Promise(resolve =&gt; host.addEventListener(&quot;renderer-ready&quot;, resolve, { once: true }));
 }
 
-class PreactPopover extends PreactElement {
-  static referenceTarget = &quot;panel&quot;;
-
-  render() {
-    return h(Fragment, null,
-      h(&quot;style&quot;, null, componentStyles),
-      h(&quot;div&quot;, { id: &quot;panel&quot;, popover: &quot;auto&quot; },
-        h(&quot;p&quot;, { class: &quot;eyebrow&quot; }, &quot;Preact · shadow DOM&quot;),
-        h(&quot;h2&quot;, null, &quot;Rendered with Preact&quot;),
-        h(&quot;p&quot;, null, &quot;This native popover lives inside a custom element rendered by Preact.&quot;),
-        h(&quot;button&quot;, { type: &quot;button&quot;, popovertarget: &quot;panel&quot;, popovertargetaction: &quot;hide&quot; }, &quot;Close popover&quot;),
-      ),
-    );
-  }
-}
-
-customElements.define(&quot;rt-preact-checkbox&quot;, PreactCheckbox);
-customElements.define(&quot;rt-preact-popover&quot;, PreactPopover);
-
+// Svelte mounts its inner component on the next tick after connection. The
+// onMount signal waits for that actual render, including its native targets.
 export async function whenReady() {
-  await Promise.all([
-    document.getElementById(&quot;renderer-checkbox&quot;).updateComplete,
-    document.getElementById(&quot;renderer-popover&quot;).updateComplete,
-  ]);
+  const hosts = [&quot;renderer-checkbox&quot;, &quot;renderer-popover&quot;].map(id =&gt; {
+    const host = document.getElementById(id);
+    if (!host) throw new Error(`Missing Svelte demo host: ${id}`);
+    return host;
+  });
+  await Promise.all(hosts.map(whenRendered));
 }
 </code></pre></details>
 
       </div>
 
-      <section class="metrics-panel" data-bundle-id="preact" aria-label="JavaScript delivery sizes">
+      <section class="metrics-panel" data-bundle-id="svelte" aria-label="JavaScript delivery sizes">
     <h2>JavaScript sizes</h2>
-    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="21090" data-gzip-bytes="8542">
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="62976" data-gzip-bytes="23597">
       <h3>Page JavaScript</h3>
-      <strong data-size="bytes" data-bytes="21090">21.090 KB</strong>
-      <span data-size="gzip" data-bytes="8542">8.542 KB gzip</span>
+      <strong data-size="bytes" data-bytes="62976">62.976 KB</strong>
+      <span data-size="gzip" data-bytes="23597">23.597 KB gzip</span>
       <p>Always loaded.</p>
     </article>
 <article class="size-card" data-size-kind="fallback" data-bytes="14704" data-gzip-bytes="5446">
@@ -231,10 +219,10 @@ export async function whenReady() {
       <span data-size="gzip" data-bytes="5446">5.446 KB gzip</span>
       <p>Core + selected adapters.</p>
     </article>
-<article class="size-card" data-size-kind="total" data-bytes="35794" data-gzip-bytes="13988">
+<article class="size-card" data-size-kind="total" data-bytes="77680" data-gzip-bytes="29043">
       <h3>Total with fallback</h3>
-      <strong data-size="bytes" data-bytes="35794">35.794 KB</strong>
-      <span data-size="gzip" data-bytes="13988">13.988 KB gzip</span>
+      <strong data-size="bytes" data-bytes="77680">77.680 KB</strong>
+      <span data-size="gzip" data-bytes="29043">29.043 KB gzip</span>
       <p>Shared files counted once.</p>
     </article></div>
     <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
@@ -245,26 +233,26 @@ export async function whenReady() {
       <div class="table-scroll"><table class="files-table">
         <caption>Files included in this page’s totals</caption>
         <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
-        <tbody><tr data-file-path="preact/app-MOFEPKJY.js" data-delivery="baseline">
-      <td><a data-bundle-file="preact/app-MOFEPKJY.js" href="../preact/app-MOFEPKJY.js"><code>preact/app-MOFEPKJY.js</code></a></td>
+        <tbody><tr data-file-path="svelte/app-DN6T3ZEW.js" data-delivery="baseline">
+      <td><a data-bundle-file="svelte/app-DN6T3ZEW.js" href="../svelte/app-DN6T3ZEW.js"><code>svelte/app-DN6T3ZEW.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="17682">17.682 KB</td>
-      <td data-size="gzip" data-bytes="6938">6.938 KB</td>
+      <td data-size="bytes" data-bytes="59568">59.568 KB</td>
+      <td data-size="gzip" data-bytes="21992">21.992 KB</td>
     </tr>
-<tr data-file-path="preact/chunk-32G5PXKY.js" data-delivery="baseline">
-      <td><a data-bundle-file="preact/chunk-32G5PXKY.js" href="../preact/chunk-32G5PXKY.js"><code>preact/chunk-32G5PXKY.js</code></a></td>
+<tr data-file-path="svelte/chunk-32G5PXKY.js" data-delivery="baseline">
+      <td><a data-bundle-file="svelte/chunk-32G5PXKY.js" href="../svelte/chunk-32G5PXKY.js"><code>svelte/chunk-32G5PXKY.js</code></a></td>
       <td>Page</td>
       <td data-size="bytes" data-bytes="924">0.924 KB</td>
       <td data-size="gzip" data-bytes="464">0.464 KB</td>
     </tr>
-<tr data-file-path="preact/main.js" data-delivery="baseline">
-      <td><a data-bundle-file="preact/main.js" href="../preact/main.js"><code>preact/main.js</code></a></td>
+<tr data-file-path="svelte/main.js" data-delivery="baseline">
+      <td><a data-bundle-file="svelte/main.js" href="../svelte/main.js"><code>svelte/main.js</code></a></td>
       <td>Page</td>
       <td data-size="bytes" data-bytes="2484">2.484 KB</td>
-      <td data-size="gzip" data-bytes="1140">1.140 KB</td>
+      <td data-size="gzip" data-bytes="1141">1.141 KB</td>
     </tr>
-<tr data-file-path="preact/reference-target.setup-OHRVICDB.js" data-delivery="fallback">
-      <td><a data-bundle-file="preact/reference-target.setup-OHRVICDB.js" href="../preact/reference-target.setup-OHRVICDB.js"><code>preact/reference-target.setup-OHRVICDB.js</code></a></td>
+<tr data-file-path="svelte/reference-target.setup-AH57T32X.js" data-delivery="fallback">
+      <td><a data-bundle-file="svelte/reference-target.setup-AH57T32X.js" href="../svelte/reference-target.setup-AH57T32X.js"><code>svelte/reference-target.setup-AH57T32X.js</code></a></td>
       <td>Fallback additional</td>
       <td data-size="bytes" data-bytes="14704">14.704 KB</td>
       <td data-size="gzip" data-bytes="5446">5.446 KB</td>
@@ -276,11 +264,11 @@ export async function whenReady() {
 
       <details class="reading-notes" aria-labelledby="reading-title">
         <summary>Renderer integration &amp; limitations</summary>
-        <h2 id="reading-title">Preact and Reference Target</h2>
-        <p>PreactElement creates the shadow root, batches attribute updates, and unmounts Preact on disconnection. Its subclasses return virtual DOM with h(); a keyed input is replaced when revision changes. Reconnecting schedules a fresh render.</p>
+        <h2 id="reading-title">Svelte and Reference Target</h2>
+        <p>Svelte compiles these components into custom element classes during the build. Its extend option sets referenceTarget on the generated shadow root, a keyed block replaces the checkbox, and onMount signals first-render readiness. Mounting and destruction follow Svelte’s deferred custom element lifecycle.</p>
         <p>The library and its component code are included in Page JavaScript above. Each renderer is built as an independent page with only the labels and popover-targets adapters in its optional fallback bundle.</p>
         <p>These examples use open, client-rendered roots. They do not test server rendering or hydration. The label fallback does not recreate native label.control or input.labels relationships. Readouts describe DOM state; computed names and assistive technology need separate validation.</p>
-        <p><a href="https://preactjs.com/">Preact documentation ↗</a></p>
+        <p><a href="https://svelte.dev/docs/svelte/custom-elements">Svelte documentation ↗</a></p>
       </details>
       <footer class="page-footer">
         <p><a href="../">Explore every capability</a> · <a href="../scenarios/">Declarative reference cases</a></p>

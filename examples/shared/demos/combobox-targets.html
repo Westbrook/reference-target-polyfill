@@ -1,0 +1,63 @@
+<section class="scenario" id="combobox-targets" data-capability="combobox-targets" data-ready="loading" aria-labelledby="combobox-targets-title">
+  <p class="case-kind">Combobox relationships</p>
+  <h2 id="combobox-targets-title">One host. Two destinations.</h2>
+  <p>The input controls a listbox and points to its active option, through a component-provided public popup.</p>
+  <p class="expected" id="cb-instructions"><strong>Try:</strong> Type to filter, use ↑ / ↓ to explore, Enter to choose, and Escape to close. Focus stays in the input.</p>
+
+  <div class="field-grid">
+    <article class="demo-card combobox-card">
+      <p class="combobox-margin">A small directory of rabbit holes ↴</p>
+      <label class="field" for="cb-input">
+        <span id="cb-label">Find a web topic</span>
+        <input id="cb-input" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false"
+          aria-controls="cb-host" aria-activedescendant="cb-host" aria-describedby="cb-instructions"
+          autocomplete="off" spellcheck="false" placeholder="Try “web” or press ↓" disabled>
+      </label>
+      <rt-topic-picker id="cb-host" data-input="cb-input">
+        <div id="cb-listbox" role="listbox" aria-labelledby="cb-label" hidden></div>
+        <p id="cb-empty" class="combobox-empty" hidden>No topics match. Try another search.</p>
+      </rt-topic-picker>
+      <p class="combobox-count" id="cb-count" aria-live="polite">Preparing the suggestions…</p>
+      <p class="observation" id="cb-status" role="status">No topic selected.</p>
+    </article>
+    <article class="demo-card">
+      <h3>Follow the references</h3>
+      <pre id="cb-relations" aria-label="Combobox DOM relationships">Waiting for setup…</pre>
+      <p class="expected">These are the input’s actual ID references. The listbox and options share its DOM tree; a closed shadow root supplies the component’s shell.</p>
+    </article>
+  </div>
+
+  <details class="behavior-notes">
+    <summary>Behavior &amp; limits</summary>
+    <p>The adapter rewrites <code>aria-controls="cb-host"</code> to the public listbox and <code>aria-activedescendant="cb-host"</code> to its current public option. The component handles filtering, keyboard input, selection, visibility, scrolling, and focus.</p>
+    <p>This is a cooperative bridge, not the proposed Phase 2 map into private roots. There is one real listbox, with real visible options distributed through a slot. Native Phase 1 still has only one target per host, so Automatic also loads this adapter there.</p>
+    <p>Browser alone keeps the component interactions but leaves the authored host references unresolved. DOM readouts do not establish screen-reader support; test the browser and assistive technology combinations you ship.</p>
+  </details>
+
+  <details class="code-example">
+    <summary>Code sample</summary>
+    <pre><code id="combobox-targets-code-html" class="language-html" data-code-sample>&lt;input role="combobox" type="text" aria-expanded="true"
+  aria-controls="topic-picker" aria-activedescendant="topic-picker"&gt;
+&lt;rt-topic-picker id="topic-picker"&gt;
+  &lt;!-- Public light DOM, slotted into the component's shell. --&gt;
+  &lt;div id="topics" role="listbox" aria-label="Web topics"&gt;
+    &lt;div id="topic-css" role="option" aria-selected="true"&gt;CSS&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/rt-topic-picker&gt;</code></pre>
+    <pre><code id="combobox-targets-code-javascript" class="language-javascript" data-code-sample>// reference-target.setup.js
+import { installReferenceTarget } from 'reference-target-fallback/core';
+import { comboboxTargets } from 'reference-target-fallback/adapters/combobox-targets';
+
+export const referenceTargets = installReferenceTarget({
+  adapters: [comboboxTargets({
+    // The component intentionally exposes only its public nodes.
+    getTargets: host =&gt; host.getComboboxTargets?.() ?? null,
+  })],
+});
+// The component calls referenceTargets.refresh() after model/render updates.</code></pre>
+    <pre><code id="combobox-targets-code-bootstrap" class="language-javascript" data-code-sample>// bootstrap.js — Phase 1 support does not replace this cooperative bridge.
+const { referenceTargets } = await import('./reference-target.setup.js');
+await import('./app.js');
+// app.js is an ordinary module; it does not need to export a start() method.</code></pre>
+  </details>
+</section>

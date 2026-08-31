@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-demo-page="all" data-capabilities="labels popover-targets dialog-commands popover-commands text-names form-targets" data-reference-target-ready="false">
+<html lang="en" data-demo-page="all" data-capabilities="labels popover-targets dialog-commands popover-commands text-names form-targets combobox-targets" data-reference-target-ready="false">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,13 +25,14 @@
           <a href="./popover-commands/">Popover commands</a>
           <a href="./text-names/">Text names</a>
           <a href="./forms/">Form actions</a>
+          <a href="./comboboxes/">Comboboxes</a>
           <a class="docs-link" href="../">Use the polyfill ↗</a>
         </nav>
         <div class="hero">
           <div class="hero-copy">
-            <p class="eyebrow">Shadow DOM / six small experiments</p>
+            <p class="eyebrow">Shadow DOM / seven small experiments</p>
             <h1>Reference<br><em>Target.</em></h1>
-            <p class="intro">Six Reference Target capabilities, with opt-in fallback adapters.</p>
+            <p class="intro">Seven Reference Target capabilities, with opt-in fallback adapters.</p>
           </div>
           <figure class="reference-map" role="img" aria-label="A reference to a host is forwarded to a target inside its shadow root.">
             <div class="map-source"><span class="map-label">outside</span><code>for="host"</code></div>
@@ -60,14 +61,14 @@
               <div><dt>Native API surface</dt><dd id="surface-status">Checking…</dd></div>
               <div class="adapters"><dt>Active adapters</dt><dd id="adapter-status">Waiting for setup…</dd></div>
             </dl>
-            <p id="mode-note" class="mode-note">Automatic checks for the native property. Force fallback loads the selected adapters. Browser alone leaves them out.</p>
+            <p id="mode-note" class="mode-note">Automatic checks native support and includes the cooperative combobox bridge. Force fallback loads every selected adapter. Browser alone leaves them out.</p>
           </details>
           <p class="error" id="load-error" role="alert" hidden></p>
           <noscript><p class="error">Enable JavaScript to try the controls.</p></noscript>
         </section>
       </header>
 
-      <nav class="jump-links" aria-label="Jump to a demo"><a href="#labels">Labels</a><a href="#popover-targets">Popover targeting</a><a href="#dialog-commands">Dialog commands</a><a href="#popover-commands">Popover commands</a><a href="#text-names">Text names</a><a href="#form-targets">Form actions</a><a href="#boundaries">Reference boundaries</a></nav>
+      <nav class="jump-links" aria-label="Jump to a demo"><a href="#labels">Labels</a><a href="#popover-targets">Popover targeting</a><a href="#dialog-commands">Dialog commands</a><a href="#popover-commands">Popover commands</a><a href="#text-names">Text names</a><a href="#form-targets">Form actions</a><a href="#combobox-targets">Comboboxes</a><a href="#boundaries">Reference boundaries</a></nav>
       <div class="demo-stack" id="demos">
         <!-- demo:labels -->
         <!-- demo:popover-targets -->
@@ -75,6 +76,7 @@
         <!-- demo:popover-commands -->
         <!-- demo:text-names -->
         <!-- demo:form-targets -->
+        <!-- demo:combobox-targets -->
         <!-- demo:boundaries -->
       </div>
 

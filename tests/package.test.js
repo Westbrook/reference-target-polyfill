@@ -26,6 +26,12 @@ test("browser requirements fail clearly outside a supported realm", async () => 
   assert.throws(() => installReferenceTarget(), /browser with Shadow DOM/);
 });
 
+test("combobox relationships require an explicit public provider", async () => {
+  const { comboboxTargets } = await import("../src/adapters/combobox-targets.js");
+  assert.throws(() => comboboxTargets(), TypeError);
+  assert.throws(() => comboboxTargets({ getTargets: true }), TypeError);
+});
+
 async function assertExampleBundle(directory, selected) {
   const entryPoint = `${directory}/main.js`;
   const result = await build({
@@ -34,7 +40,7 @@ async function assertExampleBundle(directory, selected) {
     minify: true, metafile: true, write: false,
   });
   const inputs = Object.keys(result.metafile.inputs);
-  for (const adapter of ["labels", "text-names", "popover-targets", "dialog-commands", "popover-commands", "form-targets"]) {
+  for (const adapter of ["labels", "text-names", "popover-targets", "dialog-commands", "popover-commands", "form-targets", "combobox-targets"]) {
     assert.equal(inputs.includes(`src/adapters/${adapter}.js`), selected.includes(adapter),
       `${directory}: ${adapter} should be ${selected.includes(adapter) ? "included" : "omitted"}`);
   }

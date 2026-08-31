@@ -1,4 +1,4 @@
-import { bootstrap } from "./shared/bootstrap.js";
+import { bootstrap } from "../shared/bootstrap.js";
 
 await bootstrap({
   cooperativeFallback: true,

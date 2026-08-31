@@ -1,7 +1,14 @@
 import { hasNativeReferenceTarget } from "../../src/detect.js";
 
+let referenceTargets;
+
+/** Components call this after changing the model behind a cooperative provider. */
+export function refreshReferenceTargets() {
+  referenceTargets?.refresh();
+}
+
 /** The page owns the two import boundaries; this helper imports no adapters. */
-export async function bootstrap({ loadFallback, loadApp }) {
+export async function bootstrap({ loadFallback, loadApp, cooperativeFallback = false }) {
   const page = document.documentElement;
   const parameters = new URL(location.href).searchParams;
   const requested = parameters.get("mode") ?? (parameters.get("fallback") === "1" ? "fallback" : "auto");
@@ -23,10 +30,13 @@ export async function bootstrap({ loadFallback, loadApp }) {
   try {
     let fallback;
     let loadedFallback = false;
-    if (requestedMode === "fallback" || (requestedMode === "auto" && !nativeSurface)) {
+    if (requestedMode === "fallback" || (requestedMode === "auto" && (!nativeSurface || cooperativeFallback))) {
       ({ referenceTargetFallback: fallback } = await loadFallback());
       loadedFallback = true;
     }
+    // This is assigned before importing the ordinary app module so its first
+    // render can synchronously synchronize component-provided public targets.
+    referenceTargets = fallback;
     const mode = requestedMode === "off" ? "off" : fallback?.mode ?? "native";
     page.dataset.referenceTargetMode = mode;
     page.dataset.referenceTargetAdapters = fallback?.activeAdapters.join(",") ?? "";
@@ -35,7 +45,9 @@ export async function bootstrap({ loadFallback, loadApp }) {
     document.getElementById("mode-status").textContent = mode === "off"
       ? "Browser alone · fallback off"
       : mode === "native" ? "Native API detected"
-        : mode === "fallback" ? `Fallback · ${requestedMode === "fallback" ? "forced" : "automatic"}`
+        : mode === "fallback" ? nativeSurface && requestedMode !== "fallback" && cooperativeFallback
+          ? "Cooperative bridge · native API surface present"
+          : `Fallback · ${requestedMode === "fallback" ? "forced" : "automatic"}`
           : "Fallback unavailable";
     document.getElementById("adapter-status").textContent = fallback
       ? Object.entries(fallback.statuses).map(([id, status]) => `${id}: ${status}`).join(" · ")
@@ -43,13 +55,16 @@ export async function bootstrap({ loadFallback, loadApp }) {
 
     // Each app is an ordinary module. Its imports only initialize its own demos.
     await loadApp();
+    refreshReferenceTargets();
     await Promise.resolve();
     page.dataset.referenceTargetReady = "true";
     ready.dataset.ready = "true";
     ready.textContent = "Ready.";
     const note = document.getElementById("mode-note");
     if (note) note.textContent = loadedFallback
-      ? "This visit includes the additional fallback JavaScript shown below."
+      ? cooperativeFallback
+        ? "This visit includes the additional adapter JavaScript shown below. The combobox bridge also runs with native Phase 1: a single referenceTarget cannot expose both a listbox and its active option."
+        : "This visit includes the additional fallback JavaScript shown below."
       : "This visit uses the baseline JavaScript only. Browser-only mode does not imply native Reference Target support.";
   } catch (error) {
     page.dataset.referenceTargetMode = "error";

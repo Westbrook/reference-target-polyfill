@@ -5,6 +5,7 @@ import { dialogCommands } from "./../src/adapters/dialog-commands.js";
 import { popoverCommands } from "./../src/adapters/popover-commands.js";
 import { textNames } from "./../src/adapters/text-names.js";
 import { formTargets } from "./../src/adapters/form-targets.js";
+import { comboboxTargets } from "./../src/adapters/combobox-targets.js";
 
 const parameters = new URL(location.href).searchParams;
 export const referenceTargetFallback = installReferenceTarget({
@@ -15,6 +16,7 @@ export const referenceTargetFallback = installReferenceTarget({
     popoverCommands(),
     textNames({ getText(host, kind) { return host.getAttribute(kind === "label" ? "data-label-text" : "data-description-text"); } }),
     formTargets(),
+    comboboxTargets({ getTargets: host => host.getComboboxTargets?.() ?? null }),
   ],
   force: parameters.get("mode") === "fallback" || parameters.get("fallback") === "1",
 });

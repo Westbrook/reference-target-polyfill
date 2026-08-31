@@ -48,7 +48,7 @@ for (const page of pages) {
 }
 
 await mkdir(join(outputsRoot, "shared"), { recursive: true });
-for (const filename of ["styles.css", "components.css", "code-highlighting.js"]) {
+for (const filename of ["styles.css", "components.css", "code-highlighting.js", "favicon.svg"]) {
   await copyFile(join(projectRoot, "examples/shared", filename), join(outputsRoot, "shared", filename));
 }
 
@@ -122,7 +122,7 @@ for (const page of pages) {
     html = html.replace("<head>", `<head>\n<link rel="stylesheet" href="${assets}/styles.css">`);
   }
   html = html.replace("<!-- capability-sizes -->", () => renderCapabilitySizes(reports, { prefix }));
-  html = html.replace("</head>", () => `<link rel="stylesheet" href="${assets}/microlighter/themes/github.css">\n</head>`);
+  html = html.replace("</head>", () => `<link rel="icon" type="image/svg+xml" href="${assets}/favicon.svg">\n<link rel="stylesheet" href="${assets}/microlighter/themes/github.css">\n</head>`);
   html = html.replace("</body>", () => `<script type="module" src="${assets}/code-highlighting.js"></script>\n</body>`);
   await writeFile(join(outputsRoot, page.directory, "index.html"), html);
 }

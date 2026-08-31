@@ -1,0 +1,2 @@
+# Stencil regenerates its JSX element declarations during each build.
+/src/components.d.ts

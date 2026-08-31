@@ -25,6 +25,14 @@ Edit shared demo content in `examples/shared/demos/`, behavior in
 Consumption documentation lives in `docs/`. Builds regenerate the displayed
 sizes; do not edit `dist/` by hand or commit it to `main`.
 
+Renderer examples live in `examples/lit/`, `examples/fast/`, `examples/stencil/`,
+and `examples/preact/`. Their shared cases are in `examples/shared/demos/renderer.html`
+and observation controls in `examples/shared/renderer-demo.js`. Keep framework
+imports inside each renderer’s application boundary. The build and package tests
+compile Stencil’s TSX into `dist/stencil` before bundling its custom elements;
+Stencil’s generated `src/components.d.ts` is ignored. Browser tests cover initial
+rendering, target replacement, reconnection, popovers, and the three loading modes.
+
 ## Publishing the site
 
 The `main` branch contains source. The `gh-pages` branch contains only the

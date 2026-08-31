@@ -1,0 +1,47 @@
+<section id="renderer-labels" class="scenario" data-capability="labels" aria-labelledby="renderer-labels-title">
+  <p class="case-kind">Labels &amp; rendering</p>
+  <h2 id="renderer-labels-title">A new control. The same reference.</h2>
+  <p>The outside label references the component. {{renderer-name}} renders the checkbox inside its shadow root.</p>
+  <p class="expected"><strong>Try:</strong> Click the label, replace the checkbox, then click the label again. Each replacement starts unchecked.</p>
+  <article class="demo-card">
+    <h3>Follow a rendered target</h3>
+    <div class="try-it button-row">
+      <label id="renderer-label" for="renderer-checkbox">Send me release notes</label>
+      <rt-{{renderer-id}}-checkbox id="renderer-checkbox" revision="0"></rt-{{renderer-id}}-checkbox>
+    </div>
+    <div class="toolbar">
+      <button id="renderer-replace" class="secondary" type="button" disabled>Replace checkbox</button>
+    </div>
+    <div class="observation"><span>DOM observation</span><output id="renderer-checkbox-observation">Waiting for {{renderer-name}} to render.</output></div>
+  </article>
+</section>
+
+<section id="renderer-popovers" class="scenario" data-capability="popover-targets" aria-labelledby="renderer-popovers-title">
+  <p class="case-kind">Popover targeting</p>
+  <h2 id="renderer-popovers-title">An outside button. A rendered panel.</h2>
+  <p>{{renderer-name}} creates a native popover inside another component. The outside buttons reference its host.</p>
+  <p class="expected"><strong>Try:</strong> Open the popover, then dismiss it with its close button or Escape.</p>
+  <article class="demo-card">
+    <h3>Open an internal popover</h3>
+    <div class="try-it button-row">
+      <button id="renderer-open" type="button" popovertarget="renderer-popover" popovertargetaction="show" disabled>Open popover</button>
+      <button id="renderer-hide" class="secondary" type="button" popovertarget="renderer-popover" popovertargetaction="hide" disabled>Hide popover</button>
+    </div>
+    <rt-{{renderer-id}}-popover id="renderer-popover"></rt-{{renderer-id}}-popover>
+    <div class="observation"><span>DOM observation</span><output id="renderer-popover-observation">Waiting for {{renderer-name}} to render.</output></div>
+  </article>
+</section>
+
+<details class="reading-notes">
+  <summary>How the examples are connected</summary>
+  <p>Each component sets its shadow root’s <code>referenceTarget</code> to the internal target ID. The fallback loads before the component definitions, so it can capture the roots when the renderer creates them and observe later DOM changes.</p>
+  <p>The page waits for the renderer’s first update before enabling its buttons. Replacing the checkbox changes the component’s <code>revision</code> attribute; the renderer creates a new input with the same ID.</p>
+  <pre><code class="language-html" data-code-sample>&lt;label for="renderer-checkbox"&gt;Send me release notes&lt;/label&gt;
+&lt;rt-{{renderer-id}}-checkbox id="renderer-checkbox" revision="0"&gt;&lt;/rt-{{renderer-id}}-checkbox&gt;
+
+&lt;button type="button" popovertarget="renderer-popover"&gt;Open popover&lt;/button&gt;
+&lt;rt-{{renderer-id}}-popover id="renderer-popover"&gt;&lt;/rt-{{renderer-id}}-popover&gt;</code></pre>
+  <p>The selected setup uses <code>labels({ activation: "focus-and-click", naming: true })</code> and <code>popoverTargets()</code>. The page’s event listeners only display state; they do not forward label or popover actions.</p>
+</details>
+
+<!-- renderer-source -->

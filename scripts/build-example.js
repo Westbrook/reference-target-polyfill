@@ -3,11 +3,13 @@ import { copyFile, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promi
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { gzipSync } from "node:zlib";
-import { pages } from "../examples/pages.js";
+import { pages, renderers } from "../examples/pages.js";
+import { buildStencilExamples } from "./build-stencil.js";
 import { analyzePageBundles, renderBundleSummary, renderCapabilitySizes } from "./bundle-sizes.js";
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputsRoot = join(projectRoot, "dist/examples");
+await buildStencilExamples();
 await rm(outputsRoot, { recursive: true, force: true });
 await mkdir(outputsRoot, { recursive: true });
 
@@ -23,6 +25,7 @@ for (const page of pages) {
     entryPoints: [join(source, "main.js")], outdir: destination,
     bundle: true, splitting: true, format: "esm", platform: "browser",
     target: "es2022", minify: true, sourcemap: true, metafile: true,
+    loader: { ".css": "text" },
   });
   const report = await analyzePageBundles({ page, metafile: result.metafile, outputsRoot, projectRoot });
   reports.push(report);
@@ -53,7 +56,7 @@ const loadGrammars = createGrammarLoader(async language => {
   const grammar = await import(pathToFileURL(join(microlighterRoot, "grammars", `${language}.js`)).href);
   return grammar.default;
 });
-const { languages } = await loadGrammars(["html", "javascript", "css", "json"]);
+const { languages } = await loadGrammars(["html", "javascript", "css", "json", "tsx"]);
 const microlighterDestination = join(outputsRoot, "shared/microlighter");
 for (const filename of [
   "index.js", "highlight.js", "grammar-dependencies.js", "themes/github.css",
@@ -64,6 +67,8 @@ for (const filename of [
   await copyFile(join(microlighterRoot, filename), destination);
 }
 await copyFile(join(microlighterRoot, "../LICENSE"), join(microlighterDestination, "LICENSE"));
+
+const escapeHTML = text => text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
 for (const page of pages) {
   const report = reports.find(item => item.id === page.id);
@@ -82,6 +87,23 @@ for (const page of pages) {
     html = html.replaceAll(marker, () => fragment);
   }
   html = html.replaceAll("{{assets}}", assets);
+  if (page.renderer) {
+    html = html.replaceAll("{{renderer-id}}", page.renderer.id)
+      .replaceAll("{{renderer-name}}", escapeHTML(page.renderer.title))
+      .replaceAll("{{renderer-url}}", page.renderer.url);
+    const samples = [];
+    for (const filename of page.renderer.sources) {
+      const source = await readFile(join(projectRoot, "examples", page.directory, filename), "utf8");
+      const language = filename.endsWith(".tsx") ? "tsx" : "javascript";
+      samples.push(`<h3>${escapeHTML(filename)}</h3><pre><code class="language-${language}" data-code-sample>${escapeHTML(source)}</code></pre>`);
+    }
+    html = html.replace("<!-- renderer-source -->", () => `<details class="reading-notes"><summary>Component source</summary>${samples.join("\n")}</details>`);
+  }
+  html = html.replace("<!-- renderer-links -->", () => `<section class="metrics-panel" id="renderers" aria-labelledby="renderers-title">
+    <h2 id="renderers-title">Rendered by a library</h2>
+    <p>Try the same label, checkbox replacement, and popover examples in four independent pages.</p>
+    <nav class="jump-links" aria-label="Renderer examples">${renderers.map(renderer => `<a href="${prefix}${renderer.id}/">${escapeHTML(renderer.title)}</a>`).join(" ")}</nav>
+  </section>`);
   const summary = renderBundleSummary(report, { prefix });
   if (html.includes("<!-- bundle-summary -->")) {
     html = html.replace("<!-- bundle-summary -->", () => summary);

@@ -96,7 +96,7 @@ export function renderBundleSummary(report, { prefix = "./" } = {}) {
     <details>
       <summary>Inspect the ${report.files.length} generated JavaScript files</summary>
       <p class="metric-note">Selected adapters: ${report.adapters.map(adapter => `<code>${escapeHTML(adapter)}</code>`).join(", ")}.</p>
-      <p class="metric-note">Gzip totals sum each compressed file. CSS, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Transfer sizes depend on compression and caching. <a href="${escapeHTML(prefix + "shared/microlighter/LICENSE")}">Microlighter MIT license</a>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="${escapeHTML(prefix + "shared/microlighter/LICENSE")}">Microlighter MIT license</a>.</p>
       <div class="table-scroll"><table class="files-table">
         <caption>Files included in this page’s totals</caption>
         <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>

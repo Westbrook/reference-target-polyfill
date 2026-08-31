@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { build } from "esbuild";
 import { pages } from "../examples/pages.js";
+import { buildStencilExamples } from "../scripts/build-stencil.js";
 
 test("published entry points import without a DOM or installation side effects", async () => {
   const manifest = JSON.parse(await readFile(new URL("../package.json", import.meta.url)));
@@ -32,14 +33,22 @@ test("combobox relationships require an explicit public provider", async () => {
   assert.throws(() => comboboxTargets({ getTargets: true }), TypeError);
 });
 
-async function assertExampleBundle(directory, selected) {
+async function assertExampleBundle(directory, selected, renderer) {
   const entryPoint = `${directory}/main.js`;
   const result = await build({
     entryPoints: [entryPoint], outdir: "dist/test-build",
     bundle: true, splitting: true, format: "esm", platform: "browser", target: "es2022",
     minify: true, metafile: true, write: false,
+    loader: { ".css": "text" },
   });
   const inputs = Object.keys(result.metafile.inputs);
+  for (const [id, prefix] of Object.entries({
+    lit: "node_modules/lit/", fast: "node_modules/@microsoft/fast-element/",
+    stencil: "dist/stencil/", preact: "node_modules/preact/",
+  })) {
+    assert.equal(inputs.some(input => input.startsWith(prefix)), renderer?.id === id,
+      `${directory}: ${id} runtime should be ${renderer?.id === id ? "included" : "omitted"}`);
+  }
   for (const adapter of ["labels", "text-names", "popover-targets", "dialog-commands", "popover-commands", "form-targets", "combobox-targets"]) {
     assert.equal(inputs.includes(`src/adapters/${adapter}.js`), selected.includes(adapter),
       `${directory}: ${adapter} should be ${selected.includes(adapter) ? "included" : "omitted"}`);
@@ -75,6 +84,7 @@ async function assertExampleBundle(directory, selected) {
 
 for (const page of pages) {
   test(`${page.title}: adapter selection stays behind the readiness boundary`, async () => {
-    await assertExampleBundle(`examples${page.directory ? `/${page.directory}` : ""}`, page.adapters);
+    if (page.renderer?.id === "stencil") await buildStencilExamples();
+    await assertExampleBundle(`examples${page.directory ? `/${page.directory}` : ""}`, page.adapters, page.renderer);
   });
 }

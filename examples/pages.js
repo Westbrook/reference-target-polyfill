@@ -8,6 +8,19 @@ const capabilities = [
   { id: "form-targets", directory: "forms", title: "Form submission and reset" },
 ];
 
+export const renderers = [
+  { id: "lit", title: "Lit", url: "https://lit.dev/", sources: ["components.js"] },
+  { id: "fast", title: "FAST", url: "https://fast.design/", sources: ["components.js"] },
+  {
+    id: "stencil", title: "Stencil", url: "https://stenciljs.com/",
+    sources: ["src/components/checkbox.tsx", "src/components/popover.tsx", "components.js"],
+  },
+  {
+    id: "preact", title: "Preact", url: "https://preactjs.com/",
+    sources: ["preact-element.js", "components.js"],
+  },
+];
+
 export const pages = [
   {
     id: "all", directory: "", title: "All Reference Target demos",
@@ -15,6 +28,10 @@ export const pages = [
     features: [...capabilities.map(({ id }) => id), "boundaries"],
   },
   ...capabilities.map(page => ({ ...page, adapters: [page.id], features: [page.id] })),
+  ...renderers.map(renderer => ({
+    id: renderer.id, directory: renderer.id, title: `${renderer.title} custom elements`,
+    adapters: ["labels", "popover-targets"], features: ["renderer"], renderer,
+  })),
   {
     id: "scenarios", directory: "scenarios", title: "Declarative boundary comparisons",
     adapters: ["labels", "popover-targets", "text-names"], features: [],

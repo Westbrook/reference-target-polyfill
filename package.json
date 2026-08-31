@@ -58,7 +58,11 @@
     "node": ">=22"
   },
   "devDependencies": {
+    "@microsoft/fast-element": "3.0.2",
+    "@stencil/core": "4.44.2",
     "esbuild": "^0.28.2",
-    "microlighter": "2.1.0"
+    "lit": "3.3.3",
+    "microlighter": "2.1.0",
+    "preact": "10.29.8"
   }
 }

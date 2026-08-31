@@ -1306,6 +1306,8 @@ async function run() {
   });
   const { registerGalleryTests } = await import("./gallery.js");
   registerGalleryTests({ test, assert, equal, requirePrimitive });
+  const { registerRendererTests } = await import("./renderers.js");
+  registerRendererTests({ test, assert, equal, requirePrimitive });
 
   for (const { name, callback } of tests) {
     statusElement.textContent = `Running ${results.length + 1}/${tests.length}: ${name}`;

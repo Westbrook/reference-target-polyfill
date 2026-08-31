@@ -67,12 +67,10 @@ export function installReferenceTarget({
   }
   if (!selected.length) return inactiveHandle("inactive", selected, "No adapters selected");
   const nativeSurface = hasNativeReferenceTarget(realm);
-  const nativeCooperation = nativeSurface && !force;
-  const probe = nativeCooperation ? probeReferenceTarget(realm) : null;
-  const nativeStatus = probe?.nullable && probe?.labels ? "native" : "unsupported";
-  if (nativeCooperation && !selected.some(adapter => adapter.nativeFallback === true)) {
-    return inactiveHandle(nativeStatus, selected,
-      nativeStatus === "native" ? undefined : "Partial native implementation; fallback was not layered over it");
+  if (nativeSurface && !force) {
+    const probe = probeReferenceTarget(realm);
+    return inactiveHandle(probe.nullable && probe.labels ? "native" : "unsupported", selected,
+      probe.nullable && probe.labels ? undefined : "Partial native implementation; fallback was not layered over it");
   }
 
   const document = realm.document;
@@ -174,41 +172,35 @@ export function installReferenceTarget({
     excludedRoots.delete(root);
     let record = records.get(root.host);
     if (record) {
-      if (!nativeCooperation && "referenceTarget" in options) root.referenceTarget = options.referenceTarget;
+      if ("referenceTarget" in options) root.referenceTarget = options.referenceTarget;
       return record.handle;
     }
-    // Cooperative adapters can still be needed with native Phase 1. Observe
-    // their scopes without taking ownership of native roots or their metadata.
-    if (nativeCooperation) {
-      record = { root, get referenceTarget() { return targetString(root.referenceTarget); } };
-    } else {
-      const own = Object.getOwnPropertyDescriptor(root, "referenceTarget");
-      if (own && !own.configurable) throw new TypeError("Cannot capture a nonconfigurable referenceTarget property");
-      const initial = targetString("referenceTarget" in options ? options.referenceTarget : root.referenceTarget);
-      const nativeReferenceTarget = nativeSurface && force ? nativeProperty?.get?.call(root) : undefined;
-      record = { root, referenceTarget: initial, own, nativeReferenceTarget };
-      const getter = function () {
-        if (this !== root) throw new TypeError("Illegal referenceTarget receiver");
-        return record.referenceTarget;
-      };
-      const setter = function (value) {
-        if (this !== root) throw new TypeError("Illegal referenceTarget receiver");
-        const next = targetString(value);
-        if (next !== record.referenceTarget) {
-          record.referenceTarget = next;
-          scheduleRefresh();
-        }
-      };
-      Object.defineProperty(root, "referenceTarget", { configurable: true, enumerable: true, get: getter, set: setter });
-      try {
-        if (nativeSurface && force) nativeProperty?.set?.call(root, null);
-      } catch (error) {
-        if (own) Object.defineProperty(root, "referenceTarget", own);
-        else delete root.referenceTarget;
-        throw error;
+    const own = Object.getOwnPropertyDescriptor(root, "referenceTarget");
+    if (own && !own.configurable) throw new TypeError("Cannot capture a nonconfigurable referenceTarget property");
+    const initial = targetString("referenceTarget" in options ? options.referenceTarget : root.referenceTarget);
+    const nativeReferenceTarget = nativeSurface && force ? nativeProperty?.get?.call(root) : undefined;
+    record = { root, referenceTarget: initial, own, nativeReferenceTarget };
+    const getter = function () {
+      if (this !== root) throw new TypeError("Illegal referenceTarget receiver");
+      return record.referenceTarget;
+    };
+    const setter = function (value) {
+      if (this !== root) throw new TypeError("Illegal referenceTarget receiver");
+      const next = targetString(value);
+      if (next !== record.referenceTarget) {
+        record.referenceTarget = next;
+        scheduleRefresh();
       }
-      record.getter = getter;
+    };
+    Object.defineProperty(root, "referenceTarget", { configurable: true, enumerable: true, get: getter, set: setter });
+    try {
+      if (nativeSurface && force) nativeProperty?.set?.call(root, null);
+    } catch (error) {
+      if (own) Object.defineProperty(root, "referenceTarget", own);
+      else delete root.referenceTarget;
+      throw error;
     }
+    record.getter = getter;
     record.handle = Object.freeze({
       dispose() {
         if (records.get(root.host) === record) unregister(root);
@@ -232,7 +224,7 @@ export function installReferenceTarget({
     records.delete(root.host);
     excludedRoots.add(root);
     for (const ref of knownRoots) if (ref.deref() === root || !ref.deref()) knownRoots.delete(ref);
-    if (record.getter && Object.getOwnPropertyDescriptor(root, "referenceTarget")?.get === record.getter) {
+    if (Object.getOwnPropertyDescriptor(root, "referenceTarget")?.get === record.getter) {
       if (record.own) Object.defineProperty(root, "referenceTarget", record.own);
       else delete root.referenceTarget;
       if (nativeSurface && force) {
@@ -279,10 +271,10 @@ export function installReferenceTarget({
       // A form control named "shadowRoot" can mask the inherited getter.
       if (!(root instanceof realm.ShadowRoot) || excludedRoots.has(root)) continue;
       if (!existing) {
-        const options = metadata && !nativeCooperation && element.hasAttribute("data-reference-target")
+        const options = metadata && element.hasAttribute("data-reference-target")
           ? { referenceTarget: element.getAttribute("data-reference-target") } : {};
         register(root, options);
-      } else if (metadata && !nativeCooperation && element.hasAttribute("data-reference-target")) {
+      } else if (metadata && element.hasAttribute("data-reference-target")) {
         root.referenceTarget = element.getAttribute("data-reference-target");
       }
       discover(root, metadata);
@@ -359,14 +351,8 @@ export function installReferenceTarget({
 
   installations.set(realm, handle);
   try {
-    if (!nativeCooperation) {
-      Object.defineProperty(prototype, "attachShadow", { ...originalDescriptor, value: wrappedAttachShadow });
-    }
+    Object.defineProperty(prototype, "attachShadow", { ...originalDescriptor, value: wrappedAttachShadow });
     for (const adapter of selected) {
-      if (nativeCooperation && adapter.nativeFallback !== true) {
-        statuses[adapter.id] = nativeStatus;
-        continue;
-      }
       if (adapter.check && !adapter.check(realm)) {
         statuses[adapter.id] = "unsupported";
         report("missing-primitive", { adapter: adapter.id });

@@ -5,6 +5,8 @@ import { resolve, dirname } from "node:path";
 import { build } from "esbuild";
 import { pages } from "../examples/pages.js";
 import { buildStencilExamples } from "../scripts/build-stencil.js";
+import { buildAngularExamples } from "../scripts/build-angular.js";
+import { exampleBuildOptions } from "../scripts/example-build-options.js";
 
 test("published entry points import without a DOM or installation side effects", async () => {
   const manifest = JSON.parse(await readFile(new URL("../package.json", import.meta.url)));
@@ -39,16 +41,22 @@ async function assertExampleBundle(directory, selected, renderer) {
     entryPoints: [entryPoint], outdir: "dist/test-build",
     bundle: true, splitting: true, format: "esm", platform: "browser", target: "es2022",
     minify: true, metafile: true, write: false,
-    loader: { ".css": "text" },
+    ...exampleBuildOptions({ renderer }),
   });
   const inputs = Object.keys(result.metafile.inputs);
   for (const [id, prefix] of Object.entries({
     lit: "node_modules/lit/", fast: "node_modules/@microsoft/fast-element/",
     stencil: "dist/stencil/", preact: "node_modules/preact/",
+    vue: "node_modules/@vue/", svelte: "node_modules/svelte/",
+    angular: "node_modules/@angular/core/",
   })) {
     assert.equal(inputs.some(input => input.startsWith(prefix)), renderer?.id === id,
       `${directory}: ${id} runtime should be ${renderer?.id === id ? "included" : "omitted"}`);
   }
+  for (const compiler of ["node_modules/@angular/compiler/", "node_modules/@angular/compiler-cli/", "node_modules/svelte/compiler/"]) {
+    assert.ok(!inputs.some(input => input.startsWith(compiler)), `${directory}: compiler must stay out of the browser bundle`);
+  }
+  assert.ok(!inputs.some(input => input.startsWith("node_modules/@vue/compiler-")), `${directory}: Vue uses its runtime-only entry point`);
   for (const adapter of ["labels", "text-names", "popover-targets", "dialog-commands", "popover-commands", "form-targets", "combobox-targets"]) {
     assert.equal(inputs.includes(`src/adapters/${adapter}.js`), selected.includes(adapter),
       `${directory}: ${adapter} should be ${selected.includes(adapter) ? "included" : "omitted"}`);
@@ -85,6 +93,7 @@ async function assertExampleBundle(directory, selected, renderer) {
 for (const page of pages) {
   test(`${page.title}: adapter selection stays behind the readiness boundary`, async () => {
     if (page.renderer?.id === "stencil") await buildStencilExamples();
+    if (page.renderer?.id === "angular") await buildAngularExamples();
     await assertExampleBundle(`examples${page.directory ? `/${page.directory}` : ""}`, page.adapters, page.renderer);
   });
 }

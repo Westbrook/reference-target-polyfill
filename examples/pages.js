@@ -19,6 +19,18 @@ export const renderers = [
     id: "preact", title: "Preact", url: "https://preactjs.com/",
     sources: ["preact-element.js", "components.js"],
   },
+  {
+    id: "vue", title: "Vue", url: "https://vuejs.org/guide/extras/web-components.html",
+    sources: ["components.js"],
+  },
+  {
+    id: "svelte", title: "Svelte", url: "https://svelte.dev/docs/svelte/custom-elements",
+    sources: ["checkbox.svelte", "popover.svelte", "components.js"],
+  },
+  {
+    id: "angular", title: "Angular Elements", url: "https://angular.dev/guide/elements",
+    sources: ["components.ts", "components.js"],
+  },
 ];
 
 export const pages = [

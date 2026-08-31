@@ -4,6 +4,11 @@ const renderers = [
   { id: "fast", title: "FAST" },
   { id: "stencil", title: "Stencil" },
   { id: "preact", title: "Preact" },
+  { id: "vue", title: "Vue" },
+  { id: "svelte", title: "Svelte" },
+  // The default Angular Elements strategy does not support reusing a host
+  // after its disconnected component has been destroyed.
+  { id: "angular", title: "Angular Elements", supportsReconnection: false },
 ];
 
 /** Exercise the generated pages with each library's actual renderer. */
@@ -164,7 +169,9 @@ export function registerRendererTests({ test, assert, equal, requirePrimitive })
   }
 
   for (const renderer of renderers) {
-    test(`Built ${renderer.title} renderer: labels activate once after two replacements and reconnection`, async ({ fixture }) => {
+    const supportsReconnection = renderer.supportsReconnection !== false;
+    const labelBehavior = `labels activate once after two replacements${supportsReconnection ? " and reconnection" : ""}`;
+    test(`Built ${renderer.title} renderer: ${labelBehavior}`, async ({ fixture }) => {
       const page = await loadPage(fixture, renderer);
       const host = checkbox(page);
       const label = page.document.getElementById("renderer-label");
@@ -193,6 +200,7 @@ export function registerRendererTests({ test, assert, equal, requirePrimitive })
         }
       }
 
+      if (!supportsReconnection) return;
       // Let the disconnected callback run, change an observed attribute while
       // detached, and then check that reconnection renders and forwards again.
       const previous = control(page);
@@ -208,7 +216,10 @@ export function registerRendererTests({ test, assert, equal, requirePrimitive })
       await checkActivation(page, 3, 4, () => label.click());
     });
 
-    test(`Built ${renderer.title} renderer: external targets and internal popover controls survive reconnection`, async ({ fixture }) => {
+    const popoverBehavior = supportsReconnection
+      ? "external targets and internal popover controls survive reconnection"
+      : "external targets and internal controls open and close its native popover";
+    test(`Built ${renderer.title} renderer: ${popoverBehavior}`, async ({ fixture }) => {
       requirePrimitive(hasPopovers(window), "Popover primitives unavailable");
       const page = await loadPage(fixture, renderer);
       const host = page.document.getElementById("renderer-popover");
@@ -248,6 +259,7 @@ export function registerRendererTests({ test, assert, equal, requirePrimitive })
       await openCurrentPanel();
       await closeCurrentPanel();
 
+      if (!supportsReconnection) return;
       const position = page.document.createComment("popover reconnect position");
       host.before(position);
       host.remove();

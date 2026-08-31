@@ -1,7 +1,7 @@
 # Contributing
 
-Use Node.js 22 or newer; `.nvmrc` selects Node.js 24. Install development
-dependencies with `npm ci`.
+Use Node.js 24.15+ on the 24.x line (`.nvmrc` selects 24), or 22.22.3+ on the
+22.x line, for Angular 22’s compiler. Install development dependencies with `npm ci`.
 
 ```sh
 npm start                 # Build and serve the demos on port 4173
@@ -26,12 +26,17 @@ Consumption documentation lives in `docs/`. Builds regenerate the displayed
 sizes; do not edit `dist/` by hand or commit it to `main`.
 
 Renderer examples live in `examples/lit/`, `examples/fast/`, `examples/stencil/`,
-and `examples/preact/`. Their shared cases are in `examples/shared/demos/renderer.html`
+`examples/preact/`, `examples/vue/`, `examples/svelte/`, and `examples/angular/`.
+Their shared cases are in `examples/shared/demos/renderer.html`
 and observation controls in `examples/shared/renderer-demo.js`. Keep framework
 imports inside each renderer’s application boundary. The build and package tests
-compile Stencil’s TSX into `dist/stencil` before bundling its custom elements;
-Stencil’s generated `src/components.d.ts` is ignored. Browser tests cover initial
-rendering, target replacement, reconnection, popovers, and the three loading modes.
+compile Stencil’s TSX into `dist/stencil` and Angular’s templates into `dist/angular`.
+Shared production options in `scripts/example-build-options.js` select the Svelte
+compiler plugin or Angular linker for the relevant page. Vue uses its runtime-only
+entry point. Keep compilers out of browser bundles. Stencil’s generated
+`src/components.d.ts` is ignored. Browser tests cover initial rendering, target
+replacement, popovers, all three loading modes, and supported reconnection behavior.
+Document renderer lifecycle limits without bypassing their normal cleanup.
 
 ## Publishing the site
 

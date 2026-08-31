@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-demo-page="all" data-capabilities="labels popover-targets dialog-commands popover-commands text-names form-targets combobox-targets" data-reference-target-ready="false">
+<html lang="en" data-demo-page="all" data-capabilities="labels popover-targets dialog-commands popover-commands text-names form-targets" data-reference-target-ready="false">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,14 +26,13 @@
           <a href="./popover-commands/">Popover commands</a>
           <a href="./text-names/">Text names</a>
           <a href="./forms/">Form actions</a>
-          <a href="./comboboxes/">Comboboxes</a>
           <a class="docs-link" href="../">Use the polyfill ↗</a>
         </nav>
         <div class="hero">
           <div class="hero-copy">
-            <p class="eyebrow">Shadow DOM / seven small experiments</p>
+            <p class="eyebrow">Shadow DOM / six small experiments</p>
             <h1>Reference<br><em>Target.</em></h1>
-            <p class="intro">Seven Reference Target capabilities, with opt-in fallback adapters.</p>
+            <p class="intro">Six Reference Target capabilities, with opt-in fallback adapters.</p>
           </div>
           <figure class="reference-map" role="img" aria-label="A reference to a host is forwarded to a target inside its shadow root.">
             <div class="map-source"><span class="map-label">outside</span><code>for="host"</code></div>
@@ -62,14 +61,14 @@
               <div><dt>Native API surface</dt><dd id="surface-status">Checking…</dd></div>
               <div class="adapters"><dt>Active adapters</dt><dd id="adapter-status">Waiting for setup…</dd></div>
             </dl>
-            <p id="mode-note" class="mode-note">Automatic checks native support and includes the cooperative combobox bridge. Force fallback loads every selected adapter. Browser alone leaves them out.</p>
+            <p id="mode-note" class="mode-note">Automatic checks for the native property. Force fallback loads the selected adapters. Browser alone leaves them out.</p>
           </details>
           <p class="error" id="load-error" role="alert" hidden></p>
           <noscript><p class="error">Enable JavaScript to try the controls.</p></noscript>
         </section>
       </header>
 
-      <nav class="jump-links" aria-label="Jump to a demo"><a href="#labels">Labels</a><a href="#popover-targets">Popover targeting</a><a href="#dialog-commands">Dialog commands</a><a href="#popover-commands">Popover commands</a><a href="#text-names">Text names</a><a href="#form-targets">Form actions</a><a href="#combobox-targets">Comboboxes</a><a href="#boundaries">Reference boundaries</a></nav>
+      <nav class="jump-links" aria-label="Jump to a demo"><a href="#labels">Labels</a><a href="#popover-targets">Popover targeting</a><a href="#dialog-commands">Dialog commands</a><a href="#popover-commands">Popover commands</a><a href="#text-names">Text names</a><a href="#form-targets">Form actions</a><a href="#boundaries">Reference boundaries</a></nav>
       <div class="demo-stack" id="demos">
         <section id="labels" class="scenario" data-capability="labels" aria-labelledby="lj-title">
   <p class="case-kind">Labels</p>
@@ -447,70 +446,6 @@ for (const id of ['submit-profile', 'save-draft', 'reset-profile']) {
   </details>
 </section>
 
-        <section class="scenario" id="combobox-targets" data-capability="combobox-targets" data-ready="loading" aria-labelledby="combobox-targets-title">
-  <p class="case-kind">Combobox relationships</p>
-  <h2 id="combobox-targets-title">One host. Two destinations.</h2>
-  <p>The input controls a listbox and points to its active option, through a component-provided public popup.</p>
-  <p class="expected" id="cb-instructions"><strong>Try:</strong> Type to filter, use ↑ / ↓ to explore, Enter to choose, and Escape to close. Focus stays in the input.</p>
-
-  <div class="field-grid">
-    <article class="demo-card combobox-card">
-      <p class="combobox-margin">A small directory of rabbit holes ↴</p>
-      <label class="field" for="cb-input">
-        <span id="cb-label">Find a web topic</span>
-        <input id="cb-input" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false"
-          aria-controls="cb-host" aria-activedescendant="cb-host" aria-describedby="cb-instructions"
-          autocomplete="off" spellcheck="false" placeholder="Try “web” or press ↓" disabled>
-      </label>
-      <rt-topic-picker id="cb-host" data-input="cb-input">
-        <div id="cb-listbox" role="listbox" aria-labelledby="cb-label" hidden></div>
-        <p id="cb-empty" class="combobox-empty" hidden>No topics match. Try another search.</p>
-      </rt-topic-picker>
-      <p class="combobox-count" id="cb-count" aria-live="polite">Preparing the suggestions…</p>
-      <p class="observation" id="cb-status" role="status">No topic selected.</p>
-    </article>
-    <article class="demo-card">
-      <h3>Follow the references</h3>
-      <pre id="cb-relations" aria-label="Combobox DOM relationships">Waiting for setup…</pre>
-      <p class="expected">These are the input’s actual ID references. The listbox and options share its DOM tree; a closed shadow root supplies the component’s shell.</p>
-    </article>
-  </div>
-
-  <details class="behavior-notes">
-    <summary>Behavior &amp; limits</summary>
-    <p>The adapter rewrites <code>aria-controls="cb-host"</code> to the public listbox and <code>aria-activedescendant="cb-host"</code> to its current public option. The component handles filtering, keyboard input, selection, visibility, scrolling, and focus.</p>
-    <p>This is a cooperative bridge, not the proposed Phase 2 map into private roots. There is one real listbox, with real visible options distributed through a slot. Native Phase 1 still has only one target per host, so Automatic also loads this adapter there.</p>
-    <p>Browser alone keeps the component interactions but leaves the authored host references unresolved. DOM readouts do not establish screen-reader support; test the browser and assistive technology combinations you ship.</p>
-  </details>
-
-  <details class="code-example">
-    <summary>Code sample</summary>
-    <pre><code id="combobox-targets-code-html" class="language-html" data-code-sample>&lt;input role="combobox" type="text" aria-expanded="true"
-  aria-controls="topic-picker" aria-activedescendant="topic-picker"&gt;
-&lt;rt-topic-picker id="topic-picker"&gt;
-  &lt;!-- Public light DOM, slotted into the component's shell. --&gt;
-  &lt;div id="topics" role="listbox" aria-label="Web topics"&gt;
-    &lt;div id="topic-css" role="option" aria-selected="true"&gt;CSS&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/rt-topic-picker&gt;</code></pre>
-    <pre><code id="combobox-targets-code-javascript" class="language-javascript" data-code-sample>// reference-target.setup.js
-import { installReferenceTarget } from 'reference-target-fallback/core';
-import { comboboxTargets } from 'reference-target-fallback/adapters/combobox-targets';
-
-export const referenceTargets = installReferenceTarget({
-  adapters: [comboboxTargets({
-    // The component intentionally exposes only its public nodes.
-    getTargets: host =&gt; host.getComboboxTargets?.() ?? null,
-  })],
-});
-// The component calls referenceTargets.refresh() after model/render updates.</code></pre>
-    <pre><code id="combobox-targets-code-bootstrap" class="language-javascript" data-code-sample>// bootstrap.js — Phase 1 support does not replace this cooperative bridge.
-const { referenceTargets } = await import('./reference-target.setup.js');
-await import('./app.js');
-// app.js is an ordinary module; it does not need to export a start() method.</code></pre>
-  </details>
-</section>
-
         <aside id="boundaries" class="scenario" aria-labelledby="bd-title">
   <p class="case-kind boundary">Reference boundaries</p>
   <h2 id="bd-title">What stays on each side of the shadow root</h2>
@@ -590,37 +525,37 @@ button.popoverTargetElement = panel;</code></pre>
 
       <section class="metrics-panel" data-bundle-id="all" aria-label="JavaScript delivery sizes">
     <h2>JavaScript sizes</h2>
-    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="20829" data-gzip-bytes="7620">
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="16587" data-gzip-bytes="5996">
       <h3>Page JavaScript</h3>
-      <strong data-size="bytes" data-bytes="20829">20.829 KB</strong>
-      <span data-size="gzip" data-bytes="7620">7.620 KB gzip</span>
+      <strong data-size="bytes" data-bytes="16587">16.587 KB</strong>
+      <span data-size="gzip" data-bytes="5996">5.996 KB gzip</span>
       <p>Always loaded.</p>
     </article>
-<article class="size-card" data-size-kind="fallback" data-bytes="26566" data-gzip-bytes="9085">
+<article class="size-card" data-size-kind="fallback" data-bytes="23005" data-gzip-bytes="7954">
       <h3>Fallback additional</h3>
-      <strong data-size="bytes" data-bytes="26566">26.566 KB</strong>
-      <span data-size="gzip" data-bytes="9085">9.085 KB gzip</span>
+      <strong data-size="bytes" data-bytes="23005">23.005 KB</strong>
+      <span data-size="gzip" data-bytes="7954">7.954 KB gzip</span>
       <p>Core + selected adapters.</p>
     </article>
-<article class="size-card" data-size-kind="total" data-bytes="47395" data-gzip-bytes="16705">
+<article class="size-card" data-size-kind="total" data-bytes="39592" data-gzip-bytes="13950">
       <h3>Total with fallback</h3>
-      <strong data-size="bytes" data-bytes="47395">47.395 KB</strong>
-      <span data-size="gzip" data-bytes="16705">16.705 KB gzip</span>
+      <strong data-size="bytes" data-bytes="39592">39.592 KB</strong>
+      <span data-size="gzip" data-bytes="13950">13.950 KB gzip</span>
       <p>Shared files counted once.</p>
     </article></div>
     <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
     <details>
-      <summary>Inspect the 5 generated JavaScript files</summary>
-      <p class="metric-note">Selected adapters: <code>labels</code>, <code>popover-targets</code>, <code>dialog-commands</code>, <code>popover-commands</code>, <code>text-names</code>, <code>form-targets</code>, <code>combobox-targets</code>.</p>
+      <summary>Inspect the 4 generated JavaScript files</summary>
+      <p class="metric-note">Selected adapters: <code>labels</code>, <code>popover-targets</code>, <code>dialog-commands</code>, <code>popover-commands</code>, <code>text-names</code>, <code>form-targets</code>.</p>
       <p class="metric-note">Gzip totals sum each compressed file. CSS, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Transfer sizes depend on compression and caching. <a href="./shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
       <div class="table-scroll"><table class="files-table">
         <caption>Files included in this page’s totals</caption>
         <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
-        <tbody><tr data-file-path="app-DMRCC34D.js" data-delivery="baseline">
-      <td><a data-bundle-file="app-DMRCC34D.js" href="./app-DMRCC34D.js"><code>app-DMRCC34D.js</code></a></td>
+        <tbody><tr data-file-path="app-YOONO5DP.js" data-delivery="baseline">
+      <td><a data-bundle-file="app-YOONO5DP.js" href="./app-YOONO5DP.js"><code>app-YOONO5DP.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="16921">16.921 KB</td>
-      <td data-size="gzip" data-bytes="5704">5.704 KB</td>
+      <td data-size="bytes" data-bytes="13179">13.179 KB</td>
+      <td data-size="gzip" data-bytes="4395">4.395 KB</td>
     </tr>
 <tr data-file-path="chunk-BAUPV3FJ.js" data-delivery="baseline">
       <td><a data-bundle-file="chunk-BAUPV3FJ.js" href="./chunk-BAUPV3FJ.js"><code>chunk-BAUPV3FJ.js</code></a></td>
@@ -628,23 +563,17 @@ button.popoverTargetElement = panel;</code></pre>
       <td data-size="bytes" data-bytes="924">0.924 KB</td>
       <td data-size="gzip" data-bytes="463">0.463 KB</td>
     </tr>
-<tr data-file-path="chunk-IPADQWQY.js" data-delivery="baseline">
-      <td><a data-bundle-file="chunk-IPADQWQY.js" href="./chunk-IPADQWQY.js"><code>chunk-IPADQWQY.js</code></a></td>
-      <td>Page</td>
-      <td data-size="bytes" data-bytes="2744">2.744 KB</td>
-      <td data-size="gzip" data-bytes="1249">1.249 KB</td>
-    </tr>
 <tr data-file-path="main.js" data-delivery="baseline">
       <td><a data-bundle-file="main.js" href="./main.js"><code>main.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="240">0.240 KB</td>
-      <td data-size="gzip" data-bytes="204">0.204 KB</td>
+      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
+      <td data-size="gzip" data-bytes="1138">1.138 KB</td>
     </tr>
-<tr data-file-path="reference-target.setup-6VLJ3QUH.js" data-delivery="fallback">
-      <td><a data-bundle-file="reference-target.setup-6VLJ3QUH.js" href="./reference-target.setup-6VLJ3QUH.js"><code>reference-target.setup-6VLJ3QUH.js</code></a></td>
+<tr data-file-path="reference-target.setup-PYH2PL4C.js" data-delivery="fallback">
+      <td><a data-bundle-file="reference-target.setup-PYH2PL4C.js" href="./reference-target.setup-PYH2PL4C.js"><code>reference-target.setup-PYH2PL4C.js</code></a></td>
       <td>Fallback additional</td>
-      <td data-size="bytes" data-bytes="26566">26.566 KB</td>
-      <td data-size="gzip" data-bytes="9085">9.085 KB</td>
+      <td data-size="bytes" data-bytes="23005">23.005 KB</td>
+      <td data-size="gzip" data-bytes="7954">7.954 KB</td>
     </tr></tbody>
       </table></div>
       <p><a href="./bundle-sizes.json">Inspect the size manifest</a></p>
@@ -659,45 +588,39 @@ button.popoverTargetElement = panel;</code></pre>
       <thead><tr><th scope="col">Capability</th><th scope="col">Page JavaScript</th><th scope="col">Fallback additional</th><th scope="col">Total with fallback</th></tr></thead>
       <tbody><tr data-capability-size="labels">
       <th scope="row"><a href="./labels/">Labels and activation</a></th>
-      <td>4.791 KB <small>(2.326 KB gzip)</small></td>
+      <td>4.448 KB <small>(2.178 KB gzip)</small></td>
       <td>11.978 KB <small>(4.600 KB gzip)</small></td>
-      <td>16.769 KB <small>(6.926 KB gzip)</small></td>
+      <td>16.426 KB <small>(6.778 KB gzip)</small></td>
     </tr>
 <tr data-capability-size="popover-targets">
       <th scope="row"><a href="./popover-targets/">Popover targets</a></th>
-      <td>4.629 KB <small>(2.247 KB gzip)</small></td>
+      <td>4.286 KB <small>(2.099 KB gzip)</small></td>
       <td>10.763 KB <small>(4.191 KB gzip)</small></td>
-      <td>15.392 KB <small>(6.438 KB gzip)</small></td>
+      <td>15.049 KB <small>(6.290 KB gzip)</small></td>
     </tr>
 <tr data-capability-size="dialog-commands">
       <th scope="row"><a href="./dialog-commands/">Dialog commands</a></th>
-      <td>6.513 KB <small>(2.897 KB gzip)</small></td>
+      <td>6.170 KB <small>(2.749 KB gzip)</small></td>
       <td>11.043 KB <small>(4.294 KB gzip)</small></td>
-      <td>17.556 KB <small>(7.191 KB gzip)</small></td>
+      <td>17.213 KB <small>(7.043 KB gzip)</small></td>
     </tr>
 <tr data-capability-size="popover-commands">
       <th scope="row"><a href="./popover-commands/">Popover commands</a></th>
-      <td>4.810 KB <small>(2.294 KB gzip)</small></td>
+      <td>4.467 KB <small>(2.148 KB gzip)</small></td>
       <td>10.981 KB <small>(4.262 KB gzip)</small></td>
-      <td>15.791 KB <small>(6.556 KB gzip)</small></td>
+      <td>15.448 KB <small>(6.410 KB gzip)</small></td>
     </tr>
 <tr data-capability-size="text-names">
       <th scope="row"><a href="./text-names/">Text names and descriptions</a></th>
-      <td>5.149 KB <small>(2.464 KB gzip)</small></td>
+      <td>4.806 KB <small>(2.316 KB gzip)</small></td>
       <td>12.309 KB <small>(4.720 KB gzip)</small></td>
-      <td>17.458 KB <small>(7.184 KB gzip)</small></td>
+      <td>17.115 KB <small>(7.036 KB gzip)</small></td>
     </tr>
 <tr data-capability-size="form-targets">
       <th scope="row"><a href="./forms/">Form submission and reset</a></th>
-      <td>8.050 KB <small>(3.636 KB gzip)</small></td>
+      <td>7.707 KB <small>(3.489 KB gzip)</small></td>
       <td>11.296 KB <small>(4.311 KB gzip)</small></td>
-      <td>19.346 KB <small>(7.947 KB gzip)</small></td>
-    </tr>
-<tr data-capability-size="combobox-targets">
-      <th scope="row"><a href="./comboboxes/">Combobox relationships</a></th>
-      <td>7.680 KB <small>(3.559 KB gzip)</small></td>
-      <td>11.570 KB <small>(4.528 KB gzip)</small></td>
-      <td>19.250 KB <small>(8.087 KB gzip)</small></td>
+      <td>19.003 KB <small>(7.800 KB gzip)</small></td>
     </tr></tbody>
     </table></div>
   </section>

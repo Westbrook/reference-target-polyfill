@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../examples/comboboxes/main.js"],
-  "sourcesContent": ["import { bootstrap } from \"../shared/bootstrap.js\";\n\nawait bootstrap({\n  cooperativeFallback: true,\n  loadFallback: () => import(\"./reference-target.setup.js\"),\n  loadApp: () => import(\"./app.js\"),\n});\n"],
-  "mappings": "oEAEA,MAAMA,EAAU,CACd,oBAAqB,GACrB,aAAc,IAAM,OAAO,sCAA6B,EACxD,QAAS,IAAM,OAAO,mBAAU,CAClC,CAAC",
-  "names": ["bootstrap"]
-}

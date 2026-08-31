@@ -13,42 +13,39 @@
         "dialog-commands",
         "popover-commands",
         "text-names",
-        "form-targets",
-        "combobox-targets"
+        "form-targets"
       ],
       "baseline": {
-        "bytes": 20829,
-        "gzipBytes": 7620,
+        "bytes": 16587,
+        "gzipBytes": 5996,
         "files": [
-          "app-DMRCC34D.js",
+          "app-YOONO5DP.js",
           "chunk-BAUPV3FJ.js",
-          "chunk-IPADQWQY.js",
           "main.js"
         ]
       },
       "fallback": {
-        "bytes": 26566,
-        "gzipBytes": 9085,
+        "bytes": 23005,
+        "gzipBytes": 7954,
         "files": [
-          "reference-target.setup-6VLJ3QUH.js"
+          "reference-target.setup-PYH2PL4C.js"
         ]
       },
       "total": {
-        "bytes": 47395,
-        "gzipBytes": 16705,
+        "bytes": 39592,
+        "gzipBytes": 13950,
         "files": [
-          "app-DMRCC34D.js",
+          "app-YOONO5DP.js",
           "chunk-BAUPV3FJ.js",
-          "chunk-IPADQWQY.js",
           "main.js",
-          "reference-target.setup-6VLJ3QUH.js"
+          "reference-target.setup-PYH2PL4C.js"
         ]
       },
       "files": [
         {
-          "path": "app-DMRCC34D.js",
-          "bytes": 16921,
-          "gzipBytes": 5704,
+          "path": "app-YOONO5DP.js",
+          "bytes": 13179,
+          "gzipBytes": 4395,
           "delivery": "baseline"
         },
         {
@@ -58,21 +55,15 @@
           "delivery": "baseline"
         },
         {
-          "path": "chunk-IPADQWQY.js",
-          "bytes": 2744,
-          "gzipBytes": 1249,
-          "delivery": "baseline"
-        },
-        {
           "path": "main.js",
-          "bytes": 240,
-          "gzipBytes": 204,
+          "bytes": 2484,
+          "gzipBytes": 1138,
           "delivery": "baseline"
         },
         {
-          "path": "reference-target.setup-6VLJ3QUH.js",
-          "bytes": 26566,
-          "gzipBytes": 9085,
+          "path": "reference-target.setup-PYH2PL4C.js",
+          "bytes": 23005,
+          "gzipBytes": 7954,
           "delivery": "fallback"
         }
       ]
@@ -85,8 +76,8 @@
         "labels"
       ],
       "baseline": {
-        "bytes": 4791,
-        "gzipBytes": 2326,
+        "bytes": 4448,
+        "gzipBytes": 2178,
         "files": [
           "labels/app-Q6QH5RKX.js",
           "labels/chunk-32G5PXKY.js",
@@ -101,8 +92,8 @@
         ]
       },
       "total": {
-        "bytes": 16769,
-        "gzipBytes": 6926,
+        "bytes": 16426,
+        "gzipBytes": 6778,
         "files": [
           "labels/app-Q6QH5RKX.js",
           "labels/chunk-32G5PXKY.js",
@@ -125,8 +116,8 @@
         },
         {
           "path": "labels/main.js",
-          "bytes": 2827,
-          "gzipBytes": 1288,
+          "bytes": 2484,
+          "gzipBytes": 1140,
           "delivery": "baseline"
         },
         {
@@ -145,8 +136,8 @@
         "popover-targets"
       ],
       "baseline": {
-        "bytes": 4629,
-        "gzipBytes": 2247,
+        "bytes": 4286,
+        "gzipBytes": 2099,
         "files": [
           "popover-targets/app-LAV5U27U.js",
           "popover-targets/chunk-32G5PXKY.js",
@@ -161,8 +152,8 @@
         ]
       },
       "total": {
-        "bytes": 15392,
-        "gzipBytes": 6438,
+        "bytes": 15049,
+        "gzipBytes": 6290,
         "files": [
           "popover-targets/app-LAV5U27U.js",
           "popover-targets/chunk-32G5PXKY.js",
@@ -185,8 +176,8 @@
         },
         {
           "path": "popover-targets/main.js",
-          "bytes": 2827,
-          "gzipBytes": 1287,
+          "bytes": 2484,
+          "gzipBytes": 1139,
           "delivery": "baseline"
         },
         {
@@ -205,8 +196,8 @@
         "dialog-commands"
       ],
       "baseline": {
-        "bytes": 6513,
-        "gzipBytes": 2897,
+        "bytes": 6170,
+        "gzipBytes": 2749,
         "files": [
           "dialog-commands/app-DXTGRU4R.js",
           "dialog-commands/chunk-32G5PXKY.js",
@@ -221,8 +212,8 @@
         ]
       },
       "total": {
-        "bytes": 17556,
-        "gzipBytes": 7191,
+        "bytes": 17213,
+        "gzipBytes": 7043,
         "files": [
           "dialog-commands/app-DXTGRU4R.js",
           "dialog-commands/chunk-32G5PXKY.js",
@@ -245,8 +236,8 @@
         },
         {
           "path": "dialog-commands/main.js",
-          "bytes": 2827,
-          "gzipBytes": 1287,
+          "bytes": 2484,
+          "gzipBytes": 1139,
           "delivery": "baseline"
         },
         {
@@ -265,8 +256,8 @@
         "popover-commands"
       ],
       "baseline": {
-        "bytes": 4810,
-        "gzipBytes": 2294,
+        "bytes": 4467,
+        "gzipBytes": 2148,
         "files": [
           "popover-commands/app-TCGQHJQH.js",
           "popover-commands/chunk-32G5PXKY.js",
@@ -281,8 +272,8 @@
         ]
       },
       "total": {
-        "bytes": 15791,
-        "gzipBytes": 6556,
+        "bytes": 15448,
+        "gzipBytes": 6410,
         "files": [
           "popover-commands/app-TCGQHJQH.js",
           "popover-commands/chunk-32G5PXKY.js",
@@ -305,8 +296,8 @@
         },
         {
           "path": "popover-commands/main.js",
-          "bytes": 2827,
-          "gzipBytes": 1287,
+          "bytes": 2484,
+          "gzipBytes": 1141,
           "delivery": "baseline"
         },
         {
@@ -325,8 +316,8 @@
         "text-names"
       ],
       "baseline": {
-        "bytes": 5149,
-        "gzipBytes": 2464,
+        "bytes": 4806,
+        "gzipBytes": 2316,
         "files": [
           "text-names/app-QSED5Z7M.js",
           "text-names/chunk-32G5PXKY.js",
@@ -341,8 +332,8 @@
         ]
       },
       "total": {
-        "bytes": 17458,
-        "gzipBytes": 7184,
+        "bytes": 17115,
+        "gzipBytes": 7036,
         "files": [
           "text-names/app-QSED5Z7M.js",
           "text-names/chunk-32G5PXKY.js",
@@ -365,8 +356,8 @@
         },
         {
           "path": "text-names/main.js",
-          "bytes": 2827,
-          "gzipBytes": 1288,
+          "bytes": 2484,
+          "gzipBytes": 1140,
           "delivery": "baseline"
         },
         {
@@ -385,8 +376,8 @@
         "form-targets"
       ],
       "baseline": {
-        "bytes": 8050,
-        "gzipBytes": 3636,
+        "bytes": 7707,
+        "gzipBytes": 3489,
         "files": [
           "forms/app-6X5CZ273.js",
           "forms/chunk-32G5PXKY.js",
@@ -401,8 +392,8 @@
         ]
       },
       "total": {
-        "bytes": 19346,
-        "gzipBytes": 7947,
+        "bytes": 19003,
+        "gzipBytes": 7800,
         "files": [
           "forms/app-6X5CZ273.js",
           "forms/chunk-32G5PXKY.js",
@@ -425,82 +416,14 @@
         },
         {
           "path": "forms/main.js",
-          "bytes": 2827,
-          "gzipBytes": 1287,
+          "bytes": 2484,
+          "gzipBytes": 1140,
           "delivery": "baseline"
         },
         {
           "path": "forms/reference-target.setup-ACAS7RBB.js",
           "bytes": 11296,
           "gzipBytes": 4311,
-          "delivery": "fallback"
-        }
-      ]
-    },
-    {
-      "id": "combobox-targets",
-      "directory": "comboboxes",
-      "title": "Combobox relationships",
-      "adapters": [
-        "combobox-targets"
-      ],
-      "baseline": {
-        "bytes": 7680,
-        "gzipBytes": 3559,
-        "files": [
-          "comboboxes/app-REKGSCLI.js",
-          "comboboxes/chunk-32G5PXKY.js",
-          "comboboxes/chunk-UGAEMXCZ.js",
-          "comboboxes/main.js"
-        ]
-      },
-      "fallback": {
-        "bytes": 11570,
-        "gzipBytes": 4528,
-        "files": [
-          "comboboxes/reference-target.setup-FUKAIMFO.js"
-        ]
-      },
-      "total": {
-        "bytes": 19250,
-        "gzipBytes": 8087,
-        "files": [
-          "comboboxes/app-REKGSCLI.js",
-          "comboboxes/chunk-32G5PXKY.js",
-          "comboboxes/chunk-UGAEMXCZ.js",
-          "comboboxes/main.js",
-          "comboboxes/reference-target.setup-FUKAIMFO.js"
-        ]
-      },
-      "files": [
-        {
-          "path": "comboboxes/app-REKGSCLI.js",
-          "bytes": 3772,
-          "gzipBytes": 1640,
-          "delivery": "baseline"
-        },
-        {
-          "path": "comboboxes/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
-          "path": "comboboxes/chunk-UGAEMXCZ.js",
-          "bytes": 2744,
-          "gzipBytes": 1251,
-          "delivery": "baseline"
-        },
-        {
-          "path": "comboboxes/main.js",
-          "bytes": 240,
-          "gzipBytes": 204,
-          "delivery": "baseline"
-        },
-        {
-          "path": "comboboxes/reference-target.setup-FUKAIMFO.js",
-          "bytes": 11570,
-          "gzipBytes": 4528,
           "delivery": "fallback"
         }
       ]

@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en" data-demo-page="fast" data-renderer="fast" data-capabilities="labels popover-targets" data-reference-target-ready="false">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Reference Target with FAST custom elements: label activation, rendered target replacement, and popover targeting.">
+    <title>Reference Target · FAST custom elements</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script type="module" src="./main.js"></script>
+  <link rel="stylesheet" href="../shared/microlighter/themes/github.css">
+</head>
+  <body>
+    <a class="skip-link" href="#demos">Skip to the demos</a>
+    <main>
+      <header class="page-header">
+        <div class="masthead">
+          <a class="site-wordmark" href="../">reference <span aria-hidden="true">/</span> target</a>
+          <p class="masthead-note">Browser experiments &amp; working notes</p>
+        </div>
+        <nav class="site-nav" aria-label="Renderer examples">
+          <a href="../">All capabilities</a>
+          <a href="../lit/">Lit</a>
+          <a href="../fast/" aria-current="page">FAST</a>
+          <a href="../stencil/">Stencil</a>
+          <a href="../preact/">Preact</a>
+          <a class="docs-link" href="../../">Use the polyfill ↗</a>
+        </nav>
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Renderer examples / FAST</p>
+            <h1>FAST templates.<br><em>Native targets.</em></h1>
+            <p class="intro">Custom elements built with FASTElement and observable template bindings.</p>
+          </div>
+          <figure class="reference-map" role="img" aria-label="An outside reference reaches a target inside a shadow root rendered by FAST.">
+            <div class="map-source"><span class="map-label">outside</span><code>for="host"</code></div>
+            <span class="map-arrow" aria-hidden="true">↘</span>
+            <div class="map-host">
+              <span class="map-label">custom element</span>
+              <div class="map-shadow">
+                <span class="map-label">FAST render</span>
+                <div class="map-target"><code>#control</code></div>
+              </div>
+            </div>
+            <figcaption>One public reference. A rendered destination.</figcaption>
+          </figure>
+        </div>
+        <section class="runtime-panel" aria-label="Browser and fallback settings">
+          <nav class="mode-links" aria-label="Choose a loading mode">
+            <a href="?mode=auto" data-mode="auto">Automatic</a>
+            <a href="?mode=fallback" data-mode="fallback">Force fallback</a>
+            <a href="?mode=off" data-mode="off">Browser alone</a>
+          </nav>
+          <p id="ready-status" data-ready="false" role="status">Waiting for FAST to render…</p>
+          <details class="runtime-details">
+            <summary>Browser details</summary>
+            <dl class="status-grid">
+              <div><dt>Current path</dt><dd id="mode-status">Checking browser support…</dd></div>
+              <div><dt>Native API surface</dt><dd id="surface-status">Checking…</dd></div>
+              <div class="adapters"><dt>Active adapters</dt><dd id="adapter-status">Waiting for setup…</dd></div>
+            </dl>
+            <p id="mode-note" class="mode-note">Automatic checks for the native property. Force fallback loads the selected adapters. Browser alone leaves them out.</p>
+          </details>
+          <p class="error" id="load-error" role="alert" hidden></p>
+          <noscript><p class="error">Enable JavaScript to try the controls.</p></noscript>
+        </section>
+      </header>
+
+      <div class="demo-stack" id="demos">
+        <section id="renderer-labels" class="scenario" data-capability="labels" aria-labelledby="renderer-labels-title">
+  <p class="case-kind">Labels &amp; rendering</p>
+  <h2 id="renderer-labels-title">A new control. The same reference.</h2>
+  <p>The outside label references the component. FAST renders the checkbox inside its shadow root.</p>
+  <p class="expected"><strong>Try:</strong> Click the label, replace the checkbox, then click the label again. Each replacement starts unchecked.</p>
+  <article class="demo-card">
+    <h3>Follow a rendered target</h3>
+    <div class="try-it button-row">
+      <label id="renderer-label" for="renderer-checkbox">Send me release notes</label>
+      <rt-fast-checkbox id="renderer-checkbox" revision="0"></rt-fast-checkbox>
+    </div>
+    <div class="toolbar">
+      <button id="renderer-replace" class="secondary" type="button" disabled>Replace checkbox</button>
+    </div>
+    <div class="observation"><span>DOM observation</span><output id="renderer-checkbox-observation">Waiting for FAST to render.</output></div>
+  </article>
+</section>
+
+<section id="renderer-popovers" class="scenario" data-capability="popover-targets" aria-labelledby="renderer-popovers-title">
+  <p class="case-kind">Popover targeting</p>
+  <h2 id="renderer-popovers-title">An outside button. A rendered panel.</h2>
+  <p>FAST creates a native popover inside another component. The outside buttons reference its host.</p>
+  <p class="expected"><strong>Try:</strong> Open the popover, then dismiss it with its close button or Escape.</p>
+  <article class="demo-card">
+    <h3>Open an internal popover</h3>
+    <div class="try-it button-row">
+      <button id="renderer-open" type="button" popovertarget="renderer-popover" popovertargetaction="show" disabled>Open popover</button>
+      <button id="renderer-hide" class="secondary" type="button" popovertarget="renderer-popover" popovertargetaction="hide" disabled>Hide popover</button>
+    </div>
+    <rt-fast-popover id="renderer-popover"></rt-fast-popover>
+    <div class="observation"><span>DOM observation</span><output id="renderer-popover-observation">Waiting for FAST to render.</output></div>
+  </article>
+</section>
+
+<details class="reading-notes">
+  <summary>How the examples are connected</summary>
+  <p>Each component sets its shadow root’s <code>referenceTarget</code> to the internal target ID. The fallback loads before the component definitions, so it can capture the roots when the renderer creates them and observe later DOM changes.</p>
+  <p>The page waits for the renderer’s first update before enabling its buttons. Replacing the checkbox changes the component’s <code>revision</code> attribute; the renderer creates a new input with the same ID.</p>
+  <pre><code class="language-html" data-code-sample>&lt;label for="renderer-checkbox"&gt;Send me release notes&lt;/label&gt;
+&lt;rt-fast-checkbox id="renderer-checkbox" revision="0"&gt;&lt;/rt-fast-checkbox&gt;
+
+&lt;button type="button" popovertarget="renderer-popover"&gt;Open popover&lt;/button&gt;
+&lt;rt-fast-popover id="renderer-popover"&gt;&lt;/rt-fast-popover&gt;</code></pre>
+  <p>The selected setup uses <code>labels({ activation: "focus-and-click", naming: true })</code> and <code>popoverTargets()</code>. The page’s event listeners only display state; they do not forward label or popover actions.</p>
+</details>
+
+<details class="reading-notes"><summary>Component source</summary><h3>components.js</h3><pre><code class="language-javascript" data-code-sample>import { FASTElement, Updates, html, repeat } from &quot;@microsoft/fast-element&quot;;
+import componentStyles from &quot;../shared/components.css&quot;;
+
+class FastCheckbox extends FASTElement {
+  constructor() {
+    super();
+    this.revision = 0;
+    this.shadowRoot.referenceTarget = &quot;control&quot;;
+  }
+}
+
+const checkboxDefinition = FastCheckbox.define({
+  name: &quot;rt-fast-checkbox&quot;,
+  shadowOptions: { mode: &quot;open&quot; },
+  attributes: [{
+    property: &quot;revision&quot;,
+    converter: {
+      fromView: value =&gt; Number(value) || 0,
+      toView: value =&gt; String(value),
+    },
+  }],
+  styles: componentStyles,
+  template: html`
+    &lt;div class=&quot;component-preview&quot;&gt;
+      ${repeat(
+        host =&gt; [host.revision],
+        html`&lt;input id=&quot;control&quot; type=&quot;checkbox&quot; data-revision=${revision =&gt; revision}&gt;`,
+        { recycle: false },
+      )}
+      &lt;span aria-hidden=&quot;true&quot;&gt;Native checkbox&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;p class=&quot;hint&quot;&gt;Render revision ${host =&gt; host.revision}&lt;/p&gt;
+  `,
+});
+
+class FastPopover extends FASTElement {
+  constructor() {
+    super();
+    this.shadowRoot.referenceTarget = &quot;panel&quot;;
+  }
+}
+
+const popoverDefinition = FastPopover.define({
+  name: &quot;rt-fast-popover&quot;,
+  shadowOptions: { mode: &quot;open&quot; },
+  styles: componentStyles,
+  template: html`
+    &lt;div id=&quot;panel&quot; popover=&quot;auto&quot;&gt;
+      &lt;p class=&quot;eyebrow&quot;&gt;FASTElement · shadow DOM&lt;/p&gt;
+      &lt;h2&gt;Rendered with FAST&lt;/h2&gt;
+      &lt;p&gt;This native popover lives inside a FASTElement shadow root.&lt;/p&gt;
+      &lt;button type=&quot;button&quot; popovertarget=&quot;panel&quot; popovertargetaction=&quot;hide&quot;&gt;Close popover&lt;/button&gt;
+    &lt;/div&gt;
+  `,
+});
+
+export async function whenReady() {
+  await Promise.all([checkboxDefinition, popoverDefinition]);
+  await Updates.next();
+}
+</code></pre></details>
+
+      </div>
+
+      <section class="metrics-panel" data-bundle-id="fast" aria-label="JavaScript delivery sizes">
+    <h2>JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="66115" data-gzip-bytes="20928">
+      <h3>Page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="66115">66.115 KB</strong>
+      <span data-size="gzip" data-bytes="20928">20.928 KB gzip</span>
+      <p>Always loaded.</p>
+    </article>
+<article class="size-card" data-size-kind="fallback" data-bytes="14704" data-gzip-bytes="5446">
+      <h3>Fallback additional</h3>
+      <strong data-size="bytes" data-bytes="14704">14.704 KB</strong>
+      <span data-size="gzip" data-bytes="5446">5.446 KB gzip</span>
+      <p>Core + selected adapters.</p>
+    </article>
+<article class="size-card" data-size-kind="total" data-bytes="80819" data-gzip-bytes="26374">
+      <h3>Total with fallback</h3>
+      <strong data-size="bytes" data-bytes="80819">80.819 KB</strong>
+      <span data-size="gzip" data-bytes="26374">26.374 KB gzip</span>
+      <p>Shared files counted once.</p>
+    </article></div>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <details>
+      <summary>Inspect the 4 generated JavaScript files</summary>
+      <p class="metric-note">Selected adapters: <code>labels</code>, <code>popover-targets</code>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <div class="table-scroll"><table class="files-table">
+        <caption>Files included in this page’s totals</caption>
+        <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
+        <tbody><tr data-file-path="fast/app-UMDRO7CV.js" data-delivery="baseline">
+      <td><a data-bundle-file="fast/app-UMDRO7CV.js" href="../fast/app-UMDRO7CV.js"><code>fast/app-UMDRO7CV.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="62707">62.707 KB</td>
+      <td data-size="gzip" data-bytes="19325">19.325 KB</td>
+    </tr>
+<tr data-file-path="fast/chunk-32G5PXKY.js" data-delivery="baseline">
+      <td><a data-bundle-file="fast/chunk-32G5PXKY.js" href="../fast/chunk-32G5PXKY.js"><code>fast/chunk-32G5PXKY.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="924">0.924 KB</td>
+      <td data-size="gzip" data-bytes="464">0.464 KB</td>
+    </tr>
+<tr data-file-path="fast/main.js" data-delivery="baseline">
+      <td><a data-bundle-file="fast/main.js" href="../fast/main.js"><code>fast/main.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
+      <td data-size="gzip" data-bytes="1139">1.139 KB</td>
+    </tr>
+<tr data-file-path="fast/reference-target.setup-SS3IPAE5.js" data-delivery="fallback">
+      <td><a data-bundle-file="fast/reference-target.setup-SS3IPAE5.js" href="../fast/reference-target.setup-SS3IPAE5.js"><code>fast/reference-target.setup-SS3IPAE5.js</code></a></td>
+      <td>Fallback additional</td>
+      <td data-size="bytes" data-bytes="14704">14.704 KB</td>
+      <td data-size="gzip" data-bytes="5446">5.446 KB</td>
+    </tr></tbody>
+      </table></div>
+      <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>
+    </details>
+  </section>
+
+      <details class="reading-notes" aria-labelledby="reading-title">
+        <summary>Renderer integration &amp; limitations</summary>
+        <h2 id="reading-title">FAST and Reference Target</h2>
+        <p>FAST creates the shadow roots and binds a numeric revision attribute. A repeat directive with recycling disabled replaces the checkbox when its revision changes; the page waits for FAST’s update queue before enabling the controls.</p>
+        <p>The library and its component code are included in Page JavaScript above. Each renderer is built as an independent page with only the labels and popover-targets adapters in its optional fallback bundle.</p>
+        <p>These examples use open, client-rendered roots. They do not test server rendering or hydration. The label fallback does not recreate native label.control or input.labels relationships. Readouts describe DOM state; computed names and assistive technology need separate validation.</p>
+        <p><a href="https://fast.design/">FAST documentation ↗</a></p>
+      </details>
+      <footer class="page-footer">
+        <p><a href="../">Explore every capability</a> · <a href="../scenarios/">Declarative reference cases</a></p>
+      </footer>
+    </main>
+  <script type="module" src="../shared/code-highlighting.js"></script>
+</body>
+</html>

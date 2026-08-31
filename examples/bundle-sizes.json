@@ -429,6 +429,250 @@
       ]
     },
     {
+      "id": "lit",
+      "directory": "lit",
+      "title": "Lit custom elements",
+      "adapters": [
+        "labels",
+        "popover-targets"
+      ],
+      "baseline": {
+        "bytes": 25915,
+        "gzipBytes": 9930,
+        "files": [
+          "lit/app-R5PESLK3.js",
+          "lit/chunk-32G5PXKY.js",
+          "lit/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 14704,
+        "gzipBytes": 5446,
+        "files": [
+          "lit/reference-target.setup-NHMAGY5T.js"
+        ]
+      },
+      "total": {
+        "bytes": 40619,
+        "gzipBytes": 15376,
+        "files": [
+          "lit/app-R5PESLK3.js",
+          "lit/chunk-32G5PXKY.js",
+          "lit/main.js",
+          "lit/reference-target.setup-NHMAGY5T.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "lit/app-R5PESLK3.js",
+          "bytes": 22507,
+          "gzipBytes": 8327,
+          "delivery": "baseline"
+        },
+        {
+          "path": "lit/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "lit/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1139,
+          "delivery": "baseline"
+        },
+        {
+          "path": "lit/reference-target.setup-NHMAGY5T.js",
+          "bytes": 14704,
+          "gzipBytes": 5446,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "fast",
+      "directory": "fast",
+      "title": "FAST custom elements",
+      "adapters": [
+        "labels",
+        "popover-targets"
+      ],
+      "baseline": {
+        "bytes": 66115,
+        "gzipBytes": 20928,
+        "files": [
+          "fast/app-UMDRO7CV.js",
+          "fast/chunk-32G5PXKY.js",
+          "fast/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 14704,
+        "gzipBytes": 5446,
+        "files": [
+          "fast/reference-target.setup-SS3IPAE5.js"
+        ]
+      },
+      "total": {
+        "bytes": 80819,
+        "gzipBytes": 26374,
+        "files": [
+          "fast/app-UMDRO7CV.js",
+          "fast/chunk-32G5PXKY.js",
+          "fast/main.js",
+          "fast/reference-target.setup-SS3IPAE5.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "fast/app-UMDRO7CV.js",
+          "bytes": 62707,
+          "gzipBytes": 19325,
+          "delivery": "baseline"
+        },
+        {
+          "path": "fast/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "fast/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1139,
+          "delivery": "baseline"
+        },
+        {
+          "path": "fast/reference-target.setup-SS3IPAE5.js",
+          "bytes": 14704,
+          "gzipBytes": 5446,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "stencil",
+      "directory": "stencil",
+      "title": "Stencil custom elements",
+      "adapters": [
+        "labels",
+        "popover-targets"
+      ],
+      "baseline": {
+        "bytes": 26768,
+        "gzipBytes": 10198,
+        "files": [
+          "stencil/app-7SMAQI5F.js",
+          "stencil/chunk-32G5PXKY.js",
+          "stencil/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 14704,
+        "gzipBytes": 5447,
+        "files": [
+          "stencil/reference-target.setup-C4JWL5TV.js"
+        ]
+      },
+      "total": {
+        "bytes": 41472,
+        "gzipBytes": 15645,
+        "files": [
+          "stencil/app-7SMAQI5F.js",
+          "stencil/chunk-32G5PXKY.js",
+          "stencil/main.js",
+          "stencil/reference-target.setup-C4JWL5TV.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "stencil/app-7SMAQI5F.js",
+          "bytes": 23360,
+          "gzipBytes": 8593,
+          "delivery": "baseline"
+        },
+        {
+          "path": "stencil/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "stencil/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1141,
+          "delivery": "baseline"
+        },
+        {
+          "path": "stencil/reference-target.setup-C4JWL5TV.js",
+          "bytes": 14704,
+          "gzipBytes": 5447,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
+      "id": "preact",
+      "directory": "preact",
+      "title": "Preact custom elements",
+      "adapters": [
+        "labels",
+        "popover-targets"
+      ],
+      "baseline": {
+        "bytes": 21090,
+        "gzipBytes": 8542,
+        "files": [
+          "preact/app-MOFEPKJY.js",
+          "preact/chunk-32G5PXKY.js",
+          "preact/main.js"
+        ]
+      },
+      "fallback": {
+        "bytes": 14704,
+        "gzipBytes": 5446,
+        "files": [
+          "preact/reference-target.setup-OHRVICDB.js"
+        ]
+      },
+      "total": {
+        "bytes": 35794,
+        "gzipBytes": 13988,
+        "files": [
+          "preact/app-MOFEPKJY.js",
+          "preact/chunk-32G5PXKY.js",
+          "preact/main.js",
+          "preact/reference-target.setup-OHRVICDB.js"
+        ]
+      },
+      "files": [
+        {
+          "path": "preact/app-MOFEPKJY.js",
+          "bytes": 17682,
+          "gzipBytes": 6938,
+          "delivery": "baseline"
+        },
+        {
+          "path": "preact/chunk-32G5PXKY.js",
+          "bytes": 924,
+          "gzipBytes": 464,
+          "delivery": "baseline"
+        },
+        {
+          "path": "preact/main.js",
+          "bytes": 2484,
+          "gzipBytes": 1140,
+          "delivery": "baseline"
+        },
+        {
+          "path": "preact/reference-target.setup-OHRVICDB.js",
+          "bytes": 14704,
+          "gzipBytes": 5446,
+          "delivery": "fallback"
+        }
+      ]
+    },
+    {
       "id": "scenarios",
       "directory": "scenarios",
       "title": "Declarative boundary comparisons",

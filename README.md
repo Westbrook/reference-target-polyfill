@@ -273,6 +273,10 @@ The public installation handle does not expose a raw target resolver. Scripts mu
 | [Popover commands](http://127.0.0.1:4173/examples/popover-commands/) | `popoverCommands()` only |
 | [Text names and descriptions](http://127.0.0.1:4173/examples/text-names/) | `textNames({ getText })` only |
 | [Form actions](http://127.0.0.1:4173/examples/forms/) | `formTargets()` only |
+| [Lit custom elements](http://127.0.0.1:4173/examples/lit/) | Labels and popover targets |
+| [FAST custom elements](http://127.0.0.1:4173/examples/fast/) | Labels and popover targets |
+| [Stencil custom elements](http://127.0.0.1:4173/examples/stencil/) | Labels and popover targets |
+| [Preact custom element base class](http://127.0.0.1:4173/examples/preact/) | Labels and popover targets |
 | [Original six-scenario companion](http://127.0.0.1:4173/examples/scenarios/) | Labels, popover targets, and text names for the retained declarative comparisons. |
 
 The main page contains working examples for six adapters. Each demonstrated capability also has an independent page and bundle, allowing behavior and loading cost to be compared with only that adapter selected. The boundary comparisons use existing adapters.
@@ -282,6 +286,10 @@ The demos pair a short capability description with working controls and live obs
 Every page supports `?mode=auto`, `?mode=fallback`, and `?mode=off`. Automatic mode loads its selected setup when the native surface is absent. Forced mode exercises the fallback; off mode loads no fallback and leaves native browser behavior available. Each mode still imports the application after selection. The observations report DOM state, not computed accessibility results.
 
 The form demo keeps native inputs, a checkbox, and a select inside its declarative form. Outside Submit, Save draft (`formnovalidate`), and Reset buttons exercise validation, submitter data, and native defaults. Its component-local listeners cancel navigation, capture `FormData` synchronously, and display events and actual `.form` getters; the example sends no form data.
+
+The four renderer pages use the actual [Lit](https://lit.dev/), [FAST](https://fast.design/), [Stencil](https://stenciljs.com/), and [Preact](https://preactjs.com/) libraries. Each demonstrates an outside label, a checkbox replaced by a reactive attribute update, and an outside popover invoker. Components set `referenceTarget` on their framework-created shadow roots and wait for their first render before the page becomes ready. The fallback observes subsequent target replacements; the application does not forward actions itself. These are client-rendered examples, not server-rendering or hydration tests.
+
+Lit uses `LitElement` and `keyed`; FAST uses `FASTElement` and a non-recycling `repeat`; Stencil compiles keyed JSX into custom elements. The Preact page includes a small `PreactElement` base class that owns the shadow root, batches attribute updates, unmounts on disconnection, and renders again on reconnection. Expand Component source on a built page to inspect the actual source, including the Preact base class and Stencil TSX.
 
 The retained six-scenario companion contains original examples inspired by [Microsoft Edge's Reference Target demos](https://microsoftedge.github.io/Demos/reference-target/). All six use parser-created Declarative Shadow DOM and retained `data-reference-target` metadata:
 
@@ -296,9 +304,9 @@ The retained six-scenario companion contains original examples inspired by [Micr
 
 `examples/pages.js` is the build-time page catalog. The gallery and capability pages have HTML shells containing `<!-- demo:... -->` and bundle-size markers. The build expands these using `examples/shared/demos/*.html` and embeds the size reports in the resulting static HTML. The browser receives actual demo markup, including declarative shadow templates.
 
-Application modules import only their selected `examples/shared/features/*.js` initializers. A page's `main.js` awaits its optional setup and then its application; the shared bootstrap imports no adapters. This lets the gallery reuse the same examples while each capability page retains its own adapter selection. The package API and application initialization contract are unchanged.
+Capability application modules import only their selected `examples/shared/features/*.js` initializers. Renderer application modules import their own components and shared observation controls. A page's `main.js` awaits its optional setup and then its application; the shared bootstrap imports no adapters. Each renderer has an independent bundle; visiting the gallery or another renderer never loads that library. The package API and application initialization contract are unchanged.
 
-Code samples use [Microlighter](https://davatron5000.github.io/microlighter/) with its GitHub theme. It highlights HTML and JavaScript using the CSS Custom Highlight API without adding token elements to the samples. The build copies the pinned development dependency, required grammars, theme, and MIT license into a separate shared demo asset directory. Highlighting runs independently of application setup; browsers without that API keep readable plain-text samples. The highlighter is neither a polyfill dependency nor part of the size figures below.
+Code samples use [Microlighter](https://davatron5000.github.io/microlighter/) with its GitHub theme. It highlights HTML, JavaScript, and Stencil TSX using the CSS Custom Highlight API without adding token elements to the samples. The build copies the pinned development dependency, required grammars, theme, and MIT license into a separate shared demo asset directory. Highlighting runs independently of application setup; browsers without that API keep readable plain-text samples. The highlighter is neither a polyfill dependency nor part of the size figures below.
 
 ## JavaScript sizes
 
@@ -306,17 +314,17 @@ The built pages show current JavaScript sizes, including the baseline, additiona
 
 | Measurement | Included JavaScript |
 | --- | --- |
-| Baseline ("Page JavaScript") | The bootstrap, application, selected demo initializers, and their shared dependencies, loaded even when the fallback is skipped. |
+| Baseline ("Page JavaScript") | The bootstrap, application, selected demo initializers, renderer runtime and embedded styles (on renderer pages), and shared dependencies, loaded even when the fallback is skipped. |
 | "Fallback additional" | The selected setup, installer, adapters, and dependencies that are not already in the baseline. |
 | Total with fallback | The union of baseline and fallback files. Each shared chunk is counted once. |
 
-Sizes are shown in decimal KB (`1 KB = 1,000 bytes`). Raw figures measure emitted minified JavaScript; gzip figures sum the separately compressed size of each JavaScript file. They exclude Microlighter and its demo highlighting script/grammars, HTML, CSS, JSON, source maps, and HTTP headers. The local server can serve the measured JavaScript gzip sidecars, so its compressed bodies correspond to the reported per-file figures; browser caching and other servers' compression can change actual network transfer.
+Sizes are shown in decimal KB (`1 KB = 1,000 bytes`). Raw figures measure emitted minified JavaScript; gzip figures sum the separately compressed size of each JavaScript file. They exclude Microlighter and its demo highlighting script/grammars, HTML, separate CSS files, JSON, source maps, and HTTP headers. Component styles embedded in JavaScript are included. The local server can serve the measured JavaScript gzip sidecars, so its compressed bodies correspond to the reported per-file figures; browser caching and other servers' compression can change actual network transfer.
 
 An independent capability's fallback cost includes the core installer and its required shared utilities. Adding the six independent costs does not predict the gallery's cost: the gallery shares code and is bundled as its own graph. Rebuild after changing a feature, selection, or build setting to regenerate the visible report and manifest.
 
 ## Run locally
 
-Use Node.js 22 or newer (`.nvmrc` selects 24). Runtime modules use only browser APIs; esbuild and Microlighter are development dependencies for the examples.
+Use Node.js 22 or newer (`.nvmrc` selects 24). Package runtime modules use only browser APIs. The rendering libraries, Stencil compiler, esbuild, and Microlighter are development dependencies used to build the examples; the published fallback has no runtime dependencies.
 
 ```sh
 npm install
@@ -327,7 +335,7 @@ npm run build:example
 
 `npm start` builds the complete site through `prestart`, then serves the consumption guide at `/`, the gallery and capability pages under `/examples/`, and the [browser tests](http://127.0.0.1:4173/tests/browser.html). `/dist/examples/` is an alias for the same built output. Set `RT_PORT` to change the default port of 4173.
 
-`npm run build:example` builds every cataloged page independently into `dist/examples`, including its capability subdirectories and the original scenarios companion. It generates the static demo HTML, current size reports, gzip JavaScript sidecars, `bundle-sizes.json`, and a combined esbuild dependency report in `dist/metafile.json`. Run it again after edits; the server does not automatically rebuild.
+`npm run build:example` first compiles the Stencil sources into `dist/stencil`, then builds every cataloged page independently into `dist/examples`, including its capability and renderer subdirectories and the original scenarios companion. Stencil’s generated runtime chunks are bundled into its page, with no browser-time compiler or CDN imports. The build generates static demo HTML, component source samples, current size reports, gzip JavaScript sidecars, `bundle-sizes.json`, and a combined esbuild dependency report in `dist/metafile.json`. Run it again after edits; the server does not automatically rebuild.
 
 For source inspection, `/source/examples/` serves the original files and `/source/src/` maps their runtime imports. The gallery and capability source HTML are unexpanded templates, so those debug URLs are not the complete interactive pages. Use `/examples/` for the rendered demos and measured bundles.
 
@@ -351,4 +359,4 @@ The preparation command leaves the source checkout in place and preserves Pages 
 
 Native-surface tests may be skipped where that API is absent; force-mode simulations do not establish native interoperability. Browser behavior and accessibility outcomes require browser and assistive-technology validation. No cross-browser conformance claim is made here.
 
-Validation on 31 August 2026: **16 Node/package tests passed** and the Chromium 151 browser suite reported **98 passed, 0 failed, 1 skipped**. The skipped test needs a native Reference Target surface. The gallery tests cover all six individual pages, their shared gallery, conditional loading, interactions, displayed size/file reports, and separate syntax highlighting that preserves sample text and live form observations. Combobox adapter checks cover public relationships, ownership and cleanup, scope/privacy guards, and simulated native Phase 1 coexistence. Pages checks also cover project-relative links and branch preparation that preserves source work and publication history. The demos were checked in light and dark palettes at desktop and narrow widths. Firefox, Safari, and assistive-technology behavior remain unverified by this run.
+Validation on 31 August 2026: **20 Node/package tests passed** and the Chromium 151 browser suite reported **114 passed, 0 failed, 1 skipped**. The skipped test needs a native Reference Target surface. Package checks verify that each renderer is isolated and adapters stay behind the setup boundary. Sixteen renderer cases cover actual target replacement, single activation, checkbox and popover reconnection, internal popover dismissal, and automatic/forced/off loading. Existing gallery tests cover six capability pages, their shared gallery, interactions, size reports, and syntax highlighting. Combobox adapter checks cover public relationships, ownership and cleanup, scope/privacy guards, and simulated native Phase 1 coexistence. Pages checks cover project-relative links and branch preparation. Renderer layout and source highlighting were also checked in desktop Chromium. Firefox, Safari, and assistive-technology behavior remain unverified by this run.

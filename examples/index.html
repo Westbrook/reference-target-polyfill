@@ -26,13 +26,14 @@
           <a href="./popover-commands/">Popover commands</a>
           <a href="./text-names/">Text names</a>
           <a href="./forms/">Form actions</a>
+          <a href="#renderers">Renderers</a>
           <a class="docs-link" href="../">Use the polyfill ↗</a>
         </nav>
         <div class="hero">
           <div class="hero-copy">
-            <p class="eyebrow">Shadow DOM / six small experiments</p>
+            <p class="eyebrow">Shadow DOM / working examples</p>
             <h1>Reference<br><em>Target.</em></h1>
-            <p class="intro">Six Reference Target capabilities, with opt-in fallback adapters.</p>
+            <p class="intro">Six Reference Target capabilities and four rendering libraries, with opt-in fallback adapters.</p>
           </div>
           <figure class="reference-map" role="img" aria-label="A reference to a host is forwarded to a target inside its shadow root.">
             <div class="map-source"><span class="map-label">outside</span><code>for="host"</code></div>
@@ -523,6 +524,12 @@ button.popoverTargetElement = panel;</code></pre>
 
       </div>
 
+      <section class="metrics-panel" id="renderers" aria-labelledby="renderers-title">
+    <h2 id="renderers-title">Rendered by a library</h2>
+    <p>Try the same label, checkbox replacement, and popover examples in four independent pages.</p>
+    <nav class="jump-links" aria-label="Renderer examples"><a href="./lit/">Lit</a> <a href="./fast/">FAST</a> <a href="./stencil/">Stencil</a> <a href="./preact/">Preact</a></nav>
+  </section>
+
       <section class="metrics-panel" data-bundle-id="all" aria-label="JavaScript delivery sizes">
     <h2>JavaScript sizes</h2>
     <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="16587" data-gzip-bytes="5996">
@@ -547,7 +554,7 @@ button.popoverTargetElement = panel;</code></pre>
     <details>
       <summary>Inspect the 4 generated JavaScript files</summary>
       <p class="metric-note">Selected adapters: <code>labels</code>, <code>popover-targets</code>, <code>dialog-commands</code>, <code>popover-commands</code>, <code>text-names</code>, <code>form-targets</code>.</p>
-      <p class="metric-note">Gzip totals sum each compressed file. CSS, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Transfer sizes depend on compression and caching. <a href="./shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="./shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
       <div class="table-scroll"><table class="files-table">
         <caption>Files included in this page’s totals</caption>
         <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>

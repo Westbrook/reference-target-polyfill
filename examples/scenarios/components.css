@@ -1,3 +1,1 @@
-@import "../shared/components.css";
-
-input[type="checkbox"] { width: 22px; height: 22px; }
+@import"../shared/components.css";input[type=checkbox]{width:22px;height:22px}

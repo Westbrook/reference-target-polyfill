@@ -7,9 +7,10 @@
     <meta name="description" content="Interactive Reference Target examples with conditional, modular fallbacks and measured JavaScript bundle sizes.">
     <title>Reference Target · Popover commands</title>
     <link rel="stylesheet" href="../shared/styles.css">
-    <script type="module" src="./main.js"></script>
+    <link rel="modulepreload" href="../shared/chunks/app-NKBZQNH6.js">
+<link rel="modulepreload" href="../shared/chunks/chunk-S2QLMWTP.js">
+<script type="module" src="./main.js"></script>
   <link rel="icon" type="image/svg+xml" href="../shared/favicon.svg">
-<link rel="stylesheet" href="../shared/microlighter/themes/github.css">
 </head>
   <body>
     <a class="skip-link" href="#demos">Skip to the demos</a>
@@ -89,7 +90,7 @@
           <h2 id="pc-panel-title">A panel with a say</h2>
           <p>The component can cancel a <code>command</code> event before the corresponding native popover operation runs.</p>
           <p>This manual popover stays open until a hide or toggle action closes it.</p>
-          <button id="pc-close" type="button" disabled>Close from inside</button>
+          <button id="pc-close" type="button" autofocus disabled>Close from inside</button>
         </section>
       </template>
     </rt-popover-command-demo>
@@ -117,6 +118,7 @@
     &lt;section id="pc-panel" popover="manual" role="dialog"
         aria-labelledby="pc-panel-title"&gt;
       &lt;h2 id="pc-panel-title"&gt;A panel with a say&lt;/h2&gt;
+      &lt;button type="button" autofocus&gt;Close from inside&lt;/button&gt;
     &lt;/section&gt;
   &lt;/template&gt;
 &lt;/rt-popover-command-demo&gt;</code></pre>
@@ -125,57 +127,104 @@
 
       </div>
 
-      <section class="metrics-panel" data-bundle-id="popover-commands" aria-label="JavaScript delivery sizes">
-    <h2>JavaScript sizes</h2>
-    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="4467" data-gzip-bytes="2146">
-      <h3>Page JavaScript</h3>
-      <strong data-size="bytes" data-bytes="4467">4.467 KB</strong>
-      <span data-size="gzip" data-bytes="2146">2.146 KB gzip</span>
+      <section class="metrics-panel" data-bundle-id="popover-commands" aria-label="JavaScript and page delivery sizes">
+    <h2>Functional JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="5185" data-gzip-bytes="2286">
+      <h3>Functional page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="5185">5.185 KB</strong>
+      <span data-size="gzip" data-bytes="2286">2.286 KB gzip</span>
       <p>Always loaded.</p>
     </article>
-<article class="size-card" data-size-kind="fallback" data-bytes="10790" data-gzip-bytes="4182">
+<article class="size-card" data-size-kind="fallback" data-bytes="19208" data-gzip-bytes="6967">
       <h3>Fallback additional</h3>
-      <strong data-size="bytes" data-bytes="10790">10.790 KB</strong>
-      <span data-size="gzip" data-bytes="4182">4.182 KB gzip</span>
+      <strong data-size="bytes" data-bytes="19208">19.208 KB</strong>
+      <span data-size="gzip" data-bytes="6967">6.967 KB gzip</span>
       <p>Core + selected adapters.</p>
     </article>
-<article class="size-card" data-size-kind="total" data-bytes="15257" data-gzip-bytes="6328">
-      <h3>Total with fallback</h3>
-      <strong data-size="bytes" data-bytes="15257">15.257 KB</strong>
-      <span data-size="gzip" data-bytes="6328">6.328 KB gzip</span>
-      <p>Shared files counted once.</p>
+<article class="size-card" data-size-kind="total" data-bytes="24393" data-gzip-bytes="9253">
+      <h3>Fallback route total</h3>
+      <strong data-size="bytes" data-bytes="24393">24.393 KB</strong>
+      <span data-size="gzip" data-bytes="9253">9.253 KB gzip</span>
+      <p>Always-loaded and fallback files; shared files counted once.</p>
+    </article><article class="size-card" data-optional-size="native-probe" data-bytes="6174" data-gzip-bytes="2824">
+      <h3>Native-surface route total</h3>
+      <strong>6.174 KB</strong>
+      <span>2.824 KB gzip</span>
+      <p>Includes 0.989 KB (0.538 KB gzip) of behavioral probes requested only after the property surface is present.</p>
     </article></div>
-    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Demo-only syntax highlighting is excluded from the functional totals and reported separately below.</p>
+    <section class="delivery-context" aria-labelledby="popover-commands-delivery-title">
+    <h3 id="popover-commands-delivery-title">Whole-page delivery context</h3>
+    <div class="size-grid">
+      <article class="size-card" data-delivery-kind="document" data-bytes="15372">
+        <h4>HTML document</h4>
+        <strong>15.372 KB</strong>
+        <span>1 request</span>
+        <p>Generated markup, including these measurements.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="supporting" data-bytes="21802">
+        <h4>Initial supporting assets</h4>
+        <strong>21.802 KB raw</strong>
+        <span>21.179 KB local transfer · 4 requests</span>
+        <p>Styles, icon, and the highlighting scheduler; functional JS is separate above.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="initial-with-fallback" data-bytes="61567">
+        <h4>Initial page with fallback</h4>
+        <strong>61.567 KB raw</strong>
+        <span>45.804 KB local transfer · 10 requests</span>
+        <p>Document + functional fallback path + initial supporting assets, with unique files counted once.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="decoration" data-bytes="16700">
+        <h4>Deferred highlighting</h4>
+        <strong>16.700 KB raw</strong>
+        <span>7.831 KB local transfer · 8 requests</span>
+        <p>Engine, theme, and this page’s grammar closure, requested after a source disclosure opens or during idle time.</p>
+      </article>
+    </div>
+    <p class="metric-note">“Local transfer” matches the included development server: gzip JavaScript sidecars, but uncompressed HTML, CSS, and SVG. GitHub Pages, browser caching, HTTP headers, and production compression can change transferred bytes and request scheduling. Module preloads fetch functional modules early without evaluating the app and do not add duplicate transfers.</p>
+  </section>
     <details>
-      <summary>Inspect the 4 generated JavaScript files</summary>
+      <summary>Inspect the 6 generated JavaScript files</summary>
       <p class="metric-note">Selected adapters: <code>popover-commands</code>.</p>
-      <p class="metric-note">Gzip totals sum each compressed file. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. The fallback and native-probe routes are mutually exclusive. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
       <div class="table-scroll"><table class="files-table">
         <caption>Files included in this page’s totals</caption>
         <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
-        <tbody><tr data-file-path="popover-commands/app-TCGQHJQH.js" data-delivery="baseline">
-      <td><a data-bundle-file="popover-commands/app-TCGQHJQH.js" href="../popover-commands/app-TCGQHJQH.js"><code>popover-commands/app-TCGQHJQH.js</code></a></td>
-      <td>Page</td>
-      <td data-size="bytes" data-bytes="1059">1.059 KB</td>
-      <td data-size="gzip" data-bytes="543">0.543 KB</td>
-    </tr>
-<tr data-file-path="popover-commands/chunk-32G5PXKY.js" data-delivery="baseline">
-      <td><a data-bundle-file="popover-commands/chunk-32G5PXKY.js" href="../popover-commands/chunk-32G5PXKY.js"><code>popover-commands/chunk-32G5PXKY.js</code></a></td>
-      <td>Page</td>
-      <td data-size="bytes" data-bytes="924">0.924 KB</td>
-      <td data-size="gzip" data-bytes="464">0.464 KB</td>
-    </tr>
-<tr data-file-path="popover-commands/main.js" data-delivery="baseline">
+        <tbody><tr data-file-path="popover-commands/main.js" data-delivery="baseline">
       <td><a data-bundle-file="popover-commands/main.js" href="../popover-commands/main.js"><code>popover-commands/main.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
-      <td data-size="gzip" data-bytes="1139">1.139 KB</td>
+      <td data-size="bytes" data-bytes="3257">3.257 KB</td>
+      <td data-size="gzip" data-bytes="1351">1.351 KB</td>
     </tr>
-<tr data-file-path="popover-commands/reference-target.setup-2UW36AFD.js" data-delivery="fallback">
-      <td><a data-bundle-file="popover-commands/reference-target.setup-2UW36AFD.js" href="../popover-commands/reference-target.setup-2UW36AFD.js"><code>popover-commands/reference-target.setup-2UW36AFD.js</code></a></td>
+<tr data-file-path="shared/chunks/app-NKBZQNH6.js" data-delivery="baseline">
+      <td><a data-bundle-file="shared/chunks/app-NKBZQNH6.js" href="../shared/chunks/app-NKBZQNH6.js"><code>shared/chunks/app-NKBZQNH6.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="1786">1.786 KB</td>
+      <td data-size="gzip" data-bytes="797">0.797 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/chunk-CLCOZ6O7.js" data-delivery="route-shared">
+      <td><a data-bundle-file="shared/chunks/chunk-CLCOZ6O7.js" href="../shared/chunks/chunk-CLCOZ6O7.js"><code>shared/chunks/chunk-CLCOZ6O7.js</code></a></td>
+      <td>Fallback / native probe shared</td>
+      <td data-size="bytes" data-bytes="849">0.849 KB</td>
+      <td data-size="gzip" data-bytes="422">0.422 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/chunk-S2QLMWTP.js" data-delivery="baseline">
+      <td><a data-bundle-file="shared/chunks/chunk-S2QLMWTP.js" href="../shared/chunks/chunk-S2QLMWTP.js"><code>shared/chunks/chunk-S2QLMWTP.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="142">0.142 KB</td>
+      <td data-size="gzip" data-bytes="138">0.138 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/detect-X6QVIAY4.js" data-delivery="native-probe">
+      <td><a data-bundle-file="shared/chunks/detect-X6QVIAY4.js" href="../shared/chunks/detect-X6QVIAY4.js"><code>shared/chunks/detect-X6QVIAY4.js</code></a></td>
+      <td>Native-surface probe</td>
+      <td data-size="bytes" data-bytes="140">0.140 KB</td>
+      <td data-size="gzip" data-bytes="116">0.116 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/reference-target.setup-LPCOCIRI.js" data-delivery="fallback">
+      <td><a data-bundle-file="shared/chunks/reference-target.setup-LPCOCIRI.js" href="../shared/chunks/reference-target.setup-LPCOCIRI.js"><code>shared/chunks/reference-target.setup-LPCOCIRI.js</code></a></td>
       <td>Fallback additional</td>
-      <td data-size="bytes" data-bytes="10790">10.790 KB</td>
-      <td data-size="gzip" data-bytes="4182">4.182 KB</td>
+      <td data-size="bytes" data-bytes="18359">18.359 KB</td>
+      <td data-size="gzip" data-bytes="6545">6.545 KB</td>
     </tr></tbody>
       </table></div>
       <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>

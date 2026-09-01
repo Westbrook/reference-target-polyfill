@@ -7,9 +7,10 @@
     <title>Reference Target — six scenarios</title>
     <link rel="stylesheet" href="../shared/styles.css">
     <link rel="stylesheet" href="./styles.css">
-    <script type="module" src="./main.js"></script>
+    <link rel="modulepreload" href="../shared/chunks/app-S3BP47PD.js">
+<link rel="modulepreload" href="../shared/chunks/chunk-S2QLMWTP.js">
+<script type="module" src="./main.js"></script>
   <link rel="icon" type="image/svg+xml" href="../shared/favicon.svg">
-<link rel="stylesheet" href="../shared/microlighter/themes/github.css">
 </head>
   <body>
     <a class="skip-link" href="#demos">Skip to the demos</a>
@@ -188,57 +189,87 @@
         </section>
       </div>
 
-      <section class="metrics-panel" data-bundle-id="scenarios" aria-label="JavaScript delivery sizes">
-    <h2>JavaScript sizes</h2>
-    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="6253" data-gzip-bytes="2622">
-      <h3>Page JavaScript</h3>
-      <strong data-size="bytes" data-bytes="6253">6.253 KB</strong>
-      <span data-size="gzip" data-bytes="2622">2.622 KB gzip</span>
+      <section class="metrics-panel" data-bundle-id="scenarios" aria-label="JavaScript and page delivery sizes">
+    <h2>Functional JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="5442" data-gzip-bytes="2242">
+      <h3>Functional page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="5442">5.442 KB</strong>
+      <span data-size="gzip" data-bytes="2242">2.242 KB gzip</span>
       <p>Always loaded.</p>
     </article>
-<article class="size-card" data-size-kind="fallback" data-bytes="18810" data-gzip-bytes="6825">
+<article class="size-card" data-size-kind="fallback" data-bytes="29693" data-gzip-bytes="10083">
       <h3>Fallback additional</h3>
-      <strong data-size="bytes" data-bytes="18810">18.810 KB</strong>
-      <span data-size="gzip" data-bytes="6825">6.825 KB gzip</span>
+      <strong data-size="bytes" data-bytes="29693">29.693 KB</strong>
+      <span data-size="gzip" data-bytes="10083">10.083 KB gzip</span>
       <p>Core + selected adapters.</p>
     </article>
-<article class="size-card" data-size-kind="total" data-bytes="25063" data-gzip-bytes="9447">
-      <h3>Total with fallback</h3>
-      <strong data-size="bytes" data-bytes="25063">25.063 KB</strong>
-      <span data-size="gzip" data-bytes="9447">9.447 KB gzip</span>
-      <p>Shared files counted once.</p>
+<article class="size-card" data-size-kind="total" data-bytes="35135" data-gzip-bytes="12325">
+      <h3>Fallback route total</h3>
+      <strong data-size="bytes" data-bytes="35135">35.135 KB</strong>
+      <span data-size="gzip" data-bytes="12325">12.325 KB gzip</span>
+      <p>Always-loaded and fallback files; shared files counted once.</p>
     </article></div>
-    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Demo-only syntax highlighting is excluded from the functional totals and reported separately below.</p>
+    <section class="delivery-context" aria-labelledby="scenarios-delivery-title">
+    <h3 id="scenarios-delivery-title">Whole-page delivery context</h3>
+    <div class="size-grid">
+      <article class="size-card" data-delivery-kind="document" data-bytes="20840">
+        <h4>HTML document</h4>
+        <strong>20.840 KB</strong>
+        <span>1 request</span>
+        <p>Generated markup, including these measurements.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="supporting" data-bytes="19099">
+        <h4>Initial supporting assets</h4>
+        <strong>19.099 KB raw</strong>
+        <span>18.476 KB local transfer · 5 requests</span>
+        <p>Styles, icon, and the highlighting scheduler; functional JS is separate above.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="initial-with-fallback" data-bytes="75074">
+        <h4>Initial page with fallback</h4>
+        <strong>75.074 KB raw</strong>
+        <span>51.641 KB local transfer · 10 requests</span>
+        <p>Document + functional fallback path + initial supporting assets, with unique files counted once.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="decoration" data-bytes="16700">
+        <h4>Deferred highlighting</h4>
+        <strong>16.700 KB raw</strong>
+        <span>7.831 KB local transfer · 8 requests</span>
+        <p>Engine, theme, and this page’s grammar closure, requested after a source disclosure opens or during idle time.</p>
+      </article>
+    </div>
+    <p class="metric-note">“Local transfer” matches the included development server: gzip JavaScript sidecars, but uncompressed HTML, CSS, and SVG. GitHub Pages, browser caching, HTTP headers, and production compression can change transferred bytes and request scheduling. Module preloads fetch functional modules early without evaluating the app and do not add duplicate transfers.</p>
+  </section>
     <details>
       <summary>Inspect the 4 generated JavaScript files</summary>
       <p class="metric-note">Selected adapters: <code>labels</code>, <code>popover-targets</code>, <code>text-names</code>.</p>
-      <p class="metric-note">Gzip totals sum each compressed file. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. The fallback and native-probe routes are mutually exclusive. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
       <div class="table-scroll"><table class="files-table">
         <caption>Files included in this page’s totals</caption>
         <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
-        <tbody><tr data-file-path="scenarios/app-FS777VM2.js" data-delivery="baseline">
-      <td><a data-bundle-file="scenarios/app-FS777VM2.js" href="../scenarios/app-FS777VM2.js"><code>scenarios/app-FS777VM2.js</code></a></td>
-      <td>Page</td>
-      <td data-size="bytes" data-bytes="3487">3.487 KB</td>
-      <td data-size="gzip" data-bytes="1261">1.261 KB</td>
-    </tr>
-<tr data-file-path="scenarios/chunk-32G5PXKY.js" data-delivery="baseline">
-      <td><a data-bundle-file="scenarios/chunk-32G5PXKY.js" href="../scenarios/chunk-32G5PXKY.js"><code>scenarios/chunk-32G5PXKY.js</code></a></td>
-      <td>Page</td>
-      <td data-size="bytes" data-bytes="924">0.924 KB</td>
-      <td data-size="gzip" data-bytes="464">0.464 KB</td>
-    </tr>
-<tr data-file-path="scenarios/main.js" data-delivery="baseline">
+        <tbody><tr data-file-path="scenarios/main.js" data-delivery="baseline">
       <td><a data-bundle-file="scenarios/main.js" href="../scenarios/main.js"><code>scenarios/main.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="1842">1.842 KB</td>
-      <td data-size="gzip" data-bytes="897">0.897 KB</td>
+      <td data-size="bytes" data-bytes="1854">1.854 KB</td>
+      <td data-size="gzip" data-bytes="880">0.880 KB</td>
     </tr>
-<tr data-file-path="scenarios/reference-target.setup-YED7OLV2.js" data-delivery="fallback">
-      <td><a data-bundle-file="scenarios/reference-target.setup-YED7OLV2.js" href="../scenarios/reference-target.setup-YED7OLV2.js"><code>scenarios/reference-target.setup-YED7OLV2.js</code></a></td>
+<tr data-file-path="shared/chunks/app-S3BP47PD.js" data-delivery="baseline">
+      <td><a data-bundle-file="shared/chunks/app-S3BP47PD.js" href="../shared/chunks/app-S3BP47PD.js"><code>shared/chunks/app-S3BP47PD.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="3446">3.446 KB</td>
+      <td data-size="gzip" data-bytes="1224">1.224 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/chunk-S2QLMWTP.js" data-delivery="baseline">
+      <td><a data-bundle-file="shared/chunks/chunk-S2QLMWTP.js" href="../shared/chunks/chunk-S2QLMWTP.js"><code>shared/chunks/chunk-S2QLMWTP.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="142">0.142 KB</td>
+      <td data-size="gzip" data-bytes="138">0.138 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/reference-target.setup-63HUVE2L.js" data-delivery="fallback">
+      <td><a data-bundle-file="shared/chunks/reference-target.setup-63HUVE2L.js" href="../shared/chunks/reference-target.setup-63HUVE2L.js"><code>shared/chunks/reference-target.setup-63HUVE2L.js</code></a></td>
       <td>Fallback additional</td>
-      <td data-size="bytes" data-bytes="18810">18.810 KB</td>
-      <td data-size="gzip" data-bytes="6825">6.825 KB</td>
+      <td data-size="bytes" data-bytes="29693">29.693 KB</td>
+      <td data-size="gzip" data-bytes="10083">10.083 KB</td>
     </tr></tbody>
       </table></div>
       <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>

@@ -61,9 +61,20 @@ export function textNames({ getText } = {}) {
   return {
     id: "text-names",
     attributes: ["aria-labelledby", "aria-describedby", "id"],
+    observation: {
+      events: [],
+      refresh: true,
+      childList: true,
+      // getText() is application code and may depend on any host attribute.
+      attributes: null,
+      characterData: true,
+      slotchange: true,
+      provider: "conservative",
+    },
     install(context) {
       const { document, window } = context;
       const bindings = new Map();
+      const proxyNodes = new WeakSet();
       const reflected = new Set(
         relations
           .filter(({ property }) => property in window.Element.prototype)
@@ -72,6 +83,7 @@ export function textNames({ getText } = {}) {
       let nextProxyId = 0;
       let disposed = false;
       let refreshing = false;
+      let pending;
 
       function report(code, detail) {
         context.report(code, detail);
@@ -141,12 +153,15 @@ export function textNames({ getText } = {}) {
       }
 
       function release(source, relation, binding, restore) {
-        if (restore && owns(source, relation, binding)) {
-          // Restore the actual explicit backing list even if scope filtering
-          // makes both current and original getters empty while disconnected.
-          writeBinding(source, relation, binding.original, binding.original.mode === "elements");
+        try {
+          if (restore && owns(source, relation, binding)) {
+            // Restore the actual explicit backing list even if scope filtering
+            // makes both current and original getters empty while disconnected.
+            writeBinding(source, relation, binding.original, binding.original.mode === "elements");
+          }
+        } finally {
+          clearProxies(binding);
         }
-        clearProxies(binding);
       }
 
       function uniqueId(root) {
@@ -157,12 +172,13 @@ export function textNames({ getText } = {}) {
         return id;
       }
 
-      function proxyFor(binding, index, text) {
+      function proxyFor(binding, key, text) {
         const root = binding.root;
-        let proxy = binding.proxies.get(index);
+        let proxy = binding.proxies.get(key);
         if (!proxy || proxy.getRootNode() !== root) {
           proxy?.remove();
           proxy = document.createElement("span");
+          proxyNodes.add(proxy);
           proxy.id = uniqueId(root);
           // Referenced hidden text participates in accessible name/description
           // computation without adding another visible or focusable control.
@@ -173,7 +189,7 @@ export function textNames({ getText } = {}) {
             : root;
           if (!parent) return null;
           parent.append(proxy);
-          binding.proxies.set(index, proxy);
+          binding.proxies.set(key, proxy);
         } else if (root.getElementById(proxy.id) !== proxy) {
           // An author may have added a conflicting ID since our last refresh.
           proxy.id = uniqueId(root);
@@ -202,6 +218,7 @@ export function textNames({ getText } = {}) {
       }
 
       function reconcile(source, relation, sourceBindings, cache) {
+        if (disposed) return;
         let binding = sourceBindings.get(relation.attribute);
         if (binding && !owns(source, relation, binding)) {
           // A later authored binding takes precedence, including an explicit
@@ -228,96 +245,176 @@ export function textNames({ getText } = {}) {
           proxies: new Map(),
           expected: original,
         };
-        const effective = [];
-        const usedProxies = new Set();
-        let changed = false;
+        pending = { source, relation, binding: next };
+        try {
+          const effective = [];
+          const usedProxies = new Set();
+          let changed = false;
 
-        references.forEach((reference, index) => {
-          if (original.mode === "elements" && !isInReferenceScope(source, reference)) {
-            // Retain the original backing reference for a later move back into
-            // scope, without exposing its text through a currently valid proxy.
+          for (const reference of references) {
+            if (disposed) return;
+            if (original.mode === "elements" && !isInReferenceScope(source, reference)) {
+              // Retain the original backing reference for a later move back into
+              // scope, without exposing its text through a currently valid proxy.
+              changed = true;
+              continue;
+            }
+            const host = original.mode === "elements"
+              ? reference
+              : root.getElementById(reference);
+            if (!host || !context.isForwarded(host)) {
+              effective.push(reference);
+              continue;
+            }
+            if (!context.resolveTarget(host)) {
+              changed = true;
+              continue;
+            }
+            // Captured roots include closed trees. Do not expose one of their
+            // descendants to an application callback, even through an open root
+            // nested inside that closed tree. A public host may still forward to
+            // a target in its own closed root: only its enclosing roots matter.
+            if (!isPubliclyReachable(host)) {
+              effective.push(reference);
+              continue;
+            }
+            const text = providerText(host, relation.kind, cache);
+            if (disposed) return;
+            if (text === null) {
+              effective.push(reference);
+              continue;
+            }
+            // Repeated references to the same original host retain one node
+            // identity, matching the relationship more closely and avoiding
+            // duplicate hidden nodes and text computation.
+            const proxy = proxyFor(next, reference, text);
+            if (!proxy) {
+              effective.push(reference);
+              continue;
+            }
             changed = true;
-            return;
+            usedProxies.add(reference);
+            effective.push(original.mode === "elements" ? proxy : proxy.id);
           }
-          const host = original.mode === "elements"
-            ? reference
-            : root.getElementById(reference);
-          if (!host || !context.isForwarded(host)) {
-            effective.push(reference);
-            return;
-          }
-          if (!context.resolveTarget(host)) {
-            changed = true;
-            return;
-          }
-          // Captured roots include closed trees. Do not expose one of their
-          // descendants to an application callback, even through an open root
-          // nested inside that closed tree. A public host may still forward to
-          // a target in its own closed root: only its enclosing roots matter.
-          if (!isPubliclyReachable(host)) {
-            effective.push(reference);
-            return;
-          }
-          const text = providerText(host, relation.kind, cache);
-          if (text === null) {
-            effective.push(reference);
-            return;
-          }
-          const proxy = proxyFor(next, index, text);
-          if (!proxy) {
-            effective.push(reference);
-            return;
-          }
-          changed = true;
-          usedProxies.add(index);
-          effective.push(original.mode === "elements" ? proxy : proxy.id);
-        });
 
-        // Provider callbacks may perform application work. Do not overwrite a
-        // binding changed by the author during such a callback.
-        if (binding ? !owns(source, relation, binding) : !matches(source, relation, original)) {
-          clearProxies(next);
+          if (disposed) return;
+          // Provider callbacks may perform application work. Do not overwrite a
+          // binding changed by the author during such a callback.
+          if (binding ? !owns(source, relation, binding) : !matches(source, relation, original)) {
+            clearProxies(next);
+            sourceBindings.delete(relation.attribute);
+            return;
+          }
+
+          if (!changed) {
+            if (binding) release(source, relation, binding, true);
+            sourceBindings.delete(relation.attribute);
+            return;
+          }
+
+          const expected = original.mode === "elements"
+            ? { mode: "elements", attribute: "", elements: effective }
+            : { mode: "attribute", attribute: effective.join(" ") };
+          writeBinding(source, relation, expected);
+          next.expected = expected;
+          if (disposed) {
+            release(source, relation, next, true);
+            sourceBindings.delete(relation.attribute);
+            return;
+          }
+          // Keep old explicit references in scope until after changing the
+          // binding. Removing their proxies earlier would change the reflected
+          // getter and look like an author edit while checking ownership.
+          for (const [key, proxy] of next.proxies) {
+            if (!usedProxies.has(key)) {
+              proxy.remove();
+              next.proxies.delete(key);
+            }
+          }
+          sourceBindings.set(relation.attribute, next);
+        } catch (error) {
           sourceBindings.delete(relation.attribute);
-          return;
-        }
-
-        if (!changed) {
-          if (binding) release(source, relation, binding, true);
-          sourceBindings.delete(relation.attribute);
-          return;
-        }
-
-        const expected = original.mode === "elements"
-          ? { mode: "elements", attribute: "", elements: effective }
-          : { mode: "attribute", attribute: effective.join(" ") };
-        writeBinding(source, relation, expected);
-        // Keep old explicit references in scope until after changing the
-        // binding. Removing their proxies earlier would change the reflected
-        // getter and look like an author edit while checking ownership.
-        for (const [index, proxy] of next.proxies) {
-          if (!usedProxies.has(index)) {
-            proxy.remove();
-            next.proxies.delete(index);
+          try {
+            release(source, relation, next, true);
+          } catch (cleanupError) {
+            throw new AggregateError(
+              [error, cleanupError],
+              "Text-name reconciliation and rollback failed",
+              { cause: error },
+            );
           }
+          throw error;
+        } finally {
+          pending = undefined;
         }
-        next.expected = expected;
-        sourceBindings.set(relation.attribute, next);
       }
 
-      function refresh() {
+      function ownsMutation(mutation) {
+        if (!mutation) return false;
+        if (proxyNodes.has(mutation.target)) return true;
+        if (mutation.type === "childList") {
+          const nodes = [...mutation.addedNodes, ...mutation.removedNodes];
+          if (nodes.length && nodes.every((node) => proxyNodes.has(node))) return true;
+        }
+        if (mutation.type !== "attributes") return false;
+        const relation = relations.find(({ attribute }) => attribute === mutation.attributeName);
+        if (!relation) return false;
+        const binding = bindings.get(mutation.target)?.get(relation.attribute);
+        return !!binding && owns(mutation.target, relation, binding);
+      }
+
+      function incrementalSources(changeSet) {
+        if (
+          !changeSet ||
+          changeSet.full ||
+          changeSet.model ||
+          changeSet.referenceTarget ||
+          changeSet.slotchange
+        ) return null;
+
+        const sources = new Set();
+        const mutations = changeSet.mutations ?? [];
+        if (!mutations.length && changeSet.roots?.size) return null;
+        for (const mutation of mutations) {
+          if (ownsMutation(mutation)) continue;
+          if (
+            mutation.type !== "attributes" ||
+            (mutation.attributeName !== "aria-labelledby" &&
+              mutation.attributeName !== "aria-describedby")
+          ) return null;
+          sources.add(mutation.target);
+        }
+        if (!mutations.length) {
+          for (const source of changeSet.sources ?? []) {
+            if (
+              bindings.has(source) ||
+              source.hasAttribute?.("aria-labelledby") ||
+              source.hasAttribute?.("aria-describedby")
+            ) sources.add(source);
+          }
+        }
+        return sources;
+      }
+
+      function refresh(changeSet) {
         if (disposed || refreshing) return;
+        const incremental = incrementalSources(changeSet);
+        if (incremental?.size === 0) return;
         refreshing = true;
         try {
           const roots = new Set(context.roots());
-          const sources = new Set(bindings.keys());
+          const sources = incremental ?? new Set(bindings.keys());
           const cache = new WeakMap();
-          for (const root of roots) {
-            for (const source of root.querySelectorAll(
-              "[aria-labelledby], [aria-describedby]",
-            )) sources.add(source);
+          if (!incremental) {
+            for (const root of roots) {
+              for (const source of root.querySelectorAll(
+                "[aria-labelledby], [aria-describedby]",
+              )) sources.add(source);
+            }
           }
 
           for (const source of sources) {
+            if (disposed) break;
             const sourceBindings = bindings.get(source) ?? new Map();
             if (!source.isConnected || !roots.has(source.getRootNode())) {
               for (const relation of relations) {
@@ -329,7 +426,9 @@ export function textNames({ getText } = {}) {
             }
             for (const relation of relations) {
               reconcile(source, relation, sourceBindings, cache);
+              if (disposed) break;
             }
+            if (disposed) break;
             if (sourceBindings.size) bindings.set(source, sourceBindings);
             else bindings.delete(source);
           }
@@ -341,16 +440,25 @@ export function textNames({ getText } = {}) {
       function dispose() {
         if (disposed) return;
         disposed = true;
+        const errors = [];
+        const cleanup = (callback) => {
+          try { callback(); } catch (error) { errors.push(error); }
+        };
         for (const [source, sourceBindings] of bindings) {
           for (const relation of relations) {
             const binding = sourceBindings.get(relation.attribute);
-            if (binding) release(source, relation, binding, true);
+            if (binding) cleanup(() => release(source, relation, binding, true));
           }
         }
         bindings.clear();
+        if (pending) {
+          cleanup(() => release(pending.source, pending.relation, pending.binding, true));
+        }
+        pending = undefined;
+        if (errors.length) throw new AggregateError(errors, "Errors while disposing text-name bindings");
       }
 
-      return { refresh, dispose };
+      return { refresh, ownsMutation, dispose };
     },
   };
 }

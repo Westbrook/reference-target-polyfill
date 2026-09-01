@@ -16,57 +16,190 @@
         "form-targets"
       ],
       "baseline": {
-        "bytes": 16587,
-        "gzipBytes": 5997,
+        "bytes": 17732,
+        "gzipBytes": 6193,
         "files": [
-          "app-YOONO5DP.js",
-          "chunk-BAUPV3FJ.js",
-          "main.js"
+          "main.js",
+          "shared/chunks/app-LCB4BC4L.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 22810,
-        "gzipBytes": 7872,
+        "bytes": 34010,
+        "gzipBytes": 11390,
         "files": [
-          "reference-target.setup-767JWZHE.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-CRS7ANCA.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 39397,
-        "gzipBytes": 13869,
+        "bytes": 51742,
+        "gzipBytes": 17583,
         "files": [
-          "app-YOONO5DP.js",
-          "chunk-BAUPV3FJ.js",
           "main.js",
-          "reference-target.setup-767JWZHE.js"
+          "shared/chunks/app-LCB4BC4L.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-CRS7ANCA.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 18721,
+        "gzipBytes": 6731,
+        "files": [
+          "main.js",
+          "shared/chunks/app-LCB4BC4L.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "files": [
         {
-          "path": "app-YOONO5DP.js",
-          "bytes": 13179,
-          "gzipBytes": 4395,
-          "delivery": "baseline"
-        },
-        {
-          "path": "chunk-BAUPV3FJ.js",
-          "bytes": 924,
-          "gzipBytes": 463,
-          "delivery": "baseline"
-        },
-        {
           "path": "main.js",
-          "bytes": 2484,
-          "gzipBytes": 1139,
+          "bytes": 3253,
+          "gzipBytes": 1349,
           "delivery": "baseline"
         },
         {
-          "path": "reference-target.setup-767JWZHE.js",
-          "bytes": 22810,
-          "gzipBytes": 7872,
+          "path": "shared/chunks/app-LCB4BC4L.js",
+          "bytes": 14337,
+          "gzipBytes": 4706,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-CRS7ANCA.js",
+          "bytes": 33161,
+          "gzipBytes": 10968,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 42666,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 21802,
+          "gzipBytes": 6772,
+          "localTransferBytes": 21179,
+          "requests": 4,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/components.css",
+              "bytes": 3282,
+              "gzipBytes": 1219,
+              "localTransferBytes": 3282
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 116210,
+          "localTransferBytes": 81428,
+          "requests": 10
+        }
+      }
     },
     {
       "id": "labels",
@@ -76,57 +209,190 @@
         "labels"
       ],
       "baseline": {
-        "bytes": 4448,
-        "gzipBytes": 2178,
+        "bytes": 4398,
+        "gzipBytes": 2026,
         "files": [
-          "labels/app-Q6QH5RKX.js",
-          "labels/chunk-32G5PXKY.js",
-          "labels/main.js"
+          "labels/main.js",
+          "shared/chunks/app-ERKZUBYG.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 11786,
-        "gzipBytes": 4520,
+        "bytes": 20951,
+        "gzipBytes": 7528,
         "files": [
-          "labels/reference-target.setup-G6VGX556.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-VHWBBDI4.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 16234,
-        "gzipBytes": 6698,
+        "bytes": 25349,
+        "gzipBytes": 9554,
         "files": [
-          "labels/app-Q6QH5RKX.js",
-          "labels/chunk-32G5PXKY.js",
           "labels/main.js",
-          "labels/reference-target.setup-G6VGX556.js"
+          "shared/chunks/app-ERKZUBYG.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-VHWBBDI4.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 5387,
+        "gzipBytes": 2564,
+        "files": [
+          "labels/main.js",
+          "shared/chunks/app-ERKZUBYG.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "files": [
         {
-          "path": "labels/app-Q6QH5RKX.js",
-          "bytes": 1040,
-          "gzipBytes": 574,
-          "delivery": "baseline"
-        },
-        {
-          "path": "labels/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
           "path": "labels/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1140,
+          "bytes": 3257,
+          "gzipBytes": 1351,
           "delivery": "baseline"
         },
         {
-          "path": "labels/reference-target.setup-G6VGX556.js",
-          "bytes": 11786,
-          "gzipBytes": 4520,
+          "path": "shared/chunks/app-ERKZUBYG.js",
+          "bytes": 999,
+          "gzipBytes": 537,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-VHWBBDI4.js",
+          "bytes": 20102,
+          "gzipBytes": 7106,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 15154,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 21802,
+          "gzipBytes": 6772,
+          "localTransferBytes": 21179,
+          "requests": 4,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/components.css",
+              "bytes": 3282,
+              "gzipBytes": 1219,
+              "localTransferBytes": 3282
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 62305,
+          "localTransferBytes": 45887,
+          "requests": 10
+        }
+      }
     },
     {
       "id": "popover-targets",
@@ -136,57 +402,190 @@
         "popover-targets"
       ],
       "baseline": {
-        "bytes": 4286,
-        "gzipBytes": 2100,
+        "bytes": 5004,
+        "gzipBytes": 2242,
         "files": [
-          "popover-targets/app-LAV5U27U.js",
-          "popover-targets/chunk-32G5PXKY.js",
-          "popover-targets/main.js"
+          "popover-targets/main.js",
+          "shared/chunks/app-CP7YFVEN.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 10572,
-        "gzipBytes": 4113,
+        "bytes": 18991,
+        "gzipBytes": 6891,
         "files": [
-          "popover-targets/reference-target.setup-52XL4GCC.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-Z6ZTKSGX.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 14858,
-        "gzipBytes": 6213,
+        "bytes": 23995,
+        "gzipBytes": 9133,
         "files": [
-          "popover-targets/app-LAV5U27U.js",
-          "popover-targets/chunk-32G5PXKY.js",
           "popover-targets/main.js",
-          "popover-targets/reference-target.setup-52XL4GCC.js"
+          "shared/chunks/app-CP7YFVEN.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-Z6ZTKSGX.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 5993,
+        "gzipBytes": 2780,
+        "files": [
+          "popover-targets/main.js",
+          "shared/chunks/app-CP7YFVEN.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "files": [
         {
-          "path": "popover-targets/app-LAV5U27U.js",
-          "bytes": 878,
-          "gzipBytes": 496,
-          "delivery": "baseline"
-        },
-        {
-          "path": "popover-targets/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
           "path": "popover-targets/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1140,
+          "bytes": 3257,
+          "gzipBytes": 1352,
           "delivery": "baseline"
         },
         {
-          "path": "popover-targets/reference-target.setup-52XL4GCC.js",
-          "bytes": 10572,
-          "gzipBytes": 4113,
+          "path": "shared/chunks/app-CP7YFVEN.js",
+          "bytes": 1605,
+          "gzipBytes": 752,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-Z6ZTKSGX.js",
+          "bytes": 18142,
+          "gzipBytes": 6469,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 15034,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 21802,
+          "gzipBytes": 6772,
+          "localTransferBytes": 21179,
+          "requests": 4,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/components.css",
+              "bytes": 3282,
+              "gzipBytes": 1219,
+              "localTransferBytes": 3282
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 60831,
+          "localTransferBytes": 45346,
+          "requests": 10
+        }
+      }
     },
     {
       "id": "dialog-commands",
@@ -196,57 +595,184 @@
         "dialog-commands"
       ],
       "baseline": {
-        "bytes": 6170,
-        "gzipBytes": 2750,
+        "bytes": 6120,
+        "gzipBytes": 2596,
         "files": [
-          "dialog-commands/app-DXTGRU4R.js",
-          "dialog-commands/chunk-32G5PXKY.js",
-          "dialog-commands/main.js"
+          "dialog-commands/main.js",
+          "shared/chunks/app-VKU5LUFH.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 10852,
-        "gzipBytes": 4215,
+        "bytes": 19270,
+        "gzipBytes": 7006,
         "files": [
-          "dialog-commands/reference-target.setup-WFWR7XWN.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-ZXUPH6VO.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 17022,
-        "gzipBytes": 6965,
+        "bytes": 25390,
+        "gzipBytes": 9602,
         "files": [
-          "dialog-commands/app-DXTGRU4R.js",
-          "dialog-commands/chunk-32G5PXKY.js",
           "dialog-commands/main.js",
-          "dialog-commands/reference-target.setup-WFWR7XWN.js"
+          "shared/chunks/app-VKU5LUFH.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-ZXUPH6VO.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 7109,
+        "gzipBytes": 3134,
+        "files": [
+          "dialog-commands/main.js",
+          "shared/chunks/app-VKU5LUFH.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "files": [
         {
-          "path": "dialog-commands/app-DXTGRU4R.js",
-          "bytes": 2762,
-          "gzipBytes": 1146,
-          "delivery": "baseline"
-        },
-        {
-          "path": "dialog-commands/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
           "path": "dialog-commands/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1140,
+          "bytes": 3257,
+          "gzipBytes": 1351,
           "delivery": "baseline"
         },
         {
-          "path": "dialog-commands/reference-target.setup-WFWR7XWN.js",
-          "bytes": 10852,
-          "gzipBytes": 4215,
+          "path": "shared/chunks/app-VKU5LUFH.js",
+          "bytes": 2721,
+          "gzipBytes": 1107,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-ZXUPH6VO.js",
+          "bytes": 18421,
+          "gzipBytes": 6584,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 14771,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 18520,
+          "gzipBytes": 5553,
+          "localTransferBytes": 17897,
+          "requests": 3,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 58681,
+          "localTransferBytes": 42270,
+          "requests": 9
+        }
+      }
     },
     {
       "id": "popover-commands",
@@ -256,57 +782,190 @@
         "popover-commands"
       ],
       "baseline": {
-        "bytes": 4467,
-        "gzipBytes": 2146,
+        "bytes": 5185,
+        "gzipBytes": 2286,
         "files": [
-          "popover-commands/app-TCGQHJQH.js",
-          "popover-commands/chunk-32G5PXKY.js",
-          "popover-commands/main.js"
+          "popover-commands/main.js",
+          "shared/chunks/app-NKBZQNH6.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 10790,
-        "gzipBytes": 4182,
+        "bytes": 19208,
+        "gzipBytes": 6967,
         "files": [
-          "popover-commands/reference-target.setup-2UW36AFD.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-LPCOCIRI.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 15257,
-        "gzipBytes": 6328,
+        "bytes": 24393,
+        "gzipBytes": 9253,
         "files": [
-          "popover-commands/app-TCGQHJQH.js",
-          "popover-commands/chunk-32G5PXKY.js",
           "popover-commands/main.js",
-          "popover-commands/reference-target.setup-2UW36AFD.js"
+          "shared/chunks/app-NKBZQNH6.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-LPCOCIRI.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 6174,
+        "gzipBytes": 2824,
+        "files": [
+          "popover-commands/main.js",
+          "shared/chunks/app-NKBZQNH6.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "files": [
         {
-          "path": "popover-commands/app-TCGQHJQH.js",
-          "bytes": 1059,
-          "gzipBytes": 543,
-          "delivery": "baseline"
-        },
-        {
-          "path": "popover-commands/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
           "path": "popover-commands/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1139,
+          "bytes": 3257,
+          "gzipBytes": 1351,
           "delivery": "baseline"
         },
         {
-          "path": "popover-commands/reference-target.setup-2UW36AFD.js",
-          "bytes": 10790,
-          "gzipBytes": 4182,
+          "path": "shared/chunks/app-NKBZQNH6.js",
+          "bytes": 1786,
+          "gzipBytes": 797,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-LPCOCIRI.js",
+          "bytes": 18359,
+          "gzipBytes": 6545,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 15372,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 21802,
+          "gzipBytes": 6772,
+          "localTransferBytes": 21179,
+          "requests": 4,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/components.css",
+              "bytes": 3282,
+              "gzipBytes": 1219,
+              "localTransferBytes": 3282
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 61567,
+          "localTransferBytes": 45804,
+          "requests": 10
+        }
+      }
     },
     {
       "id": "text-names",
@@ -316,57 +975,190 @@
         "text-names"
       ],
       "baseline": {
-        "bytes": 4806,
-        "gzipBytes": 2316,
+        "bytes": 5097,
+        "gzipBytes": 2235,
         "files": [
-          "text-names/app-QSED5Z7M.js",
-          "text-names/chunk-32G5PXKY.js",
+          "shared/chunks/app-M4PZ3W3X.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
           "text-names/main.js"
         ]
       },
       "fallback": {
-        "bytes": 12118,
-        "gzipBytes": 4636,
+        "bytes": 21858,
+        "gzipBytes": 7813,
         "files": [
-          "text-names/reference-target.setup-TGP4BUUT.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-I7SMHH5F.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 16924,
-        "gzipBytes": 6952,
+        "bytes": 26955,
+        "gzipBytes": 10048,
         "files": [
-          "text-names/app-QSED5Z7M.js",
-          "text-names/chunk-32G5PXKY.js",
-          "text-names/main.js",
-          "text-names/reference-target.setup-TGP4BUUT.js"
+          "shared/chunks/app-M4PZ3W3X.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-I7SMHH5F.js",
+          "text-names/main.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 6086,
+        "gzipBytes": 2773,
+        "files": [
+          "shared/chunks/app-M4PZ3W3X.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js",
+          "text-names/main.js"
         ]
       },
       "files": [
         {
-          "path": "text-names/app-QSED5Z7M.js",
-          "bytes": 1398,
-          "gzipBytes": 712,
+          "path": "shared/chunks/app-M4PZ3W3X.js",
+          "bytes": 1698,
+          "gzipBytes": 745,
           "delivery": "baseline"
         },
         {
-          "path": "text-names/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
           "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-I7SMHH5F.js",
+          "bytes": 21009,
+          "gzipBytes": 7391,
+          "delivery": "fallback"
         },
         {
           "path": "text-names/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1140,
+          "bytes": 3257,
+          "gzipBytes": 1352,
           "delivery": "baseline"
-        },
-        {
-          "path": "text-names/reference-target.setup-TGP4BUUT.js",
-          "bytes": 12118,
-          "gzipBytes": 4636,
-          "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 15852,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 21802,
+          "gzipBytes": 6772,
+          "localTransferBytes": 21179,
+          "requests": 4,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/components.css",
+              "bytes": 3282,
+              "gzipBytes": 1219,
+              "localTransferBytes": 3282
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 64609,
+          "localTransferBytes": 47079,
+          "requests": 10
+        }
+      }
     },
     {
       "id": "form-targets",
@@ -376,57 +1168,190 @@
         "form-targets"
       ],
       "baseline": {
-        "bytes": 7707,
-        "gzipBytes": 3490,
+        "bytes": 7657,
+        "gzipBytes": 3334,
         "files": [
-          "forms/app-6X5CZ273.js",
-          "forms/chunk-32G5PXKY.js",
-          "forms/main.js"
+          "forms/main.js",
+          "shared/chunks/app-LI4QCBWX.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 11105,
-        "gzipBytes": 4229,
+        "bytes": 19389,
+        "gzipBytes": 6970,
         "files": [
-          "forms/reference-target.setup-OKMB4SY5.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-6XXBBVEE.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 18812,
-        "gzipBytes": 7719,
+        "bytes": 27046,
+        "gzipBytes": 10304,
         "files": [
-          "forms/app-6X5CZ273.js",
-          "forms/chunk-32G5PXKY.js",
           "forms/main.js",
-          "forms/reference-target.setup-OKMB4SY5.js"
+          "shared/chunks/app-LI4QCBWX.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-6XXBBVEE.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 8646,
+        "gzipBytes": 3872,
+        "files": [
+          "forms/main.js",
+          "shared/chunks/app-LI4QCBWX.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "files": [
         {
-          "path": "forms/app-6X5CZ273.js",
-          "bytes": 4299,
-          "gzipBytes": 1885,
-          "delivery": "baseline"
-        },
-        {
-          "path": "forms/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
           "path": "forms/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1141,
+          "bytes": 3257,
+          "gzipBytes": 1351,
           "delivery": "baseline"
         },
         {
-          "path": "forms/reference-target.setup-OKMB4SY5.js",
-          "bytes": 11105,
-          "gzipBytes": 4229,
+          "path": "shared/chunks/app-LI4QCBWX.js",
+          "bytes": 4258,
+          "gzipBytes": 1845,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-6XXBBVEE.js",
+          "bytes": 18540,
+          "gzipBytes": 6548,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 17919,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 21802,
+          "gzipBytes": 6772,
+          "localTransferBytes": 21179,
+          "requests": 4,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/components.css",
+              "bytes": 3282,
+              "gzipBytes": 1219,
+              "localTransferBytes": 3282
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 66767,
+          "localTransferBytes": 49402,
+          "requests": 10
+        }
+      }
     },
     {
       "id": "lit",
@@ -437,57 +1362,184 @@
         "popover-targets"
       ],
       "baseline": {
-        "bytes": 25915,
-        "gzipBytes": 9931,
+        "bytes": 26950,
+        "gzipBytes": 10200,
         "files": [
-          "lit/app-R5PESLK3.js",
-          "lit/chunk-32G5PXKY.js",
-          "lit/main.js"
+          "lit/main.js",
+          "shared/chunks/app-ZW3P4NKH.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 14511,
-        "gzipBytes": 5373,
+        "bytes": 23929,
+        "gzipBytes": 8430,
         "files": [
-          "lit/reference-target.setup-N7H2Q6Q6.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 40426,
-        "gzipBytes": 15304,
+        "bytes": 50879,
+        "gzipBytes": 18630,
         "files": [
-          "lit/app-R5PESLK3.js",
-          "lit/chunk-32G5PXKY.js",
           "lit/main.js",
-          "lit/reference-target.setup-N7H2Q6Q6.js"
+          "shared/chunks/app-ZW3P4NKH.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 27939,
+        "gzipBytes": 10738,
+        "files": [
+          "lit/main.js",
+          "shared/chunks/app-ZW3P4NKH.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "files": [
         {
-          "path": "lit/app-R5PESLK3.js",
-          "bytes": 22507,
-          "gzipBytes": 8327,
-          "delivery": "baseline"
-        },
-        {
-          "path": "lit/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
           "path": "lit/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1140,
+          "bytes": 3257,
+          "gzipBytes": 1352,
           "delivery": "baseline"
         },
         {
-          "path": "lit/reference-target.setup-N7H2Q6Q6.js",
-          "bytes": 14511,
-          "gzipBytes": 5373,
+          "path": "shared/chunks/app-ZW3P4NKH.js",
+          "bytes": 23551,
+          "gzipBytes": 8710,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-F3BB382F.js",
+          "bytes": 23080,
+          "gzipBytes": 8008,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 18140,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 18520,
+          "gzipBytes": 5553,
+          "localTransferBytes": 17897,
+          "requests": 3,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 87539,
+          "localTransferBytes": 54667,
+          "requests": 9
+        }
+      }
     },
     {
       "id": "fast",
@@ -498,57 +1550,184 @@
         "popover-targets"
       ],
       "baseline": {
-        "bytes": 66115,
-        "gzipBytes": 20928,
+        "bytes": 67166,
+        "gzipBytes": 21202,
         "files": [
-          "fast/app-UMDRO7CV.js",
-          "fast/chunk-32G5PXKY.js",
-          "fast/main.js"
+          "fast/main.js",
+          "shared/chunks/app-IYDONICQ.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 14511,
-        "gzipBytes": 5371,
+        "bytes": 23929,
+        "gzipBytes": 8430,
         "files": [
-          "fast/reference-target.setup-DZ23VNTV.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 80626,
-        "gzipBytes": 26299,
+        "bytes": 91095,
+        "gzipBytes": 29632,
         "files": [
-          "fast/app-UMDRO7CV.js",
-          "fast/chunk-32G5PXKY.js",
           "fast/main.js",
-          "fast/reference-target.setup-DZ23VNTV.js"
+          "shared/chunks/app-IYDONICQ.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 68155,
+        "gzipBytes": 21740,
+        "files": [
+          "fast/main.js",
+          "shared/chunks/app-IYDONICQ.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "files": [
         {
-          "path": "fast/app-UMDRO7CV.js",
-          "bytes": 62707,
-          "gzipBytes": 19325,
-          "delivery": "baseline"
-        },
-        {
-          "path": "fast/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
           "path": "fast/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1139,
+          "bytes": 3257,
+          "gzipBytes": 1351,
           "delivery": "baseline"
         },
         {
-          "path": "fast/reference-target.setup-DZ23VNTV.js",
-          "bytes": 14511,
-          "gzipBytes": 5371,
+          "path": "shared/chunks/app-IYDONICQ.js",
+          "bytes": 63767,
+          "gzipBytes": 19713,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-F3BB382F.js",
+          "bytes": 23080,
+          "gzipBytes": 8008,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 18222,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 18520,
+          "gzipBytes": 5553,
+          "localTransferBytes": 17897,
+          "requests": 3,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 127837,
+          "localTransferBytes": 65751,
+          "requests": 9
+        }
+      }
     },
     {
       "id": "stencil",
@@ -559,57 +1738,196 @@
         "popover-targets"
       ],
       "baseline": {
-        "bytes": 26768,
-        "gzipBytes": 10197,
+        "bytes": 27767,
+        "gzipBytes": 10444,
         "files": [
-          "stencil/app-7SMAQI5F.js",
-          "stencil/chunk-32G5PXKY.js",
+          "shared/chunks/app-22WHH5BU.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
           "stencil/main.js"
         ]
       },
       "fallback": {
-        "bytes": 14511,
-        "gzipBytes": 5371,
+        "bytes": 23929,
+        "gzipBytes": 8430,
         "files": [
-          "stencil/reference-target.setup-ZQOZEL3E.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 41279,
-        "gzipBytes": 15568,
+        "bytes": 51696,
+        "gzipBytes": 18874,
         "files": [
-          "stencil/app-7SMAQI5F.js",
-          "stencil/chunk-32G5PXKY.js",
-          "stencil/main.js",
-          "stencil/reference-target.setup-ZQOZEL3E.js"
+          "shared/chunks/app-22WHH5BU.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js",
+          "stencil/main.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 28756,
+        "gzipBytes": 10982,
+        "files": [
+          "shared/chunks/app-22WHH5BU.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js",
+          "stencil/main.js"
         ]
       },
       "files": [
         {
-          "path": "stencil/app-7SMAQI5F.js",
-          "bytes": 23360,
-          "gzipBytes": 8593,
+          "path": "shared/chunks/app-22WHH5BU.js",
+          "bytes": 24368,
+          "gzipBytes": 8954,
           "delivery": "baseline"
         },
         {
-          "path": "stencil/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
           "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-F3BB382F.js",
+          "bytes": 23080,
+          "gzipBytes": 8008,
+          "delivery": "fallback"
         },
         {
           "path": "stencil/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1140,
+          "bytes": 3257,
+          "gzipBytes": 1352,
           "delivery": "baseline"
-        },
-        {
-          "path": "stencil/reference-target.setup-ZQOZEL3E.js",
-          "bytes": 14511,
-          "gzipBytes": 5371,
-          "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 19226,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 18520,
+          "gzipBytes": 5553,
+          "localTransferBytes": 17897,
+          "requests": 3,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 18671,
+          "gzipBytes": 7152,
+          "localTransferBytes": 8581,
+          "requests": 10,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/grammars/tsx.js",
+              "bytes": 810,
+              "gzipBytes": 263,
+              "localTransferBytes": 263
+            },
+            {
+              "path": "shared/microlighter/grammars/typescript.js",
+              "bytes": 1161,
+              "gzipBytes": 487,
+              "localTransferBytes": 487
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 89442,
+          "localTransferBytes": 55997,
+          "requests": 9
+        }
+      }
     },
     {
       "id": "preact",
@@ -620,57 +1938,184 @@
         "popover-targets"
       ],
       "baseline": {
-        "bytes": 21090,
-        "gzipBytes": 8542,
+        "bytes": 22121,
+        "gzipBytes": 8810,
         "files": [
-          "preact/app-MOFEPKJY.js",
-          "preact/chunk-32G5PXKY.js",
-          "preact/main.js"
+          "preact/main.js",
+          "shared/chunks/app-HVHZEK6Y.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 14511,
-        "gzipBytes": 5371,
+        "bytes": 23929,
+        "gzipBytes": 8430,
         "files": [
-          "preact/reference-target.setup-GIUIDJQ5.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 35601,
-        "gzipBytes": 13913,
+        "bytes": 46050,
+        "gzipBytes": 17240,
         "files": [
-          "preact/app-MOFEPKJY.js",
-          "preact/chunk-32G5PXKY.js",
           "preact/main.js",
-          "preact/reference-target.setup-GIUIDJQ5.js"
+          "shared/chunks/app-HVHZEK6Y.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 23110,
+        "gzipBytes": 9348,
+        "files": [
+          "preact/main.js",
+          "shared/chunks/app-HVHZEK6Y.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "files": [
         {
-          "path": "preact/app-MOFEPKJY.js",
-          "bytes": 17682,
-          "gzipBytes": 6938,
-          "delivery": "baseline"
-        },
-        {
-          "path": "preact/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
           "path": "preact/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1140,
+          "bytes": 3257,
+          "gzipBytes": 1352,
           "delivery": "baseline"
         },
         {
-          "path": "preact/reference-target.setup-GIUIDJQ5.js",
-          "bytes": 14511,
-          "gzipBytes": 5371,
+          "path": "shared/chunks/app-HVHZEK6Y.js",
+          "bytes": 18722,
+          "gzipBytes": 7320,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-F3BB382F.js",
+          "bytes": 23080,
+          "gzipBytes": 8008,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 19660,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 18520,
+          "gzipBytes": 5553,
+          "localTransferBytes": 17897,
+          "requests": 3,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 84230,
+          "localTransferBytes": 54797,
+          "requests": 9
+        }
+      }
     },
     {
       "id": "vue",
@@ -681,57 +2126,184 @@
         "popover-targets"
       ],
       "baseline": {
-        "bytes": 69739,
-        "gzipBytes": 27235,
+        "bytes": 70788,
+        "gzipBytes": 27503,
         "files": [
-          "vue/app-DN6JRKTO.js",
-          "vue/chunk-32G5PXKY.js",
+          "shared/chunks/app-RVAFZE4Y.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
           "vue/main.js"
         ]
       },
       "fallback": {
-        "bytes": 14511,
-        "gzipBytes": 5372,
+        "bytes": 23929,
+        "gzipBytes": 8430,
         "files": [
-          "vue/reference-target.setup-N3JN6GO3.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 84250,
-        "gzipBytes": 32607,
+        "bytes": 94717,
+        "gzipBytes": 35933,
         "files": [
-          "vue/app-DN6JRKTO.js",
-          "vue/chunk-32G5PXKY.js",
-          "vue/main.js",
-          "vue/reference-target.setup-N3JN6GO3.js"
+          "shared/chunks/app-RVAFZE4Y.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js",
+          "vue/main.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 71777,
+        "gzipBytes": 28041,
+        "files": [
+          "shared/chunks/app-RVAFZE4Y.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js",
+          "vue/main.js"
         ]
       },
       "files": [
         {
-          "path": "vue/app-DN6JRKTO.js",
-          "bytes": 66331,
-          "gzipBytes": 25631,
+          "path": "shared/chunks/app-RVAFZE4Y.js",
+          "bytes": 67389,
+          "gzipBytes": 26013,
           "delivery": "baseline"
         },
         {
-          "path": "vue/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
           "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-F3BB382F.js",
+          "bytes": 23080,
+          "gzipBytes": 8008,
+          "delivery": "fallback"
         },
         {
           "path": "vue/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1140,
+          "bytes": 3257,
+          "gzipBytes": 1352,
           "delivery": "baseline"
-        },
-        {
-          "path": "vue/reference-target.setup-N3JN6GO3.js",
-          "bytes": 14511,
-          "gzipBytes": 5372,
-          "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 19081,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 18520,
+          "gzipBytes": 5553,
+          "localTransferBytes": 17897,
+          "requests": 3,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 132318,
+          "localTransferBytes": 72911,
+          "requests": 9
+        }
+      }
     },
     {
       "id": "svelte",
@@ -742,57 +2314,202 @@
         "popover-targets"
       ],
       "baseline": {
-        "bytes": 62976,
-        "gzipBytes": 23596,
+        "bytes": 64011,
+        "gzipBytes": 23887,
         "files": [
-          "svelte/app-DN6T3ZEW.js",
-          "svelte/chunk-32G5PXKY.js",
+          "shared/chunks/app-QN33QWVY.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
           "svelte/main.js"
         ]
       },
       "fallback": {
-        "bytes": 14511,
-        "gzipBytes": 5372,
+        "bytes": 23929,
+        "gzipBytes": 8430,
         "files": [
-          "svelte/reference-target.setup-KOFFA67K.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 77487,
-        "gzipBytes": 28968,
+        "bytes": 87940,
+        "gzipBytes": 32317,
         "files": [
-          "svelte/app-DN6T3ZEW.js",
-          "svelte/chunk-32G5PXKY.js",
-          "svelte/main.js",
-          "svelte/reference-target.setup-KOFFA67K.js"
+          "shared/chunks/app-QN33QWVY.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js",
+          "svelte/main.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 65000,
+        "gzipBytes": 24425,
+        "files": [
+          "shared/chunks/app-QN33QWVY.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js",
+          "svelte/main.js"
         ]
       },
       "files": [
         {
-          "path": "svelte/app-DN6T3ZEW.js",
-          "bytes": 59568,
-          "gzipBytes": 21992,
+          "path": "shared/chunks/app-QN33QWVY.js",
+          "bytes": 60612,
+          "gzipBytes": 22397,
           "delivery": "baseline"
         },
         {
-          "path": "svelte/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
           "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-F3BB382F.js",
+          "bytes": 23080,
+          "gzipBytes": 8008,
+          "delivery": "fallback"
         },
         {
           "path": "svelte/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1140,
+          "bytes": 3257,
+          "gzipBytes": 1352,
           "delivery": "baseline"
-        },
-        {
-          "path": "svelte/reference-target.setup-KOFFA67K.js",
-          "bytes": 14511,
-          "gzipBytes": 5372,
-          "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 19554,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 18520,
+          "gzipBytes": 5553,
+          "localTransferBytes": 17897,
+          "requests": 3,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 20851,
+          "gzipBytes": 7973,
+          "localTransferBytes": 9402,
+          "requests": 11,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/grammars/scss.js",
+              "bytes": 638,
+              "gzipBytes": 362,
+              "localTransferBytes": 362
+            },
+            {
+              "path": "shared/microlighter/grammars/svelte.js",
+              "bytes": 2352,
+              "gzipBytes": 722,
+              "localTransferBytes": 722
+            },
+            {
+              "path": "shared/microlighter/grammars/typescript.js",
+              "bytes": 1161,
+              "gzipBytes": 487,
+              "localTransferBytes": 487
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 126014,
+          "localTransferBytes": 69768,
+          "requests": 9
+        }
+      }
     },
     {
       "id": "angular",
@@ -803,57 +2520,190 @@
         "popover-targets"
       ],
       "baseline": {
-        "bytes": 328980,
-        "gzipBytes": 107692,
+        "bytes": 330049,
+        "gzipBytes": 107952,
         "files": [
-          "angular/app-EX3SMUCG.js",
-          "angular/chunk-32G5PXKY.js",
-          "angular/main.js"
+          "angular/main.js",
+          "shared/chunks/app-PGAJV7HR.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 14511,
-        "gzipBytes": 5370,
+        "bytes": 23929,
+        "gzipBytes": 8430,
         "files": [
-          "angular/reference-target.setup-UYXNQQYG.js"
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeProbe": {
+        "bytes": 989,
+        "gzipBytes": 538,
+        "files": [
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "total": {
-        "bytes": 343491,
-        "gzipBytes": 113062,
+        "bytes": 353978,
+        "gzipBytes": 116382,
         "files": [
-          "angular/app-EX3SMUCG.js",
-          "angular/chunk-32G5PXKY.js",
           "angular/main.js",
-          "angular/reference-target.setup-UYXNQQYG.js"
+          "shared/chunks/app-PGAJV7HR.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-F3BB382F.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 331038,
+        "gzipBytes": 108490,
+        "files": [
+          "angular/main.js",
+          "shared/chunks/app-PGAJV7HR.js",
+          "shared/chunks/chunk-CLCOZ6O7.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/detect-X6QVIAY4.js"
         ]
       },
       "files": [
         {
-          "path": "angular/app-EX3SMUCG.js",
-          "bytes": 325572,
-          "gzipBytes": 106089,
-          "delivery": "baseline"
-        },
-        {
-          "path": "angular/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
           "path": "angular/main.js",
-          "bytes": 2484,
-          "gzipBytes": 1139,
+          "bytes": 3257,
+          "gzipBytes": 1351,
           "delivery": "baseline"
         },
         {
-          "path": "angular/reference-target.setup-UYXNQQYG.js",
-          "bytes": 14511,
-          "gzipBytes": 5370,
+          "path": "shared/chunks/app-PGAJV7HR.js",
+          "bytes": 326650,
+          "gzipBytes": 106463,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-CLCOZ6O7.js",
+          "bytes": 849,
+          "gzipBytes": 422,
+          "delivery": "route-shared"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/detect-X6QVIAY4.js",
+          "bytes": 140,
+          "gzipBytes": 116,
+          "delivery": "native-probe"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-F3BB382F.js",
+          "bytes": 23080,
+          "gzipBytes": 8008,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 20615,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 18520,
+          "gzipBytes": 5553,
+          "localTransferBytes": 17897,
+          "requests": 3,
+          "files": [
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 17861,
+          "gzipBytes": 6889,
+          "localTransferBytes": 8318,
+          "requests": 9,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/grammars/typescript.js",
+              "bytes": 1161,
+              "gzipBytes": 487,
+              "localTransferBytes": 487
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 393113,
+          "localTransferBytes": 154894,
+          "requests": 9
+        }
+      }
     },
     {
       "id": "scenarios",
@@ -865,57 +2715,177 @@
         "text-names"
       ],
       "baseline": {
-        "bytes": 6253,
-        "gzipBytes": 2622,
+        "bytes": 5442,
+        "gzipBytes": 2242,
         "files": [
-          "scenarios/app-FS777VM2.js",
-          "scenarios/chunk-32G5PXKY.js",
-          "scenarios/main.js"
+          "scenarios/main.js",
+          "shared/chunks/app-S3BP47PD.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "fallback": {
-        "bytes": 18810,
-        "gzipBytes": 6825,
+        "bytes": 29693,
+        "gzipBytes": 10083,
         "files": [
-          "scenarios/reference-target.setup-YED7OLV2.js"
+          "shared/chunks/reference-target.setup-63HUVE2L.js"
         ]
       },
+      "nativeProbe": {
+        "bytes": 0,
+        "gzipBytes": 0,
+        "files": []
+      },
       "total": {
-        "bytes": 25063,
-        "gzipBytes": 9447,
+        "bytes": 35135,
+        "gzipBytes": 12325,
         "files": [
-          "scenarios/app-FS777VM2.js",
-          "scenarios/chunk-32G5PXKY.js",
           "scenarios/main.js",
-          "scenarios/reference-target.setup-YED7OLV2.js"
+          "shared/chunks/app-S3BP47PD.js",
+          "shared/chunks/chunk-S2QLMWTP.js",
+          "shared/chunks/reference-target.setup-63HUVE2L.js"
+        ]
+      },
+      "nativeTotal": {
+        "bytes": 5442,
+        "gzipBytes": 2242,
+        "files": [
+          "scenarios/main.js",
+          "shared/chunks/app-S3BP47PD.js",
+          "shared/chunks/chunk-S2QLMWTP.js"
         ]
       },
       "files": [
         {
-          "path": "scenarios/app-FS777VM2.js",
-          "bytes": 3487,
-          "gzipBytes": 1261,
-          "delivery": "baseline"
-        },
-        {
-          "path": "scenarios/chunk-32G5PXKY.js",
-          "bytes": 924,
-          "gzipBytes": 464,
-          "delivery": "baseline"
-        },
-        {
           "path": "scenarios/main.js",
-          "bytes": 1842,
-          "gzipBytes": 897,
+          "bytes": 1854,
+          "gzipBytes": 880,
           "delivery": "baseline"
         },
         {
-          "path": "scenarios/reference-target.setup-YED7OLV2.js",
-          "bytes": 18810,
-          "gzipBytes": 6825,
+          "path": "shared/chunks/app-S3BP47PD.js",
+          "bytes": 3446,
+          "gzipBytes": 1224,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/chunk-S2QLMWTP.js",
+          "bytes": 142,
+          "gzipBytes": 138,
+          "delivery": "baseline"
+        },
+        {
+          "path": "shared/chunks/reference-target.setup-63HUVE2L.js",
+          "bytes": 29693,
+          "gzipBytes": 10083,
           "delivery": "fallback"
         }
-      ]
+      ],
+      "delivery": {
+        "basis": "raw source bytes and local-server transfer (gzip JavaScript; uncompressed HTML, CSS, and SVG)",
+        "document": {
+          "bytes": 20840,
+          "requests": 1
+        },
+        "supporting": {
+          "bytes": 19099,
+          "gzipBytes": 5925,
+          "localTransferBytes": 18476,
+          "requests": 5,
+          "files": [
+            {
+              "path": "scenarios/components.css",
+              "bytes": 79,
+              "gzipBytes": 95,
+              "localTransferBytes": 79
+            },
+            {
+              "path": "scenarios/styles.css",
+              "bytes": 500,
+              "gzipBytes": 277,
+              "localTransferBytes": 500
+            },
+            {
+              "path": "shared/code-highlighting.js",
+              "bytes": 1270,
+              "gzipBytes": 647,
+              "localTransferBytes": 647
+            },
+            {
+              "path": "shared/favicon.svg",
+              "bytes": 256,
+              "gzipBytes": 195,
+              "localTransferBytes": 256
+            },
+            {
+              "path": "shared/styles.css",
+              "bytes": 16994,
+              "gzipBytes": 4711,
+              "localTransferBytes": 16994
+            }
+          ]
+        },
+        "decoration": {
+          "bytes": 16700,
+          "gzipBytes": 6402,
+          "localTransferBytes": 7831,
+          "requests": 8,
+          "files": [
+            {
+              "path": "shared/microlighter/grammar-dependencies.js",
+              "bytes": 1144,
+              "gzipBytes": 672,
+              "localTransferBytes": 672
+            },
+            {
+              "path": "shared/microlighter/grammars/css.js",
+              "bytes": 2089,
+              "gzipBytes": 800,
+              "localTransferBytes": 800
+            },
+            {
+              "path": "shared/microlighter/grammars/html.js",
+              "bytes": 3533,
+              "gzipBytes": 904,
+              "localTransferBytes": 904
+            },
+            {
+              "path": "shared/microlighter/grammars/javascript.js",
+              "bytes": 3839,
+              "gzipBytes": 1404,
+              "localTransferBytes": 1404
+            },
+            {
+              "path": "shared/microlighter/grammars/json.js",
+              "bytes": 397,
+              "gzipBytes": 250,
+              "localTransferBytes": 250
+            },
+            {
+              "path": "shared/microlighter/highlight.js",
+              "bytes": 3639,
+              "gzipBytes": 1729,
+              "localTransferBytes": 1729
+            },
+            {
+              "path": "shared/microlighter/index.js",
+              "bytes": 42,
+              "gzipBytes": 55,
+              "localTransferBytes": 55
+            },
+            {
+              "path": "shared/microlighter/themes/github.css",
+              "bytes": 2017,
+              "gzipBytes": 588,
+              "localTransferBytes": 2017
+            }
+          ]
+        },
+        "initialWithFallback": {
+          "bytes": 75074,
+          "localTransferBytes": 51641,
+          "requests": 10
+        }
+      }
     }
   ]
 }

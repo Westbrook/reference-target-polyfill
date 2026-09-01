@@ -2,8 +2,10 @@ import {
   actionInvoker,
   asciiLowerCase,
   claimActivation,
+  clickOnlyObservation,
   hasPopoverPrimitives,
   isHTMLElement,
+  popoverPrimitives,
   runPopoverAction,
   shadowIncludingContains,
 } from "../internal/actions.js";
@@ -14,8 +16,10 @@ export function popoverTargets() {
     id: "popover-targets",
     priority: 50,
     attributes: ["popovertarget", "popovertargetaction", "commandfor", "command", "type", "disabled", "inert", "popover"],
+    observation: clickOnlyObservation,
     check: hasPopoverPrimitives,
     install(context) {
+      const primitives = popoverPrimitives(context.window);
       return {
         click(event, path) {
           const invoker = actionInvoker(event, path, false, context);
@@ -49,7 +53,13 @@ export function popoverTargets() {
           const action = asciiLowerCase(invoker.getAttribute("popovertargetaction") ?? "");
           // This attribute has a Toggle invalid-value default; command does
           // not, and is deliberately parsed separately by commandRuntime.
-          runPopoverAction(context, target, invoker, action === "show" || action === "hide" ? action : "toggle");
+          runPopoverAction(
+            context,
+            target,
+            invoker,
+            action === "show" || action === "hide" ? action : "toggle",
+            primitives,
+          );
           return true;
         },
       };

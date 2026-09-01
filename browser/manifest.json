@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "format": "esm",
+  "target": "es2022",
+  "minified": true,
+  "sourceMaps": false,
+  "entries": {
+    "adapters/dialog-commands": "adapters/dialog-commands.js",
+    "adapters/form-targets": "adapters/form-targets.js",
+    "adapters/labels": "adapters/labels.js",
+    "adapters/popover-commands": "adapters/popover-commands.js",
+    "adapters/popover-targets": "adapters/popover-targets.js",
+    "adapters/text-names": "adapters/text-names.js",
+    "core": "core.js",
+    "detect": "detect.js",
+    "detect/surface": "detect/surface.js"
+  },
+  "totals": {
+    "bytes": 35250,
+    "gzipBytes": 14140,
+    "brotliBytes": 12501,
+    "files": 10
+  },
+  "files": [
+    {
+      "path": "adapters/dialog-commands.js",
+      "entry": "adapters/dialog-commands",
+      "bytes": 1040,
+      "gzipBytes": 557,
+      "brotliBytes": 477,
+      "imports": [
+        "chunks/chunk-JF2OJUPZ.js"
+      ]
+    },
+    {
+      "path": "adapters/form-targets.js",
+      "entry": "adapters/form-targets",
+      "bytes": 2196,
+      "gzipBytes": 971,
+      "brotliBytes": 831,
+      "imports": [
+        "chunks/chunk-JF2OJUPZ.js"
+      ]
+    },
+    {
+      "path": "adapters/labels.js",
+      "entry": "adapters/labels",
+      "bytes": 4888,
+      "gzipBytes": 1991,
+      "brotliBytes": 1764,
+      "imports": []
+    },
+    {
+      "path": "adapters/popover-commands.js",
+      "entry": "adapters/popover-commands",
+      "bytes": 428,
+      "gzipBytes": 304,
+      "brotliBytes": 244,
+      "imports": [
+        "chunks/chunk-JF2OJUPZ.js"
+      ]
+    },
+    {
+      "path": "adapters/popover-targets.js",
+      "entry": "adapters/popover-targets",
+      "bytes": 918,
+      "gzipBytes": 500,
+      "brotliBytes": 423,
+      "imports": [
+        "chunks/chunk-JF2OJUPZ.js"
+      ]
+    },
+    {
+      "path": "adapters/text-names.js",
+      "entry": "adapters/text-names",
+      "bytes": 5745,
+      "gzipBytes": 2326,
+      "brotliBytes": 2088,
+      "imports": []
+    },
+    {
+      "path": "chunks/chunk-JF2OJUPZ.js",
+      "bytes": 3046,
+      "gzipBytes": 1313,
+      "brotliBytes": 1139,
+      "imports": []
+    },
+    {
+      "path": "core.js",
+      "entry": "core",
+      "bytes": 15840,
+      "gzipBytes": 5576,
+      "brotliBytes": 5042,
+      "imports": []
+    },
+    {
+      "path": "detect.js",
+      "entry": "detect",
+      "bytes": 984,
+      "gzipBytes": 454,
+      "brotliBytes": 383,
+      "imports": []
+    },
+    {
+      "path": "detect/surface.js",
+      "entry": "detect/surface",
+      "bytes": 165,
+      "gzipBytes": 148,
+      "brotliBytes": 110,
+      "imports": []
+    }
+  ]
+}

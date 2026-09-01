@@ -7,9 +7,10 @@
     <meta name="description" content="Reference Target with Svelte custom elements: label activation, rendered target replacement, and popover targeting.">
     <title>Reference Target · Svelte custom elements</title>
     <link rel="stylesheet" href="../shared/styles.css">
-    <script type="module" src="./main.js"></script>
+    <link rel="modulepreload" href="../shared/chunks/app-QN33QWVY.js">
+<link rel="modulepreload" href="../shared/chunks/chunk-S2QLMWTP.js">
+<script type="module" src="./main.js"></script>
   <link rel="icon" type="image/svg+xml" href="../shared/favicon.svg">
-<link rel="stylesheet" href="../shared/microlighter/themes/github.css">
 </head>
   <body>
     <a class="skip-link" href="#demos">Skip to the demos</a>
@@ -174,23 +175,19 @@
 &lt;/script&gt;
 
 &lt;svelte:element this={&quot;style&quot;}&gt;{componentStyles}&lt;/svelte:element&gt;
-&lt;div id=&quot;panel&quot; popover=&quot;auto&quot;&gt;
+&lt;div id=&quot;panel&quot; popover=&quot;auto&quot; role=&quot;dialog&quot; aria-labelledby=&quot;panel-title&quot;&gt;
   &lt;p class=&quot;eyebrow&quot;&gt;Svelte custom element · shadow DOM&lt;/p&gt;
-  &lt;h2&gt;Rendered with Svelte&lt;/h2&gt;
+  &lt;h2 id=&quot;panel-title&quot;&gt;Rendered with Svelte&lt;/h2&gt;
   &lt;p&gt;This native popover lives inside a compiler-generated Svelte custom element.&lt;/p&gt;
   &lt;button type=&quot;button&quot; popovertarget=&quot;panel&quot; popovertargetaction=&quot;hide&quot;&gt;Close popover&lt;/button&gt;
 &lt;/div&gt;
 </code></pre>
 <h3>components.js</h3><pre><code class="language-javascript" data-code-sample>import Checkbox from &quot;./checkbox.svelte&quot;;
 import Popover from &quot;./popover.svelte&quot;;
+import { whenRendererEvent } from &quot;../shared/renderer-readiness.js&quot;;
 
 customElements.define(&quot;rt-svelte-checkbox&quot;, Checkbox.element);
 customElements.define(&quot;rt-svelte-popover&quot;, Popover.element);
-
-function whenRendered(host) {
-  if (host.hasAttribute(&quot;data-renderer-ready&quot;)) return Promise.resolve();
-  return new Promise(resolve =&gt; host.addEventListener(&quot;renderer-ready&quot;, resolve, { once: true }));
-}
 
 // Svelte mounts its inner component on the next tick after connection. The
 // onMount signal waits for that actual render, including its native targets.
@@ -200,63 +197,110 @@ export async function whenReady() {
     if (!host) throw new Error(`Missing Svelte demo host: ${id}`);
     return host;
   });
-  await Promise.all(hosts.map(whenRendered));
+  await Promise.all(hosts.map(host =&gt; whenRendererEvent(host, &quot;Svelte&quot;)));
 }
 </code></pre></details>
 
       </div>
 
-      <section class="metrics-panel" data-bundle-id="svelte" aria-label="JavaScript delivery sizes">
-    <h2>JavaScript sizes</h2>
-    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="62976" data-gzip-bytes="23596">
-      <h3>Page JavaScript</h3>
-      <strong data-size="bytes" data-bytes="62976">62.976 KB</strong>
-      <span data-size="gzip" data-bytes="23596">23.596 KB gzip</span>
+      <section class="metrics-panel" data-bundle-id="svelte" aria-label="JavaScript and page delivery sizes">
+    <h2>Functional JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="64011" data-gzip-bytes="23887">
+      <h3>Functional page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="64011">64.011 KB</strong>
+      <span data-size="gzip" data-bytes="23887">23.887 KB gzip</span>
       <p>Always loaded.</p>
     </article>
-<article class="size-card" data-size-kind="fallback" data-bytes="14511" data-gzip-bytes="5372">
+<article class="size-card" data-size-kind="fallback" data-bytes="23929" data-gzip-bytes="8430">
       <h3>Fallback additional</h3>
-      <strong data-size="bytes" data-bytes="14511">14.511 KB</strong>
-      <span data-size="gzip" data-bytes="5372">5.372 KB gzip</span>
+      <strong data-size="bytes" data-bytes="23929">23.929 KB</strong>
+      <span data-size="gzip" data-bytes="8430">8.430 KB gzip</span>
       <p>Core + selected adapters.</p>
     </article>
-<article class="size-card" data-size-kind="total" data-bytes="77487" data-gzip-bytes="28968">
-      <h3>Total with fallback</h3>
-      <strong data-size="bytes" data-bytes="77487">77.487 KB</strong>
-      <span data-size="gzip" data-bytes="28968">28.968 KB gzip</span>
-      <p>Shared files counted once.</p>
+<article class="size-card" data-size-kind="total" data-bytes="87940" data-gzip-bytes="32317">
+      <h3>Fallback route total</h3>
+      <strong data-size="bytes" data-bytes="87940">87.940 KB</strong>
+      <span data-size="gzip" data-bytes="32317">32.317 KB gzip</span>
+      <p>Always-loaded and fallback files; shared files counted once.</p>
+    </article><article class="size-card" data-optional-size="native-probe" data-bytes="65000" data-gzip-bytes="24425">
+      <h3>Native-surface route total</h3>
+      <strong>65.000 KB</strong>
+      <span>24.425 KB gzip</span>
+      <p>Includes 0.989 KB (0.538 KB gzip) of behavioral probes requested only after the property surface is present.</p>
     </article></div>
-    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Demo-only syntax highlighting is excluded from the functional totals and reported separately below.</p>
+    <section class="delivery-context" aria-labelledby="svelte-delivery-title">
+    <h3 id="svelte-delivery-title">Whole-page delivery context</h3>
+    <div class="size-grid">
+      <article class="size-card" data-delivery-kind="document" data-bytes="19554">
+        <h4>HTML document</h4>
+        <strong>19.554 KB</strong>
+        <span>1 request</span>
+        <p>Generated markup, including these measurements.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="supporting" data-bytes="18520">
+        <h4>Initial supporting assets</h4>
+        <strong>18.520 KB raw</strong>
+        <span>17.897 KB local transfer · 3 requests</span>
+        <p>Styles, icon, and the highlighting scheduler; functional JS is separate above.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="initial-with-fallback" data-bytes="126014">
+        <h4>Initial page with fallback</h4>
+        <strong>126.014 KB raw</strong>
+        <span>69.768 KB local transfer · 9 requests</span>
+        <p>Document + functional fallback path + initial supporting assets, with unique files counted once.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="decoration" data-bytes="20851">
+        <h4>Deferred highlighting</h4>
+        <strong>20.851 KB raw</strong>
+        <span>9.402 KB local transfer · 11 requests</span>
+        <p>Engine, theme, and this page’s grammar closure, requested after a source disclosure opens or during idle time.</p>
+      </article>
+    </div>
+    <p class="metric-note">“Local transfer” matches the included development server: gzip JavaScript sidecars, but uncompressed HTML, CSS, and SVG. GitHub Pages, browser caching, HTTP headers, and production compression can change transferred bytes and request scheduling. Module preloads fetch functional modules early without evaluating the app and do not add duplicate transfers.</p>
+  </section>
     <details>
-      <summary>Inspect the 4 generated JavaScript files</summary>
+      <summary>Inspect the 6 generated JavaScript files</summary>
       <p class="metric-note">Selected adapters: <code>labels</code>, <code>popover-targets</code>.</p>
-      <p class="metric-note">Gzip totals sum each compressed file. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. The fallback and native-probe routes are mutually exclusive. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
       <div class="table-scroll"><table class="files-table">
         <caption>Files included in this page’s totals</caption>
         <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
-        <tbody><tr data-file-path="svelte/app-DN6T3ZEW.js" data-delivery="baseline">
-      <td><a data-bundle-file="svelte/app-DN6T3ZEW.js" href="../svelte/app-DN6T3ZEW.js"><code>svelte/app-DN6T3ZEW.js</code></a></td>
+        <tbody><tr data-file-path="shared/chunks/app-QN33QWVY.js" data-delivery="baseline">
+      <td><a data-bundle-file="shared/chunks/app-QN33QWVY.js" href="../shared/chunks/app-QN33QWVY.js"><code>shared/chunks/app-QN33QWVY.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="59568">59.568 KB</td>
-      <td data-size="gzip" data-bytes="21992">21.992 KB</td>
+      <td data-size="bytes" data-bytes="60612">60.612 KB</td>
+      <td data-size="gzip" data-bytes="22397">22.397 KB</td>
     </tr>
-<tr data-file-path="svelte/chunk-32G5PXKY.js" data-delivery="baseline">
-      <td><a data-bundle-file="svelte/chunk-32G5PXKY.js" href="../svelte/chunk-32G5PXKY.js"><code>svelte/chunk-32G5PXKY.js</code></a></td>
+<tr data-file-path="shared/chunks/chunk-CLCOZ6O7.js" data-delivery="route-shared">
+      <td><a data-bundle-file="shared/chunks/chunk-CLCOZ6O7.js" href="../shared/chunks/chunk-CLCOZ6O7.js"><code>shared/chunks/chunk-CLCOZ6O7.js</code></a></td>
+      <td>Fallback / native probe shared</td>
+      <td data-size="bytes" data-bytes="849">0.849 KB</td>
+      <td data-size="gzip" data-bytes="422">0.422 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/chunk-S2QLMWTP.js" data-delivery="baseline">
+      <td><a data-bundle-file="shared/chunks/chunk-S2QLMWTP.js" href="../shared/chunks/chunk-S2QLMWTP.js"><code>shared/chunks/chunk-S2QLMWTP.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="924">0.924 KB</td>
-      <td data-size="gzip" data-bytes="464">0.464 KB</td>
+      <td data-size="bytes" data-bytes="142">0.142 KB</td>
+      <td data-size="gzip" data-bytes="138">0.138 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/detect-X6QVIAY4.js" data-delivery="native-probe">
+      <td><a data-bundle-file="shared/chunks/detect-X6QVIAY4.js" href="../shared/chunks/detect-X6QVIAY4.js"><code>shared/chunks/detect-X6QVIAY4.js</code></a></td>
+      <td>Native-surface probe</td>
+      <td data-size="bytes" data-bytes="140">0.140 KB</td>
+      <td data-size="gzip" data-bytes="116">0.116 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/reference-target.setup-F3BB382F.js" data-delivery="fallback">
+      <td><a data-bundle-file="shared/chunks/reference-target.setup-F3BB382F.js" href="../shared/chunks/reference-target.setup-F3BB382F.js"><code>shared/chunks/reference-target.setup-F3BB382F.js</code></a></td>
+      <td>Fallback additional</td>
+      <td data-size="bytes" data-bytes="23080">23.080 KB</td>
+      <td data-size="gzip" data-bytes="8008">8.008 KB</td>
     </tr>
 <tr data-file-path="svelte/main.js" data-delivery="baseline">
       <td><a data-bundle-file="svelte/main.js" href="../svelte/main.js"><code>svelte/main.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
-      <td data-size="gzip" data-bytes="1140">1.140 KB</td>
-    </tr>
-<tr data-file-path="svelte/reference-target.setup-KOFFA67K.js" data-delivery="fallback">
-      <td><a data-bundle-file="svelte/reference-target.setup-KOFFA67K.js" href="../svelte/reference-target.setup-KOFFA67K.js"><code>svelte/reference-target.setup-KOFFA67K.js</code></a></td>
-      <td>Fallback additional</td>
-      <td data-size="bytes" data-bytes="14511">14.511 KB</td>
-      <td data-size="gzip" data-bytes="5372">5.372 KB</td>
+      <td data-size="bytes" data-bytes="3257">3.257 KB</td>
+      <td data-size="gzip" data-bytes="1352">1.352 KB</td>
     </tr></tbody>
       </table></div>
       <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>

@@ -7,9 +7,10 @@
     <meta name="description" content="Reference Target with Stencil custom elements: label activation, rendered target replacement, and popover targeting.">
     <title>Reference Target · Stencil custom elements</title>
     <link rel="stylesheet" href="../shared/styles.css">
-    <script type="module" src="./main.js"></script>
+    <link rel="modulepreload" href="../shared/chunks/app-22WHH5BU.js">
+<link rel="modulepreload" href="../shared/chunks/chunk-S2QLMWTP.js">
+<script type="module" src="./main.js"></script>
   <link rel="icon" type="image/svg+xml" href="../shared/favicon.svg">
-<link rel="stylesheet" href="../shared/microlighter/themes/github.css">
 </head>
   <body>
     <a class="skip-link" href="#demos">Skip to the demos</a>
@@ -167,24 +168,20 @@ export class StencilPopover {
 
   render() {
     return (
-      &lt;div id=&quot;panel&quot; popover=&quot;auto&quot; aria-labelledby=&quot;panel-title&quot;&gt;
+      &lt;div id=&quot;panel&quot; popover=&quot;auto&quot; role=&quot;dialog&quot; aria-labelledby=&quot;panel-title&quot;&gt;
         &lt;p class=&quot;eyebrow&quot;&gt;Stencil component&lt;/p&gt;
         &lt;h2 id=&quot;panel-title&quot;&gt;Rendered with Stencil&lt;/h2&gt;
         &lt;p&gt;This native popover lives inside a Stencil component’s shadow root.&lt;/p&gt;
-        &lt;button type=&quot;button&quot; popoverTarget=&quot;panel&quot; popoverTargetAction=&quot;hide&quot;&gt;Close popover&lt;/button&gt;
+        &lt;button type=&quot;button&quot; popoverTarget=&quot;panel&quot; popoverTargetAction=&quot;hide&quot; autoFocus&gt;Close popover&lt;/button&gt;
       &lt;/div&gt;
     );
   }
 }
 </code></pre>
 <h3>components.js</h3><pre><code class="language-javascript" data-code-sample>import { defineCustomElements } from &quot;../../dist/stencil/index.js&quot;;
+import { whenRendererEvent } from &quot;../shared/renderer-readiness.js&quot;;
 
 defineCustomElements();
-
-function whenRendered(host) {
-  if (host.hasAttribute(&quot;data-renderer-ready&quot;)) return Promise.resolve();
-  return new Promise(resolve =&gt; host.addEventListener(&quot;renderer-ready&quot;, resolve, { once: true }));
-}
 
 // dist-custom-elements does not expose componentOnReady(); wait for the
 // componentDidLoad lifecycle instead of guessing how many frames rendering takes.
@@ -194,63 +191,110 @@ export async function whenReady() {
     if (!host) throw new Error(`Missing Stencil demo host: ${id}`);
     return host;
   });
-  await Promise.all(hosts.map(whenRendered));
+  await Promise.all(hosts.map(host =&gt; whenRendererEvent(host, &quot;Stencil&quot;)));
 }
 </code></pre></details>
 
       </div>
 
-      <section class="metrics-panel" data-bundle-id="stencil" aria-label="JavaScript delivery sizes">
-    <h2>JavaScript sizes</h2>
-    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="26768" data-gzip-bytes="10197">
-      <h3>Page JavaScript</h3>
-      <strong data-size="bytes" data-bytes="26768">26.768 KB</strong>
-      <span data-size="gzip" data-bytes="10197">10.197 KB gzip</span>
+      <section class="metrics-panel" data-bundle-id="stencil" aria-label="JavaScript and page delivery sizes">
+    <h2>Functional JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="27767" data-gzip-bytes="10444">
+      <h3>Functional page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="27767">27.767 KB</strong>
+      <span data-size="gzip" data-bytes="10444">10.444 KB gzip</span>
       <p>Always loaded.</p>
     </article>
-<article class="size-card" data-size-kind="fallback" data-bytes="14511" data-gzip-bytes="5371">
+<article class="size-card" data-size-kind="fallback" data-bytes="23929" data-gzip-bytes="8430">
       <h3>Fallback additional</h3>
-      <strong data-size="bytes" data-bytes="14511">14.511 KB</strong>
-      <span data-size="gzip" data-bytes="5371">5.371 KB gzip</span>
+      <strong data-size="bytes" data-bytes="23929">23.929 KB</strong>
+      <span data-size="gzip" data-bytes="8430">8.430 KB gzip</span>
       <p>Core + selected adapters.</p>
     </article>
-<article class="size-card" data-size-kind="total" data-bytes="41279" data-gzip-bytes="15568">
-      <h3>Total with fallback</h3>
-      <strong data-size="bytes" data-bytes="41279">41.279 KB</strong>
-      <span data-size="gzip" data-bytes="15568">15.568 KB gzip</span>
-      <p>Shared files counted once.</p>
+<article class="size-card" data-size-kind="total" data-bytes="51696" data-gzip-bytes="18874">
+      <h3>Fallback route total</h3>
+      <strong data-size="bytes" data-bytes="51696">51.696 KB</strong>
+      <span data-size="gzip" data-bytes="18874">18.874 KB gzip</span>
+      <p>Always-loaded and fallback files; shared files counted once.</p>
+    </article><article class="size-card" data-optional-size="native-probe" data-bytes="28756" data-gzip-bytes="10982">
+      <h3>Native-surface route total</h3>
+      <strong>28.756 KB</strong>
+      <span>10.982 KB gzip</span>
+      <p>Includes 0.989 KB (0.538 KB gzip) of behavioral probes requested only after the property surface is present.</p>
     </article></div>
-    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Demo-only syntax highlighting is excluded from the functional totals and reported separately below.</p>
+    <section class="delivery-context" aria-labelledby="stencil-delivery-title">
+    <h3 id="stencil-delivery-title">Whole-page delivery context</h3>
+    <div class="size-grid">
+      <article class="size-card" data-delivery-kind="document" data-bytes="19226">
+        <h4>HTML document</h4>
+        <strong>19.226 KB</strong>
+        <span>1 request</span>
+        <p>Generated markup, including these measurements.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="supporting" data-bytes="18520">
+        <h4>Initial supporting assets</h4>
+        <strong>18.520 KB raw</strong>
+        <span>17.897 KB local transfer · 3 requests</span>
+        <p>Styles, icon, and the highlighting scheduler; functional JS is separate above.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="initial-with-fallback" data-bytes="89442">
+        <h4>Initial page with fallback</h4>
+        <strong>89.442 KB raw</strong>
+        <span>55.997 KB local transfer · 9 requests</span>
+        <p>Document + functional fallback path + initial supporting assets, with unique files counted once.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="decoration" data-bytes="18671">
+        <h4>Deferred highlighting</h4>
+        <strong>18.671 KB raw</strong>
+        <span>8.581 KB local transfer · 10 requests</span>
+        <p>Engine, theme, and this page’s grammar closure, requested after a source disclosure opens or during idle time.</p>
+      </article>
+    </div>
+    <p class="metric-note">“Local transfer” matches the included development server: gzip JavaScript sidecars, but uncompressed HTML, CSS, and SVG. GitHub Pages, browser caching, HTTP headers, and production compression can change transferred bytes and request scheduling. Module preloads fetch functional modules early without evaluating the app and do not add duplicate transfers.</p>
+  </section>
     <details>
-      <summary>Inspect the 4 generated JavaScript files</summary>
+      <summary>Inspect the 6 generated JavaScript files</summary>
       <p class="metric-note">Selected adapters: <code>labels</code>, <code>popover-targets</code>.</p>
-      <p class="metric-note">Gzip totals sum each compressed file. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. The fallback and native-probe routes are mutually exclusive. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
       <div class="table-scroll"><table class="files-table">
         <caption>Files included in this page’s totals</caption>
         <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
-        <tbody><tr data-file-path="stencil/app-7SMAQI5F.js" data-delivery="baseline">
-      <td><a data-bundle-file="stencil/app-7SMAQI5F.js" href="../stencil/app-7SMAQI5F.js"><code>stencil/app-7SMAQI5F.js</code></a></td>
+        <tbody><tr data-file-path="shared/chunks/app-22WHH5BU.js" data-delivery="baseline">
+      <td><a data-bundle-file="shared/chunks/app-22WHH5BU.js" href="../shared/chunks/app-22WHH5BU.js"><code>shared/chunks/app-22WHH5BU.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="23360">23.360 KB</td>
-      <td data-size="gzip" data-bytes="8593">8.593 KB</td>
+      <td data-size="bytes" data-bytes="24368">24.368 KB</td>
+      <td data-size="gzip" data-bytes="8954">8.954 KB</td>
     </tr>
-<tr data-file-path="stencil/chunk-32G5PXKY.js" data-delivery="baseline">
-      <td><a data-bundle-file="stencil/chunk-32G5PXKY.js" href="../stencil/chunk-32G5PXKY.js"><code>stencil/chunk-32G5PXKY.js</code></a></td>
+<tr data-file-path="shared/chunks/chunk-CLCOZ6O7.js" data-delivery="route-shared">
+      <td><a data-bundle-file="shared/chunks/chunk-CLCOZ6O7.js" href="../shared/chunks/chunk-CLCOZ6O7.js"><code>shared/chunks/chunk-CLCOZ6O7.js</code></a></td>
+      <td>Fallback / native probe shared</td>
+      <td data-size="bytes" data-bytes="849">0.849 KB</td>
+      <td data-size="gzip" data-bytes="422">0.422 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/chunk-S2QLMWTP.js" data-delivery="baseline">
+      <td><a data-bundle-file="shared/chunks/chunk-S2QLMWTP.js" href="../shared/chunks/chunk-S2QLMWTP.js"><code>shared/chunks/chunk-S2QLMWTP.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="924">0.924 KB</td>
-      <td data-size="gzip" data-bytes="464">0.464 KB</td>
+      <td data-size="bytes" data-bytes="142">0.142 KB</td>
+      <td data-size="gzip" data-bytes="138">0.138 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/detect-X6QVIAY4.js" data-delivery="native-probe">
+      <td><a data-bundle-file="shared/chunks/detect-X6QVIAY4.js" href="../shared/chunks/detect-X6QVIAY4.js"><code>shared/chunks/detect-X6QVIAY4.js</code></a></td>
+      <td>Native-surface probe</td>
+      <td data-size="bytes" data-bytes="140">0.140 KB</td>
+      <td data-size="gzip" data-bytes="116">0.116 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/reference-target.setup-F3BB382F.js" data-delivery="fallback">
+      <td><a data-bundle-file="shared/chunks/reference-target.setup-F3BB382F.js" href="../shared/chunks/reference-target.setup-F3BB382F.js"><code>shared/chunks/reference-target.setup-F3BB382F.js</code></a></td>
+      <td>Fallback additional</td>
+      <td data-size="bytes" data-bytes="23080">23.080 KB</td>
+      <td data-size="gzip" data-bytes="8008">8.008 KB</td>
     </tr>
 <tr data-file-path="stencil/main.js" data-delivery="baseline">
       <td><a data-bundle-file="stencil/main.js" href="../stencil/main.js"><code>stencil/main.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
-      <td data-size="gzip" data-bytes="1140">1.140 KB</td>
-    </tr>
-<tr data-file-path="stencil/reference-target.setup-ZQOZEL3E.js" data-delivery="fallback">
-      <td><a data-bundle-file="stencil/reference-target.setup-ZQOZEL3E.js" href="../stencil/reference-target.setup-ZQOZEL3E.js"><code>stencil/reference-target.setup-ZQOZEL3E.js</code></a></td>
-      <td>Fallback additional</td>
-      <td data-size="bytes" data-bytes="14511">14.511 KB</td>
-      <td data-size="gzip" data-bytes="5371">5.371 KB</td>
+      <td data-size="bytes" data-bytes="3257">3.257 KB</td>
+      <td data-size="gzip" data-bytes="1352">1.352 KB</td>
     </tr></tbody>
       </table></div>
       <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>

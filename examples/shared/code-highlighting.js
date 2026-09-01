@@ -1,18 +1,1 @@
-// Demo decoration only: this module is loaded separately from every page's
-// measured application/fallback bundles and never participates in app readiness.
-const page = document.documentElement;
-
-if (!globalThis.CSS?.highlights || typeof globalThis.Highlight !== "function") {
-  page.dataset.codeHighlighting = "unsupported";
-} else {
-  page.dataset.codeHighlighting = "loading";
-  try {
-    const { highlightAll } = await import("./microlighter/index.js");
-    document.body.dataset.syntaxTheme = "github";
-    await highlightAll({ selector: "pre > code[data-code-sample]" });
-    page.dataset.codeHighlighting = "ready";
-  } catch (error) {
-    page.dataset.codeHighlighting = "unavailable";
-    console.warn("Code highlighting unavailable; samples remain readable as plain text.", error);
-  }
-}
+const page=document.documentElement;if(!globalThis.CSS?.highlights||typeof globalThis.Highlight!="function")page.dataset.codeHighlighting="unsupported";else{let a=function(){return t||(page.dataset.codeHighlighting="loading",t=(async()=>{const e=document.createElement("link");e.rel="stylesheet",e.href=new URL("./microlighter/themes/github.css",import.meta.url).href,document.head.append(e);const{highlightAll:n}=await import("./microlighter/index.js");document.body.dataset.syntaxTheme="github",await n({selector:"pre > code[data-code-sample]"}),page.dataset.codeHighlighting="ready"})().catch(e=>{page.dataset.codeHighlighting="unavailable",console.warn("Code highlighting unavailable; samples remain readable as plain text.",e)}),t)},i=function(){typeof requestIdleCallback=="function"?requestIdleCallback(()=>{a()},{timeout:3e3}):setTimeout(()=>{a()},1500)};page.dataset.codeHighlighting="deferred";let t;if(document.addEventListener("toggle",e=>{e.target.matches?.("details:has(code[data-code-sample])")&&e.target.open&&a()},!0),page.dataset.referenceTargetReady==="true")i();else{const e=new MutationObserver(()=>{page.dataset.referenceTargetReady==="true"&&(e.disconnect(),i())});e.observe(page,{attributes:!0,attributeFilter:["data-reference-target-ready"]})}}

@@ -1,4 +1,5 @@
 import {
+  clickOnlyObservation,
   commandRuntime,
   invokeNativeAction,
   isHTMLElement,
@@ -12,6 +13,7 @@ export function dialogCommands() {
     id: "dialog-commands",
     priority: 100,
     attributes: ["commandfor", "command", "type", "disabled", "inert", "open", "value"],
+    observation: clickOnlyObservation,
     check(window) {
       return (
         typeof window.HTMLDialogElement?.prototype.showModal === "function" &&
@@ -19,6 +21,13 @@ export function dialogCommands() {
       );
     },
     install(context) {
+      const prototype = context.window.HTMLDialogElement.prototype;
+      const primitives = {
+        showModal: prototype.showModal,
+        close: prototype.close,
+        requestClose: prototype.requestClose,
+      };
+      const showPopover = context.window.HTMLElement?.prototype.showPopover;
       return commandRuntime(context, {
         commands: COMMANDS,
         accepts: (target) => isHTMLElement(target) && target.localName === "dialog",
@@ -26,7 +35,7 @@ export function dialogCommands() {
           // A dialog being used as a popover cannot accept dialog commands.
           if (
             target.hasAttribute("popover") &&
-            typeof target.showPopover === "function" &&
+            typeof showPopover === "function" &&
             target.matches(":popover-open")
           ) return;
 
@@ -34,7 +43,8 @@ export function dialogCommands() {
           if (opening === target.hasAttribute("open")) return;
 
           const method = opening ? "showModal" : command === "close" ? "close" : "requestClose";
-          if (typeof target[method] !== "function") {
+          const nativeMethod = primitives[method];
+          if (typeof nativeMethod !== "function") {
             context.report("missing-primitive", { method, command, source: invoker });
             return;
           }
@@ -42,7 +52,7 @@ export function dialogCommands() {
           // Omitting the return value preserves the dialog's current value;
           // passing an empty string is meaningful when value="" was authored.
           const argumentsList = !opening && invoker.hasAttribute("value") ? [invoker.value] : [];
-          invokeNativeAction(context, target, method, argumentsList, invoker);
+          invokeNativeAction(context, target, method, nativeMethod, argumentsList, invoker);
         },
       });
     },

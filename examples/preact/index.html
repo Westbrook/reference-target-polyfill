@@ -7,9 +7,10 @@
     <meta name="description" content="Reference Target with Preact custom elements: label activation, rendered target replacement, and popover targeting.">
     <title>Reference Target · Preact custom elements</title>
     <link rel="stylesheet" href="../shared/styles.css">
-    <script type="module" src="./main.js"></script>
+    <link rel="modulepreload" href="../shared/chunks/app-HVHZEK6Y.js">
+<link rel="modulepreload" href="../shared/chunks/chunk-S2QLMWTP.js">
+<script type="module" src="./main.js"></script>
   <link rel="icon" type="image/svg+xml" href="../shared/favicon.svg">
-<link rel="stylesheet" href="../shared/microlighter/themes/github.css">
 </head>
   <body>
     <a class="skip-link" href="#demos">Skip to the demos</a>
@@ -164,6 +165,7 @@ export class PreactElement extends HTMLElement {
 <h3>components.js</h3><pre><code class="language-javascript" data-code-sample>import { Fragment, h } from &quot;preact&quot;;
 import { PreactElement } from &quot;./preact-element.js&quot;;
 import componentStyles from &quot;../shared/components.css&quot;;
+import { withRendererTimeout } from &quot;../shared/renderer-readiness.js&quot;;
 
 class PreactCheckbox extends PreactElement {
   static referenceTarget = &quot;control&quot;;
@@ -195,11 +197,11 @@ class PreactPopover extends PreactElement {
   render() {
     return h(Fragment, null,
       h(&quot;style&quot;, null, componentStyles),
-      h(&quot;div&quot;, { id: &quot;panel&quot;, popover: &quot;auto&quot; },
+      h(&quot;div&quot;, { id: &quot;panel&quot;, popover: &quot;auto&quot;, role: &quot;dialog&quot;, &quot;aria-labelledby&quot;: &quot;panel-title&quot; },
         h(&quot;p&quot;, { class: &quot;eyebrow&quot; }, &quot;Preact · shadow DOM&quot;),
-        h(&quot;h2&quot;, null, &quot;Rendered with Preact&quot;),
+        h(&quot;h2&quot;, { id: &quot;panel-title&quot; }, &quot;Rendered with Preact&quot;),
         h(&quot;p&quot;, null, &quot;This native popover lives inside a custom element rendered by Preact.&quot;),
-        h(&quot;button&quot;, { type: &quot;button&quot;, popovertarget: &quot;panel&quot;, popovertargetaction: &quot;hide&quot; }, &quot;Close popover&quot;),
+        h(&quot;button&quot;, { type: &quot;button&quot;, popovertarget: &quot;panel&quot;, popovertargetaction: &quot;hide&quot;, autofocus: true }, &quot;Close popover&quot;),
       ),
     );
   }
@@ -209,66 +211,113 @@ customElements.define(&quot;rt-preact-checkbox&quot;, PreactCheckbox);
 customElements.define(&quot;rt-preact-popover&quot;, PreactPopover);
 
 export async function whenReady() {
-  await Promise.all([
+  await withRendererTimeout(Promise.all([
     document.getElementById(&quot;renderer-checkbox&quot;).updateComplete,
     document.getElementById(&quot;renderer-popover&quot;).updateComplete,
-  ]);
+  ]), &quot;Preact&quot;);
 }
 </code></pre></details>
 
       </div>
 
-      <section class="metrics-panel" data-bundle-id="preact" aria-label="JavaScript delivery sizes">
-    <h2>JavaScript sizes</h2>
-    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="21090" data-gzip-bytes="8542">
-      <h3>Page JavaScript</h3>
-      <strong data-size="bytes" data-bytes="21090">21.090 KB</strong>
-      <span data-size="gzip" data-bytes="8542">8.542 KB gzip</span>
+      <section class="metrics-panel" data-bundle-id="preact" aria-label="JavaScript and page delivery sizes">
+    <h2>Functional JavaScript sizes</h2>
+    <div class="size-grid"><article class="size-card" data-size-kind="baseline" data-bytes="22121" data-gzip-bytes="8810">
+      <h3>Functional page JavaScript</h3>
+      <strong data-size="bytes" data-bytes="22121">22.121 KB</strong>
+      <span data-size="gzip" data-bytes="8810">8.810 KB gzip</span>
       <p>Always loaded.</p>
     </article>
-<article class="size-card" data-size-kind="fallback" data-bytes="14511" data-gzip-bytes="5371">
+<article class="size-card" data-size-kind="fallback" data-bytes="23929" data-gzip-bytes="8430">
       <h3>Fallback additional</h3>
-      <strong data-size="bytes" data-bytes="14511">14.511 KB</strong>
-      <span data-size="gzip" data-bytes="5371">5.371 KB gzip</span>
+      <strong data-size="bytes" data-bytes="23929">23.929 KB</strong>
+      <span data-size="gzip" data-bytes="8430">8.430 KB gzip</span>
       <p>Core + selected adapters.</p>
     </article>
-<article class="size-card" data-size-kind="total" data-bytes="35601" data-gzip-bytes="13913">
-      <h3>Total with fallback</h3>
-      <strong data-size="bytes" data-bytes="35601">35.601 KB</strong>
-      <span data-size="gzip" data-bytes="13913">13.913 KB gzip</span>
-      <p>Shared files counted once.</p>
+<article class="size-card" data-size-kind="total" data-bytes="46050" data-gzip-bytes="17240">
+      <h3>Fallback route total</h3>
+      <strong data-size="bytes" data-bytes="46050">46.050 KB</strong>
+      <span data-size="gzip" data-bytes="17240">17.240 KB gzip</span>
+      <p>Always-loaded and fallback files; shared files counted once.</p>
+    </article><article class="size-card" data-optional-size="native-probe" data-bytes="23110" data-gzip-bytes="9348">
+      <h3>Native-surface route total</h3>
+      <strong>23.110 KB</strong>
+      <span>9.348 KB gzip</span>
+      <p>Includes 0.989 KB (0.538 KB gzip) of behavioral probes requested only after the property surface is present.</p>
     </article></div>
-    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Syntax highlighting is excluded.</p>
+    <p class="metric-note">Minified / gzip. 1 KB = 1,000 bytes. Demo-only syntax highlighting is excluded from the functional totals and reported separately below.</p>
+    <section class="delivery-context" aria-labelledby="preact-delivery-title">
+    <h3 id="preact-delivery-title">Whole-page delivery context</h3>
+    <div class="size-grid">
+      <article class="size-card" data-delivery-kind="document" data-bytes="19660">
+        <h4>HTML document</h4>
+        <strong>19.660 KB</strong>
+        <span>1 request</span>
+        <p>Generated markup, including these measurements.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="supporting" data-bytes="18520">
+        <h4>Initial supporting assets</h4>
+        <strong>18.520 KB raw</strong>
+        <span>17.897 KB local transfer · 3 requests</span>
+        <p>Styles, icon, and the highlighting scheduler; functional JS is separate above.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="initial-with-fallback" data-bytes="84230">
+        <h4>Initial page with fallback</h4>
+        <strong>84.230 KB raw</strong>
+        <span>54.797 KB local transfer · 9 requests</span>
+        <p>Document + functional fallback path + initial supporting assets, with unique files counted once.</p>
+      </article>
+      <article class="size-card" data-delivery-kind="decoration" data-bytes="16700">
+        <h4>Deferred highlighting</h4>
+        <strong>16.700 KB raw</strong>
+        <span>7.831 KB local transfer · 8 requests</span>
+        <p>Engine, theme, and this page’s grammar closure, requested after a source disclosure opens or during idle time.</p>
+      </article>
+    </div>
+    <p class="metric-note">“Local transfer” matches the included development server: gzip JavaScript sidecars, but uncompressed HTML, CSS, and SVG. GitHub Pages, browser caching, HTTP headers, and production compression can change transferred bytes and request scheduling. Module preloads fetch functional modules early without evaluating the app and do not add duplicate transfers.</p>
+  </section>
     <details>
-      <summary>Inspect the 4 generated JavaScript files</summary>
+      <summary>Inspect the 6 generated JavaScript files</summary>
       <p class="metric-note">Selected adapters: <code>labels</code>, <code>popover-targets</code>.</p>
-      <p class="metric-note">Gzip totals sum each compressed file. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
+      <p class="metric-note">Gzip totals sum each compressed file. The fallback and native-probe routes are mutually exclusive. Separate CSS files, HTML, JSON, source maps, HTTP headers, and Microlighter assets are excluded. Component styles embedded in JavaScript are included. Transfer sizes depend on compression and caching. <a href="../shared/microlighter/LICENSE">Microlighter MIT license</a>.</p>
       <div class="table-scroll"><table class="files-table">
         <caption>Files included in this page’s totals</caption>
         <thead><tr><th scope="col">File</th><th scope="col">Delivery</th><th scope="col">Minified</th><th scope="col">Gzip</th></tr></thead>
-        <tbody><tr data-file-path="preact/app-MOFEPKJY.js" data-delivery="baseline">
-      <td><a data-bundle-file="preact/app-MOFEPKJY.js" href="../preact/app-MOFEPKJY.js"><code>preact/app-MOFEPKJY.js</code></a></td>
-      <td>Page</td>
-      <td data-size="bytes" data-bytes="17682">17.682 KB</td>
-      <td data-size="gzip" data-bytes="6938">6.938 KB</td>
-    </tr>
-<tr data-file-path="preact/chunk-32G5PXKY.js" data-delivery="baseline">
-      <td><a data-bundle-file="preact/chunk-32G5PXKY.js" href="../preact/chunk-32G5PXKY.js"><code>preact/chunk-32G5PXKY.js</code></a></td>
-      <td>Page</td>
-      <td data-size="bytes" data-bytes="924">0.924 KB</td>
-      <td data-size="gzip" data-bytes="464">0.464 KB</td>
-    </tr>
-<tr data-file-path="preact/main.js" data-delivery="baseline">
+        <tbody><tr data-file-path="preact/main.js" data-delivery="baseline">
       <td><a data-bundle-file="preact/main.js" href="../preact/main.js"><code>preact/main.js</code></a></td>
       <td>Page</td>
-      <td data-size="bytes" data-bytes="2484">2.484 KB</td>
-      <td data-size="gzip" data-bytes="1140">1.140 KB</td>
+      <td data-size="bytes" data-bytes="3257">3.257 KB</td>
+      <td data-size="gzip" data-bytes="1352">1.352 KB</td>
     </tr>
-<tr data-file-path="preact/reference-target.setup-GIUIDJQ5.js" data-delivery="fallback">
-      <td><a data-bundle-file="preact/reference-target.setup-GIUIDJQ5.js" href="../preact/reference-target.setup-GIUIDJQ5.js"><code>preact/reference-target.setup-GIUIDJQ5.js</code></a></td>
+<tr data-file-path="shared/chunks/app-HVHZEK6Y.js" data-delivery="baseline">
+      <td><a data-bundle-file="shared/chunks/app-HVHZEK6Y.js" href="../shared/chunks/app-HVHZEK6Y.js"><code>shared/chunks/app-HVHZEK6Y.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="18722">18.722 KB</td>
+      <td data-size="gzip" data-bytes="7320">7.320 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/chunk-CLCOZ6O7.js" data-delivery="route-shared">
+      <td><a data-bundle-file="shared/chunks/chunk-CLCOZ6O7.js" href="../shared/chunks/chunk-CLCOZ6O7.js"><code>shared/chunks/chunk-CLCOZ6O7.js</code></a></td>
+      <td>Fallback / native probe shared</td>
+      <td data-size="bytes" data-bytes="849">0.849 KB</td>
+      <td data-size="gzip" data-bytes="422">0.422 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/chunk-S2QLMWTP.js" data-delivery="baseline">
+      <td><a data-bundle-file="shared/chunks/chunk-S2QLMWTP.js" href="../shared/chunks/chunk-S2QLMWTP.js"><code>shared/chunks/chunk-S2QLMWTP.js</code></a></td>
+      <td>Page</td>
+      <td data-size="bytes" data-bytes="142">0.142 KB</td>
+      <td data-size="gzip" data-bytes="138">0.138 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/detect-X6QVIAY4.js" data-delivery="native-probe">
+      <td><a data-bundle-file="shared/chunks/detect-X6QVIAY4.js" href="../shared/chunks/detect-X6QVIAY4.js"><code>shared/chunks/detect-X6QVIAY4.js</code></a></td>
+      <td>Native-surface probe</td>
+      <td data-size="bytes" data-bytes="140">0.140 KB</td>
+      <td data-size="gzip" data-bytes="116">0.116 KB</td>
+    </tr>
+<tr data-file-path="shared/chunks/reference-target.setup-F3BB382F.js" data-delivery="fallback">
+      <td><a data-bundle-file="shared/chunks/reference-target.setup-F3BB382F.js" href="../shared/chunks/reference-target.setup-F3BB382F.js"><code>shared/chunks/reference-target.setup-F3BB382F.js</code></a></td>
       <td>Fallback additional</td>
-      <td data-size="bytes" data-bytes="14511">14.511 KB</td>
-      <td data-size="gzip" data-bytes="5371">5.371 KB</td>
+      <td data-size="bytes" data-bytes="23080">23.080 KB</td>
+      <td data-size="gzip" data-bytes="8008">8.008 KB</td>
     </tr></tbody>
       </table></div>
       <p><a href="../bundle-sizes.json">Inspect the size manifest</a></p>

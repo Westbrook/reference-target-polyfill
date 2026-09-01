@@ -28,10 +28,17 @@ export function labels(options = {}) {
     id: "labels",
     priority: 10,
     attributes: ["for", "type", "disabled", "inert", "hidden", "aria-label", "aria-labelledby"],
+    observation: {
+      events: ["click"],
+      refresh: naming,
+      childList: true,
+      attributes: naming ? ["for", "id", "type", "aria-label", "aria-labelledby"] : [],
+      characterData: false,
+      slotchange: false,
+    },
     install(context) {
       const activating = new Set();
       const bindings = new Map();
-      const overridden = new WeakSet();
       const unavailable = new WeakSet();
       let disposed = false;
       let reportedNamingUnavailable = false;
@@ -113,35 +120,97 @@ export function labels(options = {}) {
         });
       }
 
-      function refresh() {
+      function ownsMutation(mutation) {
+        if (
+          mutation?.type !== "attributes" ||
+          mutation.attributeName !== "aria-labelledby"
+        ) return false;
+        const binding = bindings.get(mutation.target);
+        return !!binding && owns(mutation.target, binding);
+      }
+
+      function incrementalControls(changeSet) {
+        if (
+          !changeSet ||
+          changeSet.full ||
+          changeSet.model ||
+          changeSet.referenceTarget ||
+          changeSet.slotchange
+        ) return null;
+
+        const controls = new Set();
+        const mutations = changeSet.mutations ?? [];
+        if (!mutations.length && changeSet.roots?.size) return null;
+        for (const mutation of mutations) {
+          if (ownsMutation(mutation)) continue;
+          if (mutation.type !== "attributes") return null;
+          if (
+            mutation.attributeName !== "aria-label" &&
+            mutation.attributeName !== "aria-labelledby" &&
+            mutation.attributeName !== "type"
+          ) return null;
+          controls.add(mutation.target);
+        }
+        if (!mutations.length) {
+          for (const source of changeSet.sources ?? []) {
+            if (bindings.has(source) || isLabelable(source)) controls.add(source);
+          }
+        }
+        return controls;
+      }
+
+      function rootsForControls(controls, availableRoots) {
+        const roots = new Set();
+        for (const control of controls) {
+          for (
+            let root = control?.getRootNode?.();
+            root;
+            root = root.nodeType === 11 ? root.host?.getRootNode() : null
+          ) {
+            if (availableRoots.has(root)) roots.add(root);
+          }
+        }
+        return roots;
+      }
+
+      function refresh(changeSet) {
         if (disposed || !naming) return;
+        const candidates = incrementalControls(changeSet);
+        if (candidates?.size === 0) return;
+
+        const availableRoots = new Set(context.roots());
+        const roots = candidates
+          ? rootsForControls(candidates, availableRoots)
+          : availableRoots;
         const desired = new Map();
-        for (const root of context.roots()) {
+        for (const root of roots) {
           for (const label of root.querySelectorAll("label")) {
             if (!isLabel(label) || !label.isConnected) continue;
             const reference = labelReference(label);
             if (!reference || !reference.target.isConnected || !isInLabelScope(reference.target, label)) continue;
+            if (candidates && !candidates.has(reference.target)) continue;
             const list = desired.get(reference.target) ?? [];
             list.push(label);
             desired.set(reference.target, list);
           }
         }
 
-        for (const [control, binding] of bindings) {
-          if (!owns(control, binding)) {
+        const controls = candidates ?? new Set([...bindings.keys(), ...desired.keys()]);
+        for (const control of controls) {
+          let binding = bindings.get(control);
+          if (binding && !owns(control, binding)) {
             // An author changed the relationship through an attribute or IDL
             // setter. Never restore over it or fold it into a fallback name.
-            bindings.delete(control);
-            overridden.add(control);
-          } else if (!desired.has(control) || control.hasAttribute("aria-label")) {
+            if (binding) bindings.delete(control);
+            binding = undefined;
+          } else if (binding && (!desired.has(control) || control.hasAttribute("aria-label"))) {
             restore(control, binding);
             bindings.delete(control);
+            binding = undefined;
           }
-        }
 
-        for (const [control, externalLabels] of desired) {
-          let binding = bindings.get(control);
-          if (overridden.has(control) || unavailable.has(control)) continue;
+          const externalLabels = desired.get(control);
+          if (!externalLabels || unavailable.has(control)) continue;
           if (control.hasAttribute("aria-label")) continue;
           if (!("ariaLabelledByElements" in control)) {
             reportNamingUnavailable();
@@ -180,7 +249,7 @@ export function labels(options = {}) {
 
       return {
         click,
-        ...(naming ? { refresh } : {}),
+        ...(naming ? { refresh, ownsMutation } : {}),
         dispose() {
           if (disposed) return;
           disposed = true;

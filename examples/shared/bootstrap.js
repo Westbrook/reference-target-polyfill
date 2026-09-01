@@ -1,4 +1,7 @@
-import { hasNativeReferenceTarget } from "../../src/detect.js";
+// Keep the unconditional path to the property-surface check only. The full
+// behavioral probe is discovered only on the native-surface route, so it does
+// not delay the common absent-surface path before fallback setup.
+import { hasNativeReferenceTarget } from "../../src/detect/surface.js";
 
 /** The page owns the two import boundaries; this helper imports no adapters. */
 export async function bootstrap({ loadFallback, loadApp }) {
@@ -23,18 +26,30 @@ export async function bootstrap({ loadFallback, loadApp }) {
   try {
     let fallback;
     let loadedFallback = false;
+    let nativeProbe;
+    if (requestedMode === "auto" && nativeSurface) {
+      const { probeReferenceTarget } = await import("../../src/detect.js");
+      nativeProbe = probeReferenceTarget();
+      page.dataset.referenceTargetProbe = JSON.stringify(nativeProbe);
+      document.getElementById("surface-status").textContent = nativeProbe.nullable && nativeProbe.labels
+        ? "Present · basic probe passed"
+        : "Present · partial implementation";
+    }
     if (requestedMode === "fallback" || (requestedMode === "auto" && !nativeSurface)) {
       ({ referenceTargetFallback: fallback } = await loadFallback());
       loadedFallback = true;
     }
-    const mode = requestedMode === "off" ? "off" : fallback?.mode ?? "native";
+    const mode = requestedMode === "off" ? "off"
+      : fallback?.mode
+        ?? (nativeProbe?.nullable && nativeProbe?.labels ? "native-unverified" : "unsupported");
     page.dataset.referenceTargetMode = mode;
     page.dataset.referenceTargetAdapters = fallback?.activeAdapters.join(",") ?? "";
     page.dataset.referenceTargetAdapterStatuses = JSON.stringify(fallback?.statuses ?? {});
     page.dataset.bundlePath = loadedFallback ? "total" : "baseline";
     document.getElementById("mode-status").textContent = mode === "off"
       ? "Browser alone · fallback off"
-      : mode === "native" ? "Native API detected"
+      : mode === "native-unverified" ? "Native-unverified · basic probe passed"
+        : mode === "unsupported" && nativeSurface ? "Unsupported · partial native surface"
         : mode === "fallback" ? `Fallback · ${requestedMode === "fallback" ? "forced" : "automatic"}`
           : "Fallback unavailable";
     document.getElementById("adapter-status").textContent = fallback
@@ -50,7 +65,11 @@ export async function bootstrap({ loadFallback, loadApp }) {
     const note = document.getElementById("mode-note");
     if (note) note.textContent = loadedFallback
       ? "This visit includes the additional fallback JavaScript shown below."
-      : "This visit uses the baseline JavaScript only. Browser-only mode does not imply native Reference Target support.";
+      : mode === "native-unverified"
+        ? "This visit fetched the conditional native probe shown below. Passing its basic checks does not verify every selected behavior or assistive-technology result."
+        : mode === "unsupported"
+          ? "The browser exposes a partial native surface. The demo does not layer the fallback over that implementation."
+          : "This visit uses the baseline JavaScript only. Browser-only mode does not imply native Reference Target support.";
   } catch (error) {
     page.dataset.referenceTargetMode = "error";
     page.dataset.referenceTargetReady = "error";

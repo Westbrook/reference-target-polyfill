@@ -63,7 +63,7 @@
     </article>
     <article class="demo-card">
       <h3>Native form events</h3>
-      <ol id="event-log" aria-label="Recent form events" aria-live="polite" aria-relevant="additions">
+      <ol id="event-log" aria-label="Recent form events">
         <li class="empty">No events yet.</li>
       </ol>
       <p class="observation" id="reset-output">Reset restores the name, an empty email, a weekly digest, and the checked updates box.</p>
@@ -100,7 +100,7 @@ form.addEventListener('submit', event =&gt; {
   event.preventDefault();
   // Read synchronously: a fallback submitter exists only during dispatch.
   const data = new FormData(form, event.submitter);
-  console.log([...data.entries()]);
+  submitProfile(data); // Application-owned validation and transport.
 });
 for (const id of ['submit-profile', 'save-draft', 'reset-profile']) {
   document.getElementById(id).disabled = false;

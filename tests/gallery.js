@@ -9,7 +9,7 @@ const capabilities = [
 ];
 
 /** Integration tests use generated pages and their real module entry points. */
-export function registerGalleryTests({ test, assert, equal, requirePrimitive }) {
+export function registerGalleryTests({ test, assert, equal, requirePrimitive, captureAsynchronousErrors }) {
   let manifestPromise;
 
   function requireDSD() {
@@ -78,6 +78,7 @@ export function registerGalleryTests({ test, assert, equal, requirePrimitive }) 
       }
       function loaded() {
         if (frame.contentWindow.location.pathname !== url.pathname) return;
+        captureAsynchronousErrors(frame.contentWindow);
         observer?.disconnect();
         observer = new MutationObserver(check);
         observer.observe(frame.contentDocument.documentElement, {
@@ -404,5 +405,32 @@ export function registerGalleryTests({ test, assert, equal, requirePrimitive }) 
     assert(!labelRoot.getElementById("control").disabled, "Application module initialization must complete in off mode too");
     equal(page.document.getElementById("tn-input").getAttribute("aria-labelledby"), "tn-label-host");
     equal(page.document.getElementById("tn-input").getAttribute("aria-describedby"), "tn-description-host");
+  });
+
+  test("Built gallery: fallback navigation adds a bounded JavaScript request delta", async ({ fixture }) => {
+    function metrics(page) {
+      const resources = page.realm.performance.getEntriesByType("resource");
+      const javascript = resources.filter(entry => new URL(entry.name).pathname.endsWith(".js"));
+      return {
+        readyMs: page.realm.performance.now(),
+        javascriptRequests: javascript.length,
+        encodedJavaScriptBytes: javascript.reduce((sum, entry) => sum + entry.encodedBodySize, 0),
+      };
+    }
+
+    const off = metrics(await loadPage(fixture, "", "off"));
+    // The fallback navigation intentionally reuses the baseline assets loaded
+    // above, so this is a request/readiness smoke test rather than a cold-load benchmark.
+    const fallback = metrics(await loadPage(fixture, "", "fallback"));
+    const addedRequests = fallback.javascriptRequests - off.javascriptRequests;
+    assert(addedRequests > 0 && addedRequests <= 3,
+      `Forced fallback adds at most three setup-graph requests; observed ${addedRequests}`);
+    assert(fallback.encodedJavaScriptBytes > off.encodedJavaScriptBytes,
+      "Forced fallback transfers more application JavaScript than off mode");
+    assert(off.readyMs < 10000 && fallback.readyMs < 10000,
+      `Gallery navigation readiness exceeded its smoke budget: ${JSON.stringify({ off, fallback })}`);
+    assert(fallback.readyMs <= Math.max(3000, off.readyMs * 8),
+      `Fallback readiness regressed disproportionately: ${JSON.stringify({ off, fallback })}`);
+    return { metrics: { off, fallback } };
   });
 }

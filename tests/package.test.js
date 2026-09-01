@@ -11,9 +11,11 @@ import { exampleBuildOptions } from "../scripts/example-build-options.js";
 test("published entry points import without a DOM or installation side effects", async () => {
   const manifest = JSON.parse(await readFile(new URL("../package.json", import.meta.url)));
   assert.equal(Object.keys(manifest.dependencies ?? {}).length, 0, "no runtime dependencies");
-  for (const target of Object.values(manifest.exports)) {
+  for (const [subpath, conditions] of Object.entries(manifest.exports)) {
+    const target = typeof conditions === "string" ? conditions : conditions.default;
+    if (!target) continue; // Type-only opt-in modules have no runtime API.
     const module = await import(new URL(`../${target}`, import.meta.url));
-    assert.ok(Object.keys(module).length > 0, `${target} exports an API`);
+    assert.ok(Object.keys(module).length > 0, `${subpath} exports a runtime API`);
   }
 });
 

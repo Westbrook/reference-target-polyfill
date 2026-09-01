@@ -2,6 +2,7 @@ import {
   actionInvoker,
   asciiLowerCase,
   claimActivation,
+  clickOnlyObservation,
 } from "../internal/actions.js";
 
 const SUBMITTER_ATTRIBUTES = [
@@ -33,6 +34,7 @@ export function formTargets() {
     id: "form-targets",
     priority: 200,
     attributes: ["form", "type", "disabled", "inert", "command", "commandfor", ...SUBMITTER_ATTRIBUTES],
+    observation: clickOnlyObservation,
     check(window) {
       return (
         typeof window.HTMLFormElement?.prototype.requestSubmit === "function" &&

@@ -17,11 +17,11 @@ export class StencilPopover {
 
   render() {
     return (
-      <div id="panel" popover="auto" aria-labelledby="panel-title">
+      <div id="panel" popover="auto" role="dialog" aria-labelledby="panel-title">
         <p class="eyebrow">Stencil component</p>
         <h2 id="panel-title">Rendered with Stencil</h2>
         <p>This native popover lives inside a Stencil component’s shadow root.</p>
-        <button type="button" popoverTarget="panel" popoverTargetAction="hide">Close popover</button>
+        <button type="button" popoverTarget="panel" popoverTargetAction="hide" autoFocus>Close popover</button>
       </div>
     );
   }

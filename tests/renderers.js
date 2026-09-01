@@ -12,7 +12,7 @@ const renderers = [
 ];
 
 /** Exercise the generated pages with each library's actual renderer. */
-export function registerRendererTests({ test, assert, equal, requirePrimitive }) {
+export function registerRendererTests({ test, assert, equal, requirePrimitive, captureAsynchronousErrors }) {
   const nextTask = page => new Promise(resolve => page.realm.setTimeout(resolve, 0));
   const hasPopovers = realm => typeof realm.HTMLElement.prototype.showPopover === "function"
     && typeof realm.HTMLElement.prototype.hidePopover === "function";
@@ -84,6 +84,7 @@ export function registerRendererTests({ test, assert, equal, requirePrimitive })
       }
       function loaded() {
         if (frame.contentWindow.location.pathname !== url.pathname) return;
+        captureAsynchronousErrors(frame.contentWindow);
         observer?.disconnect();
         observer = new frame.contentWindow.MutationObserver(check);
         observer.observe(frame.contentDocument.documentElement, {
@@ -98,7 +99,8 @@ export function registerRendererTests({ test, assert, equal, requirePrimitive })
     });
     const state = page.document.documentElement.dataset;
     const nativeSurface = "referenceTarget" in page.realm.ShadowRoot.prototype;
-    const expectedMode = requestedMode === "auto" ? (nativeSurface ? "native" : "fallback") : requestedMode;
+    const expectedMode = requestedMode === "auto"
+      ? (nativeSurface ? "native-unverified" : "fallback") : requestedMode;
     equal(state.referenceTargetRequestedMode, requestedMode);
     equal(state.referenceTargetMode, expectedMode);
     equal(state.referenceTargetReady, "true");
@@ -154,7 +156,7 @@ export function registerRendererTests({ test, assert, equal, requirePrimitive })
     }
   }
 
-  function checkNoFallback(page) {
+  function checkNoFallback(page, { nativeProbe = false } = {}) {
     const state = page.document.documentElement.dataset;
     equal(state.referenceTargetAdapters, "");
     equal(state.bundlePath, "baseline");
@@ -165,6 +167,20 @@ export function registerRendererTests({ test, assert, equal, requirePrimitive })
     const fetched = new Set(page.realm.performance.getEntriesByType("resource").map(entry => entry.name));
     for (const row of fallbackFiles) {
       assert(!fetched.has(new URL(row.dataset.filePath, examplesURL).href), `Browser-only mode fetched fallback artifact ${row.dataset.filePath}`);
+    }
+    const probeFiles = [...page.document.querySelectorAll("[data-file-path][data-delivery='native-probe']")];
+    assert(probeFiles.length > 0, "The generated size report identifies the conditional native probe");
+    for (const row of probeFiles) {
+      const wasFetched = fetched.has(new URL(row.dataset.filePath, examplesURL).href);
+      equal(wasFetched, nativeProbe,
+        `${nativeProbe ? "Native-unverified" : "Off"} mode ${nativeProbe ? "fetches" : "omits"} ${row.dataset.filePath}`);
+    }
+    const routeSharedFiles = [...page.document.querySelectorAll("[data-file-path][data-delivery='route-shared']")];
+    assert(routeSharedFiles.length > 0, "The generated size report identifies probe/fallback shared chunks");
+    for (const row of routeSharedFiles) {
+      const wasFetched = fetched.has(new URL(row.dataset.filePath, examplesURL).href);
+      equal(wasFetched, nativeProbe,
+        `${nativeProbe ? "Native-unverified" : "Off"} mode ${nativeProbe ? "fetches" : "omits"} ${row.dataset.filePath}`);
     }
   }
 
@@ -291,7 +307,9 @@ export function registerRendererTests({ test, assert, equal, requirePrimitive })
     test(`Built ${renderer.title} renderer: auto mode selects a load path and finishes its first render`, async ({ fixture }) => {
       const page = await loadPage(fixture, renderer, "auto");
       await checkActivation(page, 0, 1, () => control(page).click());
-      if (page.document.documentElement.dataset.referenceTargetMode === "native") checkNoFallback(page);
+      if (page.document.documentElement.dataset.referenceTargetMode === "native-unverified") {
+        checkNoFallback(page, { nativeProbe: true });
+      }
       // This checks initialization and ordinary input behavior. API detection
       // alone is not proof of native forwarding or assistive-technology output.
     });

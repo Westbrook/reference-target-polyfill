@@ -21,9 +21,9 @@
 </script>
 
 <svelte:element this={"style"}>{componentStyles}</svelte:element>
-<div id="panel" popover="auto">
+<div id="panel" popover="auto" role="dialog" aria-labelledby="panel-title">
   <p class="eyebrow">Svelte custom element · shadow DOM</p>
-  <h2>Rendered with Svelte</h2>
+  <h2 id="panel-title">Rendered with Svelte</h2>
   <p>This native popover lives inside a compiler-generated Svelte custom element.</p>
   <button type="button" popovertarget="panel" popovertargetaction="hide">Close popover</button>
 </div>

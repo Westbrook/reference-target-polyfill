@@ -1,6 +1,7 @@
 import { LitElement, html, unsafeCSS } from "lit";
 import { keyed } from "lit/directives/keyed.js";
 import componentStyles from "../shared/components.css";
+import { withRendererTimeout } from "../shared/renderer-readiness.js";
 
 class ReferenceTargetLitElement extends LitElement {
   static styles = unsafeCSS(componentStyles);
@@ -39,11 +40,11 @@ class LitPopover extends ReferenceTargetLitElement {
 
   render() {
     return html`
-      <div id="panel" popover="auto">
+      <div id="panel" popover="auto" role="dialog" aria-labelledby="panel-title">
         <p class="eyebrow">LitElement · shadow DOM</p>
-        <h2>Rendered with Lit</h2>
+        <h2 id="panel-title">Rendered with Lit</h2>
         <p>This native popover lives inside a LitElement shadow root.</p>
-        <button type="button" popovertarget="panel" popovertargetaction="hide">Close popover</button>
+        <button type="button" popovertarget="panel" popovertargetaction="hide" autofocus>Close popover</button>
       </div>
     `;
   }
@@ -53,8 +54,8 @@ customElements.define("rt-lit-checkbox", LitCheckbox);
 customElements.define("rt-lit-popover", LitPopover);
 
 export async function whenReady() {
-  await Promise.all([
+  await withRendererTimeout(Promise.all([
     document.getElementById("renderer-checkbox").updateComplete,
     document.getElementById("renderer-popover").updateComplete,
-  ]);
+  ]), "Lit");
 }

@@ -1,6 +1,7 @@
 import { Fragment, h } from "preact";
 import { PreactElement } from "./preact-element.js";
 import componentStyles from "../shared/components.css";
+import { withRendererTimeout } from "../shared/renderer-readiness.js";
 
 class PreactCheckbox extends PreactElement {
   static referenceTarget = "control";
@@ -32,11 +33,11 @@ class PreactPopover extends PreactElement {
   render() {
     return h(Fragment, null,
       h("style", null, componentStyles),
-      h("div", { id: "panel", popover: "auto" },
+      h("div", { id: "panel", popover: "auto", role: "dialog", "aria-labelledby": "panel-title" },
         h("p", { class: "eyebrow" }, "Preact · shadow DOM"),
-        h("h2", null, "Rendered with Preact"),
+        h("h2", { id: "panel-title" }, "Rendered with Preact"),
         h("p", null, "This native popover lives inside a custom element rendered by Preact."),
-        h("button", { type: "button", popovertarget: "panel", popovertargetaction: "hide" }, "Close popover"),
+        h("button", { type: "button", popovertarget: "panel", popovertargetaction: "hide", autofocus: true }, "Close popover"),
       ),
     );
   }
@@ -46,8 +47,8 @@ customElements.define("rt-preact-checkbox", PreactCheckbox);
 customElements.define("rt-preact-popover", PreactPopover);
 
 export async function whenReady() {
-  await Promise.all([
+  await withRendererTimeout(Promise.all([
     document.getElementById("renderer-checkbox").updateComplete,
     document.getElementById("renderer-popover").updateComplete,
-  ]);
+  ]), "Preact");
 }

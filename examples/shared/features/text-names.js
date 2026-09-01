@@ -42,13 +42,26 @@ new MutationObserver(update).observe(input, {
   attributes: true,
   attributeFilter: ["aria-labelledby", "aria-describedby"],
 });
-// Text updates may leave the proxy IDs unchanged. Observe document text too,
-// while writing the readout only when its value changes to keep this stable.
-new MutationObserver(update).observe(document.body, {
-  subtree: true,
-  childList: true,
-  characterData: true,
+// Proxy IDs can stay stable while their provider text changes. Observe only the
+// adapter-owned proxies referenced by this example instead of the whole page.
+const proxyObserver = new MutationObserver(update);
+function observeReferencedProxies() {
+  proxyObserver.disconnect();
+  for (const attribute of ["aria-labelledby", "aria-describedby"]) {
+    const ids = (input.getAttribute(attribute) ?? "").match(/[^\t\n\f\r ]+/g) ?? [];
+    for (const id of ids) {
+      const proxy = document.getElementById(id);
+      if (proxy?.hasAttribute("data-reference-target-text")) {
+        proxyObserver.observe(proxy, { subtree: true, childList: true, characterData: true });
+      }
+    }
+  }
+  update();
+}
+new MutationObserver(observeReferencedProxies).observe(input, {
+  attributes: true,
+  attributeFilter: ["aria-labelledby", "aria-describedby"],
 });
 input.disabled = false;
 changeButton.disabled = false;
-update();
+observeReferencedProxies();

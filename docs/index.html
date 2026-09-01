@@ -13,7 +13,7 @@
     <script type="module" src="./examples/shared/code-highlighting.js"></script>
   </head>
   <body>
-    <a class="skip-link" href="#install">Skip to installation</a>
+    <a class="skip-link" href="#install-title">Skip to installation</a>
     <main>
       <header class="page-header">
         <div class="masthead">
@@ -25,7 +25,7 @@
           <a href="./examples/">Try all capabilities</a>
           <a href="./examples/#renderers">Renderer examples</a>
           <a href="./examples/scenarios/">Reference cases</a>
-          <a href="https://github.com/Westbrook/reference-target-polyfill">Source on GitHub ↗</a>
+          <a href="https://github.com/Westbrook/reference-target-polyfill">Source on GitHub <span aria-hidden="true">↗</span></a>
         </nav>
         <div class="hero docs-hero">
           <div class="hero-copy">
@@ -52,6 +52,8 @@
         <a href="#adapters">Choose adapters</a>
         <a href="#forms">Form actions</a>
         <a href="#roots">Existing roots</a>
+        <a href="#compatibility">Compatibility</a>
+        <a href="#performance">Performance</a>
         <a href="#scope">Scope &amp; cleanup</a>
       </nav>
 
@@ -59,21 +61,30 @@
         <section class="doc-section" id="install" aria-labelledby="install-title">
           <div class="section-label">01 / Get the files</div>
           <div class="doc-body">
-            <h2 id="install-title">Install from GitHub</h2>
+            <h2 id="install-title" tabindex="-1">Install from GitHub</h2>
             <pre class="command"><code>npm install git+https://github.com/Westbrook/reference-target-polyfill.git#main</code></pre>
-            <p>The package is named <code>reference-target-fallback</code>; it is not published to npm. Replace <code>main</code> with a commit SHA for a repeatable install. The package-import examples below assume a bundler; use URL imports for plain browser modules.</p>
+            <p>The package is named <code>reference-target-fallback</code>; it is not published to the npm registry. Replace <code>main</code> with a reviewed tag or commit SHA for a repeatable install, and commit the application lockfile. The package-import examples below assume a bundler.</p>
             <details class="code-example">
               <summary>Using browser modules without a bundler</summary>
-              <p>Use the hosted module URLs in place of package imports in the recipes below:</p>
+              <p>Use the optimized browser entry URLs in place of package imports in the recipes below:</p>
               <pre><code class="language-javascript" data-code-sample>import { hasNativeReferenceTarget } from
-  "https://westbrook.github.io/reference-target-polyfill/src/detect.js";
+  "https://westbrook.github.io/reference-target-polyfill/browser/detect/surface.js";
+
+// On the native-surface branch in bootstrap.js:
+if (hasNativeReferenceTarget()) {
+  const { probeReferenceTarget } = await import(
+    "https://westbrook.github.io/reference-target-polyfill/browser/detect.js"
+  );
+  // Apply the same application-specific probe policy shown below.
+}
 
 // In reference-target.setup.js:
 import { installReferenceTarget } from
-  "https://westbrook.github.io/reference-target-polyfill/src/core.js";
+  "https://westbrook.github.io/reference-target-polyfill/browser/core.js";
 import { labels } from
-  "https://westbrook.github.io/reference-target-polyfill/src/adapters/labels.js";</code></pre>
-              <p>The files are ordinary ES modules: <a href="./src/detect.js">detection</a>, <a href="./src/core.js">core</a>, and <a href="./src/adapters/labels.js">a label adapter</a>. The hosted copies follow this repository; for a version you control, vendor the complete <a href="https://github.com/Westbrook/reference-target-polyfill/tree/main/src">src directory</a> at a pinned commit and import from your own paths.</p>
+  "https://westbrook.github.io/reference-target-polyfill/browser/adapters/labels.js";</code></pre>
+              <p>These files are minified ES modules with shared chunks. <a href="./browser/manifest.json">The browser manifest</a> lists the entries, imports, and raw/gzip/Brotli byte counts. At a reviewed checkout, run <code>npm ci &amp;&amp; npm run build:browser</code>, then copy the complete generated <code>dist/browser/</code> directory to your own origin; a single entry can depend on a hashed shared chunk. The hosted URLs track the deployed repository site and are not a versioned CDN.</p>
+              <p class="small-note">Raw <a href="./src/detect.js">detection</a>, <a href="./src/core.js">core</a>, and <a href="./src/adapters/labels.js">adapter</a> modules remain available for debugging and source-level evaluation. They expose a larger unminified, multi-request graph and are not the production no-bundler recommendation.</p>
             </details>
           </div>
         </section>
@@ -81,14 +92,26 @@ import { labels } from
         <section class="doc-section" id="startup" aria-labelledby="startup-title">
           <div class="section-label">02 / Before components</div>
           <div class="doc-body">
-            <h2 id="startup-title">Load the fallback, then your app</h2>
-            <p>Load <code>bootstrap.js</code> with <code>&lt;script type="module"&gt;</code>. Keep installation in its own module so a supporting browser can skip it.</p>
+            <h2 id="startup-title">Fetch in parallel; evaluate in order</h2>
+            <p>Load <code>bootstrap.js</code> as a module and keep installation in its own dynamic boundary. Preload the always-needed app so the setup barrier does not also become a cold-network waterfall:</p>
+            <pre><code class="language-html" data-code-sample>&lt;link rel="modulepreload" href="./app.js"&gt;
+&lt;script type="module" src="./bootstrap.js"&gt;&lt;/script&gt;</code></pre>
             <figure class="source-example">
               <figcaption>bootstrap.js</figcaption>
-              <pre><code class="language-javascript" data-code-sample>import { hasNativeReferenceTarget } from "reference-target-fallback/detect";
+              <pre><code class="language-javascript" data-code-sample>import { hasNativeReferenceTarget } from
+  "reference-target-fallback/detect/surface";
 
 if (!hasNativeReferenceTarget()) {
   await import("./reference-target.setup.js");
+} else {
+  const { probeReferenceTarget } = await import(
+    "reference-target-fallback/detect"
+  );
+  const support = probeReferenceTarget();
+  if (!support.nullable || !support.labels) {
+    // Choose an application-specific structural fallback or unsupported state.
+    document.documentElement.dataset.referenceTargetSupport = "partial";
+  }
 }
 
 await import("./app.js");</code></pre>
@@ -98,20 +121,39 @@ await import("./app.js");</code></pre>
               <pre><code class="language-javascript" data-code-sample>import { installReferenceTarget } from "reference-target-fallback/core";
 import { labels } from "reference-target-fallback/adapters/labels";
 import { popoverTargets } from "reference-target-fallback/adapters/popover-targets";
+import { publishReferenceTarget } from "./reference-target.state.js";
 
 export const referenceTarget = installReferenceTarget({
   adapters: [labels({ activation: "focus" }), popoverTargets()],
 });
 
-referenceTarget.hydrate();</code></pre>
+publishReferenceTarget(referenceTarget);</code></pre>
             </figure>
+            <p>Every browser downloads only the tiny surface check. The full probe is requested on the native-surface route; the core and selected adapters are requested only when that surface is absent. The basic probe exercises nullable assignment and label forwarding, but does not certify popovers, commands, forms, text naming, accessible output, or assistive technology. Treat a passing native path as capability-unverified until it passes your application’s browser matrix. The installer will not layer fallback activation over a partial native surface.</p>
             <p><code>app.js</code> defines components and initializes normally when imported. The installer captures later <code>attachShadow()</code> calls, including closed roots:</p>
             <pre><code class="language-javascript" data-code-sample>const root = this.attachShadow({
   mode: "closed",
   referenceTarget: "control",
 });
 root.innerHTML = '&lt;input id="control" type="email"&gt;';</code></pre>
-            <p class="small-note">If your bundler uses <code>sideEffects: false</code>, preserve the setup module as side-effectful. Install once per browser realm.</p>
+            <details class="code-example">
+              <summary>Keep the handle without making setup eager</summary>
+              <p>Both setup and application code may import this tiny state module. It never imports the fallback:</p>
+              <pre><code class="language-javascript" data-code-sample>// reference-target.state.js
+let current = null;
+export function publishReferenceTarget(handle) { current = handle; }
+export function getReferenceTarget() { return current; }
+export function disposeReferenceTarget() {
+  const previous = current;
+  current = null;
+  previous?.dispose();
+}
+
+// Later, in application code:
+getReferenceTarget()?.refresh();</code></pre>
+              <p>Call <code>disposeReferenceTarget()</code> before hot replacement or a same-realm reinstall. Do not statically import <code>reference-target.setup.js</code> from the app; that would pull the selected adapters into its eager graph.</p>
+            </details>
+            <p class="small-note">Do not call <code>hydrate()</code> for roots created after installation. Reserve it for already-parsed open/declarative roots or changed host metadata. If your bundler uses <code>sideEffects: false</code>, preserve setup as side-effectful. Install once per realm. Under CSP, allow these self-hosted module URLs in <code>script-src</code>; no <code>eval</code> is used.</p>
           </div>
         </section>
 
@@ -120,17 +162,17 @@ root.innerHTML = '&lt;input id="control" type="email"&gt;';</code></pre>
           <div class="doc-body">
             <h2 id="adapters-title">Only the adapters you select</h2>
             <p>Import each factory from <code>reference-target-fallback/adapters/&lt;module&gt;</code> and add it to the same <code>adapters</code> array. There is no “all adapters” entry point.</p>
-            <div class="table-scroll">
+            <div class="table-scroll" role="region" aria-label="Adapter capability comparison" tabindex="0">
               <table class="adapter-table">
                 <caption>Open a demo to try the behavior and inspect its measured JavaScript size.</caption>
                 <thead><tr><th scope="col">Capability / module</th><th scope="col">Factory</th><th scope="col">What it supplies</th></tr></thead>
                 <tbody>
-                  <tr><th scope="row"><a href="./examples/labels/">Labels ↗</a><code>labels</code></th><td><code>labels({ activation: "focus" })</code></td><td>External label activation. Choose <code>"focus-and-click"</code> to also activate a control; <code>naming: true</code> opts into outward label naming.</td></tr>
-                  <tr><th scope="row"><a href="./examples/popover-targets/">Popover targeting ↗</a><code>popover-targets</code></th><td><code>popoverTargets()</code></td><td>Show, hide, or toggle an inner popover through <code>popovertarget</code>.</td></tr>
-                  <tr><th scope="row"><a href="./examples/dialog-commands/">Dialog commands ↗</a><code>dialog-commands</code></th><td><code>dialogCommands()</code></td><td><code>show-modal</code>, <code>close</code>, and <code>request-close</code> through <code>commandfor</code>.</td></tr>
-                  <tr><th scope="row"><a href="./examples/popover-commands/">Popover commands ↗</a><code>popover-commands</code></th><td><code>popoverCommands()</code></td><td><code>show-popover</code>, <code>hide-popover</code>, and <code>toggle-popover</code> commands.</td></tr>
-                  <tr><th scope="row"><a href="./examples/text-names/">Text names ↗</a><code>text-names</code></th><td><code>textNames({ getText })</code></td><td>Plain-text approximations for inward <code>aria-labelledby</code> and <code>aria-describedby</code>, using a component’s public text.</td></tr>
-                  <tr><th scope="row"><a href="./examples/forms/">Form actions ↗</a><code>form-targets</code></th><td><code>formTargets()</code></td><td>Outside submit and reset controls act on an inner native form.</td></tr>
+                  <tr><th scope="row"><a href="./examples/labels/">Labels <span aria-hidden="true">↗</span></a><code>labels</code></th><td><code>labels({ activation: "focus" })</code></td><td>External label activation. Choose <code>"focus-and-click"</code> to also activate a control; <code>naming: true</code> opts into outward label naming.</td></tr>
+                  <tr><th scope="row"><a href="./examples/popover-targets/">Popover targeting <span aria-hidden="true">↗</span></a><code>popover-targets</code></th><td><code>popoverTargets()</code></td><td>Show, hide, or toggle an inner popover through <code>popovertarget</code>.</td></tr>
+                  <tr><th scope="row"><a href="./examples/dialog-commands/">Dialog commands <span aria-hidden="true">↗</span></a><code>dialog-commands</code></th><td><code>dialogCommands()</code></td><td><code>show-modal</code>, <code>close</code>, and <code>request-close</code> through <code>commandfor</code>.</td></tr>
+                  <tr><th scope="row"><a href="./examples/popover-commands/">Popover commands <span aria-hidden="true">↗</span></a><code>popover-commands</code></th><td><code>popoverCommands()</code></td><td><code>show-popover</code>, <code>hide-popover</code>, and <code>toggle-popover</code> commands.</td></tr>
+                  <tr><th scope="row"><a href="./examples/text-names/">Text names <span aria-hidden="true">↗</span></a><code>text-names</code></th><td><code>textNames({ getText })</code></td><td>Plain-text approximations for inward <code>aria-labelledby</code> and <code>aria-describedby</code>, using a component’s public text.</td></tr>
+                  <tr><th scope="row"><a href="./examples/forms/">Form actions <span aria-hidden="true">↗</span></a><code>form-targets</code></th><td><code>formTargets()</code></td><td>Outside submit and reset controls act on an inner native form.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -146,7 +188,8 @@ const names = textNames({
   },
 });
 // Add names to the installation's adapters array.</code></pre>
-              <p>Return a string to opt in, or <code>null</code> to leave a reference alone. The provider receives the public host, never its private target. Call <code>referenceTarget.refresh()</code> after text changes held only in your application’s model.</p>
+              <p>Return a string to opt in, or <code>null</code> to leave a reference alone. The provider receives the public host, never its private target. It runs synchronously during reconciliation, so keep it pure, fast, and free of DOM writes. Call <code>getReferenceTarget()?.refresh()</code> once after batching text changes held only in your application model.</p>
+              <p>The resulting text proxies are visually hidden but live in the source’s own tree and remain visible to same-tree scripts, DOM observers, developer tools, and accessibility computation. Do not put secrets in provider text or treat proxy IDs as application API.</p>
             </details>
           </div>
         </section>
@@ -164,6 +207,7 @@ import { formTargets } from "reference-target-fallback/adapters/form-targets";
 export const referenceTarget = installReferenceTarget({
   adapters: [formTargets()],
 });
+// This page already contains parser-created declarative markup.
 referenceTarget.hydrate();</code></pre>
             </figure>
             <pre><code class="language-html" data-code-sample>&lt;x-profile id="profile" data-reference-target="form"&gt;
@@ -185,15 +229,15 @@ referenceTarget.hydrate();</code></pre>
 form.addEventListener("submit", (event) =&gt; {
   event.preventDefault();
   const data = new FormData(form, event.submitter);
-  console.log([...data.entries()]); // Includes intent=save.
+  submitProfile(data); // Application-owned secure transport; do not log values.
 });
 
 for (const button of document.querySelectorAll('[form="profile"]')) {
   button.disabled = false;
 }</code></pre>
             </figure>
-            <p>Native validation, submit/reset events, and the form’s own fields remain in use. In fallback mode, <code>event.submitter</code> is a temporary inner submitter carrying the outside control’s name, value, and form overrides. Read <code>FormData</code> synchronously while it exists.</p>
-            <p class="small-note">This forwards actions; it does not associate external data controls or change <code>.form</code> and <code>.elements</code>. Image submitters are unsupported. <a href="./examples/forms/">Try validation, submitter data, and reset ↗</a></p>
+            <p>Keep outside actions disabled until installation and the form’s own listeners are ready. Native validation, submit/reset events, and the form’s own fields remain in use. In fallback mode, <code>event.submitter</code> is a temporary inner submitter carrying the outside control’s authored name, value, and form overrides. Read <code>FormData</code> synchronously while it exists; the proxy and copied values are briefly visible to code inside the form component, so the component and invoker must share a trust boundary.</p>
+            <p class="small-note">This forwards actions; it does not associate external data controls or change <code>.form</code> and <code>.elements</code>. Image submitters are unsupported. <a href="./examples/forms/">Try validation, submitter data, and reset <span aria-hidden="true">↗</span></a></p>
           </div>
         </section>
 
@@ -201,14 +245,14 @@ for (const button of document.querySelectorAll('[form="profile"]')) {
           <div class="section-label">05 / Declarative markup</div>
           <div class="doc-body">
             <h2 id="roots-title">Leave a hint on the host</h2>
-            <p>For declarative Shadow DOM, keep <code>data-reference-target</code> on the host. Call <code>referenceTarget.hydrate()</code> after the markup is available to discover open roots and read that hint.</p>
+            <p>For declarative Shadow DOM, keep <code>data-reference-target</code> on the host. Call <code>referenceTarget.hydrate(container)</code> once after the markup is available. It traverses that container once, discovers open roots, reads the hint, and reconciles known state; roots created later through <code>attachShadow()</code> do not need hydration.</p>
             <pre><code class="language-html" data-code-sample>&lt;label for="email"&gt;Email&lt;/label&gt;
 &lt;x-email id="email" data-reference-target="control"&gt;
   &lt;template shadowrootmode="open" shadowrootreferencetarget="control"&gt;
     &lt;input id="control" type="email"&gt;
   &lt;/template&gt;
 &lt;/x-email&gt;</code></pre>
-            <p>The browser must already support declarative Shadow DOM. Hydrate again after changing the host metadata. Existing closed roots need cooperation from code that already holds the root:</p>
+            <p>The browser must already support declarative Shadow DOM. Hydrate again only after adding pre-existing roots or changing host metadata. Removing metadata clears a target owned by hydration but does not overwrite a later programmatic assignment. Existing closed roots need cooperation from code that already holds the root:</p>
             <pre><code class="language-javascript" data-code-sample>const registration = referenceTarget.register(rootKnownToTheComponent, {
   referenceTarget: "control",
 });
@@ -218,19 +262,57 @@ registration.dispose();</code></pre>
           </div>
         </section>
 
+        <section class="doc-section" id="compatibility" aria-labelledby="compatibility-title">
+          <div class="section-label">06 / Runtime contract</div>
+          <div class="doc-body">
+            <h2 id="compatibility-title">Know what the browser still supplies</h2>
+            <div class="table-scroll" role="region" aria-label="Runtime compatibility requirements" tabindex="0">
+              <table class="adapter-table">
+                <thead><tr><th scope="col">Area</th><th scope="col">Requirement or policy</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Core realm</th><td>A browser <code>Window</code> with a document, native Shadow DOM, <code>MutationObserver</code>, <code>WeakRef</code>, and <code>queueMicrotask</code>. Imports are side-effect free and SSR-safe; installation is client-only.</td></tr>
+                  <tr><th scope="row">Module loading</th><td>ESM is required; optimized direct-browser modules target ES2022. The recipe uses dynamic import, top-level await, and optional <code>modulepreload</code>. Wrap it in an async function if your output target cannot emit top-level await.</td></tr>
+                  <tr><th scope="row">Frames</th><td>Install once per same-origin realm that creates participating roots, passing that frame’s <code>window</code> as <code>realm</code>. Roots registered with a handle must come from its realm. Cross-origin frames are inaccessible.</td></tr>
+                  <tr><th scope="row">Action adapters</th><td>Popover, dialog, and form adapters call the browser’s existing native methods. They do not polyfill top-layer behavior, dialog focus, validation, or form ownership.</td></tr>
+                  <tr><th scope="row">ARIA naming</th><td>Opt-in label naming additionally needs working outward <code>ariaLabelledByElements</code>. Text proxies approximate plain text only. Property readback is not an accessibility result.</td></tr>
+                  <tr><th scope="row">Declarative roots</th><td>Declarative Shadow DOM is optional and not polyfilled. Hydration can discover parsed open roots with retained host metadata; existing closed roots need cooperation.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="small-note">There is no CommonJS or package-root entry point. A bundler may transpile syntax, but it cannot supply missing DOM primitives. Under CSP, allow the self-hosted module URLs in <code>script-src</code>; the package does not require <code>eval</code>.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="performance" aria-labelledby="performance-title">
+          <div class="section-label">07 / Cost model</div>
+          <div class="doc-body">
+            <h2 id="performance-title">Measure bytes and main-thread work separately</h2>
+            <p>The demo cards report minified and separately gzipped <em>functional</em> JavaScript: bootstrap, application, selected fallback, and their shared chunks. They exclude HTML, separate CSS, source maps, HTTP headers, and the eagerly requested syntax highlighter. Use the browser Network and Resource Timing views for full-page transfer, request count, caching, and latency. The optimized <code>browser/</code> distribution is also minified; raw <code>src/</code> modules are the larger debug/evaluation path.</p>
+            <p>Executable package-composition budgets independently cap surface detection, full detection, core, every core-plus-one-adapter path, and all public runtime modules in minified/raw, gzip, and Brotli bytes. Those caps are not gallery or full-page totals. Automatic native-surface mode must request no core/setup/adapter code. Hydration traverses its supplied container once; refresh initiates no scan, but drains queued records and may discover only their added subtrees before reconciliation. Irrelevant mutations do not run adapters, relevant bursts coalesce, and action-only selections do not run naming scans.</p>
+            <p>No p50/p95 load, installation, render, or update result is claimed by the size cards. The fallback does not render component UI, so report framework rendering separately from fallback installation, reconciliation, and action work. A reproducible performance run must record commit, browser, operating system, CPU/device, power mode, cache state, sample count, and fixture. Cover cold/warm navigation; 1/100/1,000 hosts; nested roots; irrelevant and relevant mutation bursts; explicit refresh; text providers; action latency; and retained state after disposal. Report median and p95 separately.</p>
+            <p><a href="./examples/bundle-sizes.json">Inspect the generated functional demo-size manifest</a> or <a href="./browser/manifest.json">the optimized browser-module manifest</a>. Package caps are executable in <a href="https://github.com/Westbrook/reference-target-polyfill/blob/main/tests/package-sizes.test.js"><code>tests/package-sizes.test.js</code></a>; release-current values stay in the generated manifests instead of hand-maintained prose. A budget increase needs an intentional baseline change and explanation.</p>
+          </div>
+        </section>
+
         <section class="doc-section" id="scope" aria-labelledby="scope-title">
-          <div class="section-label">06 / Know the boundary</div>
+          <div class="section-label">08 / Know the boundary</div>
           <div class="doc-body">
             <h2 id="scope-title">A fallback with a defined scope</h2>
             <ul class="scope-list">
               <li><strong>Accessibility:</strong> label naming and text proxies are approximations. Arbitrary cross-root ARIA relationships and full accessible-name computation are outside this package. Test with your browsers and assistive technology.</li>
-              <li><strong>Native primitives:</strong> Shadow DOM, <code>MutationObserver</code>, and <code>WeakRef</code> are required. Action adapters use the browser’s existing popover, dialog, and form methods.</li>
-              <li><strong>Encapsulation:</strong> the handle exposes no private target resolver. Native reflection, event paths, and full form ownership cannot be recreated here.</li>
-              <li><strong>Detection:</strong> <code>hasNativeReferenceTarget()</code> checks the API surface. <code>probeReferenceTarget()</code> adds basic nullable-value and label tests; neither certifies every behavior. The installer declines fallback activation over detected partial native support. <code>force: true</code> is for testing.</li>
+              <li><strong>Native primitives:</strong> Shadow DOM, <code>MutationObserver</code>, <code>WeakRef</code>, and <code>queueMicrotask</code> are required. Action adapters use the browser’s existing popover, dialog, and form methods.</li>
+              <li><strong>Encapsulation:</strong> the public handle and built-in callbacks expose no private target resolver. Native reflection, event paths, and full form ownership cannot be recreated here. Built-in adapter descriptors are opaque, privileged internals.</li>
+              <li><strong>Detection:</strong> <code>hasNativeReferenceTarget()</code> checks the API surface. <code>probeReferenceTarget()</code> adds basic nullable-value and label tests; neither certifies every selected behavior. A passing native route is reported as native-unverified. The installer declines fallback activation over detected partial native support. <code>force: true</code> is for tests only.</li>
             </ul>
-            <p>Inspect <code>referenceTarget.mode</code>, <code>.statuses</code>, and <code>.activeAdapters</code> for the installed state. To release listeners, observers, adapter changes, and the owned <code>attachShadow()</code> wrapper:</p>
+            <p>Inspect <code>referenceTarget.mode</code>, <code>.statuses</code>, and <code>.activeAdapters</code> for the live state. Modes include fallback, native-unverified, unsupported, inactive, and disposed; individual adapter statuses distinguish the same routing states. The package includes TypeScript declarations for public factories and handles. TypeScript component code can opt into native-shaped <code>ShadowRootInit.referenceTarget</code> and <code>ShadowRoot.referenceTarget</code> declarations with the type-only statement <code>import type {} from "reference-target-fallback/dom"</code>; that subpath has no runtime module.</p>
+            <p>To release listeners, observers, adapter changes, and the owned <code>attachShadow()</code> wrapper, including before hot replacement:</p>
             <pre><code class="language-javascript" data-code-sample>referenceTarget.dispose();</code></pre>
-            <p><a href="https://github.com/Westbrook/reference-target-polyfill#readme">Full API and behavior notes ↗</a> · <a href="https://github.com/Westbrook/reference-target-polyfill/blob/main/REFERENCE-TARGET-PROPOSAL.md">Research &amp; design proposal ↗</a></p>
+            <details class="code-example">
+              <summary>Diagnostic codes</summary>
+              <p><code>onDiagnostic({ code, detail })</code> is synchronous telemetry. Keep it fast and nonthrowing, avoid DOM writes, and ignore unknown future codes. Built-in codes are <code>missing-primitive</code>, <code>labels-naming-unavailable</code>, <code>unresolved-target</code>, <code>unsupported-target</code>, <code>invalid-action-state</code>, <code>text-provider-value</code>, <code>text-provider-error</code>, <code>unsupported-image-submitter</code>, <code>disabled-submitter-proxy</code>, <code>root-discovery-error</code>, <code>activation-errors</code>, and <code>refresh-errors</code>. Automatic root discovery reports its sanitized error and continues with later roots; explicit <code>register()</code> and <code>hydrate()</code> errors still throw. The last two codes are internal callback-safety diagnostics. Automatic reconciliation reports refresh errors without an uncaught observer-task failure, while synchronous install, <code>hydrate()</code>, or <code>refresh()</code> also throws an <code>AggregateError</code>. Detail fields may grow additively during <code>0.x</code>; private nodes are reduced to public host metadata.</p>
+            </details>
+            <p>Retire the fallback only after each selected native capability and its assistive-technology outcome passes the application’s browser matrix. Remove provider hooks and declarative fallback metadata separately, dispose the live handle, and then remove setup/detection.</p>
+            <p><a href="https://github.com/Westbrook/reference-target-polyfill#readme">Full API and behavior notes <span aria-hidden="true">↗</span></a> · <a href="https://github.com/Westbrook/reference-target-polyfill/blob/main/REFERENCE-TARGET-PROPOSAL.md">Research &amp; design proposal <span aria-hidden="true">↗</span></a></p>
           </div>
         </section>
       </div>

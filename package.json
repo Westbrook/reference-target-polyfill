@@ -1,6 +1,7 @@
 {
   "name": "reference-target-fallback",
   "version": "0.1.0",
+  "private": true,
   "description": "A modular, component-aware fallback for selected Reference Target behaviors.",
   "author": "Westbrook Johnson",
   "license": "MIT",
@@ -28,33 +29,71 @@
     "./examples/shared/features/*.js"
   ],
   "exports": {
-    "./core": "./src/core.js",
-    "./detect": "./src/detect.js",
-    "./adapters/labels": "./src/adapters/labels.js",
-    "./adapters/popover-targets": "./src/adapters/popover-targets.js",
-    "./adapters/dialog-commands": "./src/adapters/dialog-commands.js",
-    "./adapters/popover-commands": "./src/adapters/popover-commands.js",
-    "./adapters/text-names": "./src/adapters/text-names.js",
-    "./adapters/form-targets": "./src/adapters/form-targets.js"
+    "./core": {
+      "types": "./types/core.d.ts",
+      "default": "./src/core.js"
+    },
+    "./detect": {
+      "types": "./types/detect.d.ts",
+      "default": "./src/detect.js"
+    },
+    "./detect/surface": {
+      "types": "./types/detect/surface.d.ts",
+      "default": "./src/detect/surface.js"
+    },
+    "./adapters/labels": {
+      "types": "./types/adapters/labels.d.ts",
+      "default": "./src/adapters/labels.js"
+    },
+    "./adapters/popover-targets": {
+      "types": "./types/adapters/popover-targets.d.ts",
+      "default": "./src/adapters/popover-targets.js"
+    },
+    "./adapters/dialog-commands": {
+      "types": "./types/adapters/dialog-commands.d.ts",
+      "default": "./src/adapters/dialog-commands.js"
+    },
+    "./adapters/popover-commands": {
+      "types": "./types/adapters/popover-commands.d.ts",
+      "default": "./src/adapters/popover-commands.js"
+    },
+    "./adapters/text-names": {
+      "types": "./types/adapters/text-names.d.ts",
+      "default": "./src/adapters/text-names.js"
+    },
+    "./adapters/form-targets": {
+      "types": "./types/adapters/form-targets.d.ts",
+      "default": "./src/adapters/form-targets.js"
+    },
+    "./dom": {
+      "types": "./types/dom.d.ts"
+    }
   },
   "files": [
     "src",
+    "types",
     "README.md",
-    "REFERENCE-TARGET-PROPOSAL.md",
     "LICENSE"
   ],
   "scripts": {
     "prestart": "npm run build:pages",
     "start": "node scripts/serve.js",
+    "serve": "node scripts/serve.js",
     "test": "node --test tests/*.test.js",
-    "test:browser": "npm start",
+    "test:browser": "npm run build:pages && node scripts/browser-test.js --browser chromium",
+    "test:browser:firefox": "npm run build:pages && node scripts/browser-test.js --browser firefox",
+    "build:browser": "node scripts/build-browser.js",
     "build:example": "node scripts/build-example.js",
     "build:pages": "node scripts/build-pages.js",
     "prepare:pages": "npm run build:pages && node scripts/prepare-pages.js",
-    "check": "npm test && npm run build:pages && npm pack --dry-run"
+    "check": "npm test && npm run build:pages && npm pack --dry-run --ignore-scripts --cache .npm"
   },
-  "engines": {
-    "node": ">=22"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^22.22.3 || ^24.15.0",
+      "onFail": "error"
+    }
   },
   "devDependencies": {
     "@angular/common": "22.1.4",

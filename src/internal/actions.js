@@ -1,6 +1,16 @@
 const HTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
 const INPUT_BUTTON_TYPES = new Set(["button", "submit", "reset", "image"]);
 
+/** Core service needs shared by adapters whose behavior is resolved at click time. */
+export const clickOnlyObservation = {
+  events: ["click"],
+  refresh: false,
+  childList: true,
+  attributes: [],
+  characterData: false,
+  slotchange: false,
+};
+
 export function isHTMLElement(element) {
   return element?.nodeType === 1 && element.namespaceURI === HTML_NAMESPACE;
 }
@@ -93,6 +103,14 @@ export function hasPopoverPrimitives(window) {
   );
 }
 
+/** Capture the realm intrinsics used by native popover default actions. */
+export function popoverPrimitives(window) {
+  return {
+    showPopover: window.HTMLElement?.prototype.showPopover,
+    hidePopover: window.HTMLElement?.prototype.hidePopover,
+  };
+}
+
 /**
  * Claim synchronously to stop the browser from acting on the unforwarded host.
  * These adapters run during bubbling, so cancellation in an earlier listener
@@ -103,14 +121,15 @@ export function claimActivation(event) {
   return event.defaultPrevented;
 }
 
-export function runPopoverAction(context, target, invoker, action) {
+export function runPopoverAction(context, target, invoker, action, primitives) {
   if (!target.isConnected || !target.hasAttribute("popover")) return;
 
   const showing = target.matches(":popover-open");
   if ((action === "show" && showing) || (action === "hide" && !showing)) return;
 
   const method = showing ? "hidePopover" : "showPopover";
-  if (typeof target[method] !== "function") {
+  const nativeMethod = primitives?.[method];
+  if (typeof nativeMethod !== "function") {
     context.report("missing-primitive", { method, source: invoker });
     return;
   }
@@ -120,14 +139,14 @@ export function runPopoverAction(context, target, invoker, action) {
   // explicitly. hidePopover has no source argument: hiding event source is
   // therefore one of this fallback's documented differences from native RT.
   const argumentsList = showing ? [] : [{ source: invoker }];
-  invokeNativeAction(context, target, method, argumentsList, invoker);
+  invokeNativeAction(context, target, method, nativeMethod, argumentsList, invoker);
 }
 
-export function invokeNativeAction(context, target, method, argumentsList, invoker) {
+export function invokeNativeAction(context, target, method, nativeMethod, argumentsList, invoker) {
   try {
-    target[method](...argumentsList);
+    Reflect.apply(nativeMethod, target, argumentsList);
   } catch (error) {
-    const DOMException = target.ownerDocument.defaultView?.DOMException;
+    const { DOMException } = context.window;
     // Native command activation ignores invalid dialog/popover state. The
     // corresponding public methods throw instead. Suppress only these native
     // state errors; application exceptions and missing primitives must surface.

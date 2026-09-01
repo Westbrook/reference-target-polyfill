@@ -58,11 +58,20 @@ export async function assemblePagesSite({ projectRoot = defaultRoot } = {}) {
   const homepage = await readFile(join(root, "docs/index.html"));
   const stylesheet = await readFile(join(root, "docs/styles.css"));
   await stat(join(root, "dist/examples/index.html"));
+  await stat(join(root, "dist/browser/manifest.json"));
   await rm(output, { recursive: true, force: true });
   await mkdir(output, { recursive: true });
   await writeFile(join(output, "index.html"), homepage);
   await writeFile(join(output, "docs.css"), stylesheet);
-  await cp(join(root, "dist/examples"), join(output, "examples"), { recursive: true });
+  await cp(join(root, "dist/examples"), join(output, "examples"), {
+    recursive: true,
+    // Source maps remain useful in the local build, and gzip sidecars are used
+    // by scripts/serve.js. Neither belongs in the static Pages artifact.
+    filter: pathname => !pathname.endsWith(".map") && !pathname.endsWith(".gz"),
+  });
+  // This is the optimized direct-browser distribution. Preserve its manifest
+  // and exact module layout so documentation links and integrity checks agree.
+  await cp(join(root, "dist/browser"), join(output, "browser"), { recursive: true });
   await cp(join(root, "src"), join(output, "src"), { recursive: true });
   for (const filename of ["README.md", "REFERENCE-TARGET-PROPOSAL.md", "LICENSE"]) {
     try {
@@ -78,6 +87,7 @@ export async function assemblePagesSite({ projectRoot = defaultRoot } = {}) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await import("./build-example.js");
+  const { buildBrowserModules } = await import("./build-browser.js");
+  await Promise.all([buildBrowserModules(), import("./build-example.js")]);
   await assemblePagesSite();
 }

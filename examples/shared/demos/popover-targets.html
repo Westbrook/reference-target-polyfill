@@ -16,7 +16,7 @@
           <h2 id="pt-panel-title">The host leads here</h2>
           <p>The outside buttons target the component. Its Reference Target identifies this native popover.</p>
           <p>This is a manual popover: use Hide panel or the close button to dismiss it.</p>
-          <button id="pt-close" type="button" popovertarget="pt-panel" popovertargetaction="hide" disabled>Close panel</button>
+          <button id="pt-close" type="button" popovertarget="pt-panel" popovertargetaction="hide" autofocus disabled>Close panel</button>
         </section>
       </template>
     </rt-popover-target-demo>
@@ -41,6 +41,7 @@
         aria-labelledby="pt-panel-title"&gt;
       &lt;h2 id="pt-panel-title"&gt;The host leads here&lt;/h2&gt;
       &lt;button id="pt-close" type="button" popovertarget="pt-panel"
+          autofocus
           popovertargetaction="hide"&gt;Close panel&lt;/button&gt;
     &lt;/section&gt;
   &lt;/template&gt;

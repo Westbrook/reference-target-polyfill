@@ -1,3 +1,5 @@
+import { managePopoverFocus } from "./popover-focus.js";
+
 /** Observe real renderer output; all reference forwarding belongs to the browser or adapters. */
 export function initializeRendererDemo() {
   const host = document.getElementById("renderer-checkbox");
@@ -13,6 +15,7 @@ export function initializeRendererDemo() {
   const replace = document.getElementById("renderer-replace");
   let replacements = 0;
   let changes = 0;
+  let restoreReplaceFocus = false;
 
   function observeCheckbox() {
     const next = root.getElementById("control");
@@ -25,6 +28,10 @@ export function initializeRendererDemo() {
     const text = `checked: ${control.checked} · replacements: ${replacements} · changes: ${changes}\nlabel.control: ${labelControl ? labelControl.localName : "null"} · inner .labels: ${control.labels.length} · outward ARIA label elements: ${control.ariaLabelledByElements?.length ?? 0}`;
     if (checkboxOutput.textContent !== text) checkboxOutput.textContent = text;
     replace.disabled = false;
+    if (restoreReplaceFocus && next === control) {
+      restoreReplaceFocus = false;
+      replace.focus({ preventScroll: true });
+    }
   }
 
   root.addEventListener("change", event => {
@@ -34,10 +41,11 @@ export function initializeRendererDemo() {
     }
   });
   new MutationObserver(observeCheckbox).observe(root, {
-    childList: true, subtree: true, attributes: true,
+    childList: true, subtree: true,
   });
   label.addEventListener("click", () => queueMicrotask(observeCheckbox));
   replace.addEventListener("click", () => {
+    restoreReplaceFocus = document.activeElement === replace;
     replace.disabled = true;
     host.setAttribute("revision", String(Number(host.getAttribute("revision") ?? 0) + 1));
   });
@@ -54,7 +62,11 @@ export function initializeRendererDemo() {
   // toggle events on the stable root and always read the current target.
   popoverRoot.addEventListener("toggle", observePopover, true);
   new MutationObserver(observePopover).observe(popoverRoot, { childList: true, subtree: true });
-  document.getElementById("renderer-open").disabled = !supportsPopovers;
-  document.getElementById("renderer-hide").disabled = !supportsPopovers;
+  const open = document.getElementById("renderer-open");
+  const hide = document.getElementById("renderer-hide");
+  open.disabled = !supportsPopovers;
+  hide.disabled = !supportsPopovers;
+  panel.hidden = !supportsPopovers;
+  managePopoverFocus(panel, [open]);
   observePopover();
 }

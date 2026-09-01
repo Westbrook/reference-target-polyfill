@@ -2,9 +2,29 @@
 
 Research date: 31 August 2026. This document preserves the research and design rationale. A partial implementation is now available in this repository; see [README.md](./README.md) for its actual API, supported behaviors, and validation. The package is not published. Browser findings below come from release records, source code, specification changes, and checked-in test expectations; they are distinct from the implementation's own browser tests and do not establish assistive-technology conformance.
 
-**Recommendation.** Build a small synchronous shim with application-selected adapters. Conditionally import the selected setup module when the required native behavior is absent, await installation, then dynamically import the ordinary application module. This avoids downloading fallback code where the selected behavior is native while keeping application initialization unchanged. The package can route supported interactions and provide carefully scoped naming fallbacks. A transparent polyfill that reproduces native cross-shadow accessibility relationships, form ownership, and event dispatch is not achievable with the currently exposed JavaScript APIs. Chrome's own [feature assessment](https://chromestatus.com/feature/5188237101891584) identifies this polyfill limitation; its [public data](https://chromestatus.com/api/v0/features/5188237101891584) includes the detailed activation-risk assessment.
+## Recommendation
 
-**What the MDN request and its links establish.** I reviewed all four substantive resources linked directly from [MDN issue #832](https://github.com/mdn/mdn/issues/832), as well as the relevant follow-on discussions, implementation records, and tests. The MDN issue has no comments and remains a placeholder; its statement that no browser ships the feature is now out of date.
+Build a small synchronous shim with application-selected adapters. Conditionally import the selected setup module when the required native behavior is absent, await installation, then dynamically import the ordinary application module. This avoids downloading fallback code where the selected behavior is native while keeping application initialization unchanged. The package can route supported interactions and provide carefully scoped naming fallbacks. A transparent polyfill that reproduces native cross-shadow accessibility relationships, form ownership, and event dispatch is not achievable with the currently exposed JavaScript APIs. Chrome's own [feature assessment](https://chromestatus.com/feature/5188237101891584) identifies this polyfill limitation; its [public data](https://chromestatus.com/api/v0/features/5188237101891584) includes the detailed activation-risk assessment.
+
+## Implementation status on 1 September 2026
+
+The recommendations below led to the checked-in `0.1.0` prototype. This is a research record, so some later sections deliberately retain proposal tense and discuss ideas that are not public API. [README.md](./README.md) is the canonical current contract. In particular:
+
+| Area | Implemented contract |
+| --- | --- |
+| Delivery | Side-effect-free ESM subpaths for `detect/surface`, full `detect`, `core`, and six opt-in adapters. TypeScript declarations ship for every public export. Built-in adapter descriptors are opaque; their privileged installation protocol is not a public custom-adapter API. |
+| Loading | Statically import the tiny surface check, dynamically import the full probe only when a native surface exists, and load core plus selected adapters only when it does not. `modulepreload` can fetch the always-needed application in parallel without evaluating it before the setup barrier. The minified `browser/` distribution is the production no-bundler path; raw `src/` URLs are for debugging and evaluation. |
+| Native routing | A detected native surface is `native-unverified`, not a conformance claim. Partial probe results are `unsupported`; the package does not combine fallback activation with a partial native implementation. `force` exists for tests, not production override. |
+| Lifecycle | `hydrate(container)` discovers accessible pre-existing/open or declarative roots in that container with one traversal. `refresh()` initiates no scan, but first drains queued mutation records and any bounded added-subtree discovery they carry. `register()` is explicit cooperation for a root the caller already holds. `dispose()` clears owned state and transitions a live handle and its formerly active adapter statuses to `disposed`. |
+| Updates | Relevant mutation records are coalesced and routed only to adapters that own those mutation types. Metadata removal clears a target only when hydration still owns that assignment. Provider/model and unobservable property changes require one explicit reconciliation after batching. |
+| Privacy and telemetry | Providers and diagnostics receive public host/source metadata, never a resolved private target. Diagnostics are synchronous and have stable codes documented in the README; details may grow additively during `0.x`. |
+| Forms and text | Form actions stay disabled until setup and application listeners are ready. Temporary submitter values are visible to code in the form's tree and require a shared trust boundary. Text proxies are visually hidden, not secret, and remain visible to same-tree code and accessibility computation. |
+
+Executable minified composition budgets independently cap the surface entry, full detection, core, each core-plus-one-adapter path, and all public runtime modules in raw, gzip, and Brotli bytes. Generated browser and demo manifests report release-current files and functional JavaScript separately from complete-page transfer. These byte gates are not load-time or render/update benchmarks. Runtime claims require a recorded browser/device/fixture, cold and warm runs, 1/100/1,000-host fixtures where applicable, deterministic work counters, and separately reported median and p95 values.
+
+## What the MDN request and its links establish
+
+I reviewed all four substantive resources linked directly from [MDN issue #832](https://github.com/mdn/mdn/issues/832), as well as the relevant follow-on discussions, implementation records, and tests. The MDN issue has no comments and remains a placeholder; its statement that no browser ships the feature is now out of date.
 
 | Directly linked resource | Significance for this proposal |
 | --- | --- |
@@ -19,7 +39,7 @@ The [Cross-root ARIA Reflection proposal](https://github.com/Westbrook/cross-roo
 
 The associated [ARIA PR #2474](https://github.com/w3c/aria/pull/2474) remains a draft aligning terminology with HTML. The [WPT promotion PR #51213](https://github.com/web-platform-tests/wpt/pull/51213) also remains a draft; the relevant tests still reside in the [tentative Reference Target directory](https://github.com/web-platform-tests/wpt/tree/master/shadow-dom/reference-target/tentative). “Tentative” describes their standards status, not an absence of implementation testing.
 
-**Browser status.**
+## Browser status
 
 | Engine | Verified position on 31 August 2026 |
 | --- | --- |
@@ -35,7 +55,7 @@ WebKit still declares a nonnullable string in [ShadowRoot.idl](https://github.co
 
 Mozilla's [positive standards position](https://github.com/mozilla/standards-positions/issues/1035) and WebKit's [still-open position issue](https://github.com/WebKit/standards-positions/issues/356) should be distinguished from product availability. I found no committed Firefox or Safari shipping date in the inspected records.
 
-**The native contract to target.**
+## The native contract to target
 
 The API has four related entry points: `attachShadow({ referenceTarget: "control", mode: "open" })`, mutable `root.referenceTarget`, the `shadowrootreferencetarget` template attribute, and `HTMLTemplateElement.shadowRootReferenceTarget`. It works with ordinary shadow hosts as well as custom elements, and with open or closed roots. [Chrome 152 ShadowRoot IDL](https://chromium.googlesource.com/chromium/src/+/refs/tags/152.0.7977.64/third_party/blink/renderer/core/dom/shadow_root.idl), [initialization IDL](https://chromium.googlesource.com/chromium/src/+/refs/tags/152.0.7977.64/third_party/blink/renderer/core/dom/shadow_root_init.idl), [template IDL](https://chromium.googlesource.com/chromium/src/+/refs/tags/152.0.7977.64/third_party/blink/renderer/core/html/html_template_element.idl).
 
@@ -45,9 +65,11 @@ References *to* a host are forwarded. Attributes *on* the host are not copied to
 
 The browser uses an internal effective target while preserving public encapsulation. Writable ARIA element-reference getters and `commandForElement`/`popoverTargetElement` retain the host. Read-only `label.control`, `.list`, and `.form` first need a valid relationship and then return an appropriately retargeted host. A library should not replace those getters with ones exposing private shadow elements. [Reflection discussion](https://github.com/WICG/webcomponents/issues/1114), [label bindings](https://chromium.googlesource.com/chromium/src/+/refs/tags/152.0.7977.64/third_party/blink/renderer/core/html/forms/html_label_element.cc), [input bindings](https://chromium.googlesource.com/chromium/src/+/refs/tags/152.0.7977.64/third_party/blink/renderer/core/html/forms/html_input_element.cc).
 
-**What the fallback should promise.** This table is an engineering recommendation derived from the platform constraints, not a statement of native conformance.
+## What the fallback should promise
 
-| Capability | Proposed fallback | Practical limit |
+This table is an engineering recommendation derived from the platform constraints, not a statement of native conformance.
+
+| Capability | Fallback approach | Practical limit |
 | --- | --- | --- |
 | Target configuration and nested lookup | Private root registry; exact ID lookup; resolve when used | Only registered roots and explicitly integrated operations participate. |
 | External label activating an inner input | Component-owned focus/activation adapter; outward ARIA labeling where supported | Does not create native `label.control`, `input.labels`, or identical default-action behavior. |
@@ -63,7 +85,9 @@ The main blocker is that ordinary reflected element references can point within 
 
 `ElementInternals` can help a cooperating custom-element source, including engine-specific relaxed scope behavior, but cannot be attached to arbitrary native inputs/buttons or serve as a general access mechanism for another component's internals. Its authoring model also supplies defaults that author ARIA can override. Treat it as a separate, tested adapter. [Scope discussion](https://github.com/whatwg/html/issues/8544), [ElementInternals reflection tests](https://github.com/web-platform-tests/wpt/blob/master/custom-elements/element-internals-aria-element-reflection.html).
 
-**Package and loading contract.** The local package is named `reference-target-fallback`; it has not been published to npm. It provides a synchronous core and separate adapter entry points. The application selects its adapter modules through static imports inside one setup module, loaded according to the required capability. The bootstrap awaits that module before importing the application, which can initialize at module top level without exporting `start()`. Adapters retain native Reference Target syntax. The design discussion includes possible extensions; [README.md](./README.md) documents the implemented API.
+## Package and loading contract
+
+The local package is named `reference-target-fallback`; it has not been published to npm. It provides a synchronous core and separate adapter entry points. The application selects its adapter modules through static imports inside one setup module, loaded according to the required capability. The bootstrap awaits that module before importing the application, which can initialize at module top level without exporting `start()`. Adapters retain native Reference Target syntax. The design discussion includes possible extensions; [README.md](./README.md) documents the implemented API.
 
 ```js
 // reference-target.setup.js
@@ -81,12 +105,19 @@ export const referenceTarget = installReferenceTarget({
 
 ```js
 // main.js — client entry point; assumes native Shadow DOM is available.
-// Basic surface check; replace with the required capability probes as needed.
-const hasNativeReferenceTarget =
-  "referenceTarget" in ShadowRoot.prototype;
+import { hasNativeReferenceTarget } from
+  "reference-target-fallback/detect/surface";
 
-if (!hasNativeReferenceTarget) {
+if (!hasNativeReferenceTarget()) {
   await import("./reference-target.setup.js");
+} else {
+  const { probeReferenceTarget } = await import(
+    "reference-target-fallback/detect"
+  );
+  const support = probeReferenceTarget();
+  if (!support.nullable || !support.labels) {
+    document.documentElement.dataset.referenceTargetSupport = "partial";
+  }
 }
 
 // app.js runs its normal top-level initialization; it needs no exports.
@@ -94,6 +125,7 @@ await import("./app.js");
 ```
 
 ```html
+<link rel="modulepreload" href="./app.js">
 <script type="module" src="./main.js"></script>
 ```
 
@@ -101,11 +133,11 @@ The first dynamic import resolves after the setup module and its dependencies ha
 
 Keep setup independent of the application module graph. Do not replace `await import("./app.js")` with a static `import "./app.js"` below the conditional: static imports are dependencies evaluated before the importing module's body. Likewise, sibling static imports of an asynchronous setup module and the application do not establish this barrier. No other script or import path should initialize the application earlier. The bootstrap can run ordinary application top-level code without a `startApplication()` refactor.
 
-The fallback chunk includes the core, selected adapters, and their shared dependencies. Preserve that dynamic import boundary in the production build and avoid unconditional fallback preloads when avoiding its download is the goal. Do not statically import setup or its adapters from the application elsewhere; if application hydration needs the installation handle, use a separate lightweight state/facade module rather than pulling setup back into its eager dependency graph. The core must not import an all-adapters registry. Adapter modules and factories define behavior without installing listeners, observers, or patches during import; `installReferenceTarget()` performs those effects. Export adapter subpaths explicitly and give bundlers accurate side-effect metadata. A convenience auto-install entry point and the application's setup module are side-effectful and must not be incorrectly marked removable. [Package entry points](https://nodejs.org/api/packages.html#package-entry-points), [bundler tree shaking and side effects](https://webpack.js.org/guides/tree-shaking/).
+The fallback chunk includes the core, selected adapters, and their shared dependencies. Preserve that dynamic import boundary in the production build and avoid unconditional fallback preloads when avoiding its download is the goal. Do not statically import setup or its adapters from the application elsewhere; if application code needs the installation handle, pass it through a separate lightweight state/facade module rather than pulling setup back into its eager dependency graph. This also gives hot-module replacement one place to dispose the previous handle before installing another. The core does not import an all-adapters registry. Adapter modules and factories define behavior without installing listeners, observers, or patches during import; `installReferenceTarget()` performs those effects. The package exports adapter subpaths explicitly and marks only the example setup modules as side-effectful. [Package entry points](https://nodejs.org/api/packages.html#package-entry-points), [bundler tree shaking and side effects](https://webpack.js.org/guides/tree-shaking/).
 
 A runtime option such as `features: { labels: true, dialogs: false }` does not guarantee a smaller bundle if the library imports every adapter anyway. Prefer passing imported adapter descriptors. A build-time generator could turn a list of feature names into the same static setup module, but it should not be required for the initial package. Verify the resulting production bundles instead of promising byte sizes before implementation.
 
-| Proposed adapter entry point | Selected behavior | Shared dependencies or required policy |
+| Implemented adapter entry point | Selected behavior | Shared dependencies or required policy |
 | --- | --- | --- |
 | `adapters/labels` | Supported external-label naming and activation approximations | Label policy selects focus/activation and handles existing form-associated behavior; naming has its own capability checks. |
 | `adapters/popover-targets` | `popovertarget` actions | Shared activation dispatch and native popover operations. |
@@ -116,7 +148,7 @@ A runtime option such as `features: { labels: true, dialogs: false }` does not g
 
 These are coherent behavior groups rather than a promise to implement every IDREF independently. An adapter named `aria-controls` or `aria-owns` must not imply that the unsolved accessibility relationship is available. Shared command and activation dispatch must enforce precedence and select one operation when a button has overlapping attributes; adapters cannot each independently activate it. Shared utilities are ordinary static imports, not a hidden dependency on every adapter.
 
-`installReferenceTarget()` would perform capability checks before changing anything, install the wrapper once per realm, and activate the selected adapters synchronously before returning. Importing modules does not itself claim support. Where native behavior supplies the selected capabilities, installation has no active adapters and installs no patches or observers. API presence alone is insufficient for preview implementations: for example, an isolated label and ordinary shadow host with an inner input should make `label.control === host`, becoming `null` after an invalid target assignment. Check nullable setters and the specific selected behaviors as well. Writable ARIA getter roundtrips cannot prove forwarding. Do not layer fallback activation over partially working native activation; report an unsupported capability or choose an isolated component fallback where needed.
+`installReferenceTarget()` performs capability checks before changing anything, installs the wrapper once per realm, and activates the selected adapters synchronously before returning. Importing modules does not itself claim support. Where a native Reference Target surface exists, installation reports `native-unverified` and installs no patches or observers. API presence alone is insufficient for preview implementations: for example, an isolated label and ordinary shadow host with an inner input should make `label.control === host`, becoming `null` after an invalid target assignment. Check nullable setters and the specific selected behaviors as well. Writable ARIA getter roundtrips cannot prove forwarding. The implementation does not layer fallback activation over partially working native activation; it reports `unsupported`, leaving an application to choose an isolated structural fallback.
 
 The wrapper calls the original `attachShadow()`, captures its returned root and initial target synchronously, and returns the real root immediately. This captures closed roots too. Install a root-instance accessor for later `referenceTarget` assignments without adding a misleading global signal to `ShadowRoot.prototype`. Roots with no configured target remain inert until a relevant assignment. Normalize `string | null` values deliberately, preserve native exceptions, and keep root references private. An async `attachShadow()` replacement is incompatible with native callers.
 
@@ -132,9 +164,9 @@ const root = this.attachShadow({
 root.referenceTarget = "another-control";
 ```
 
-The installation handle would expose truthful per-adapter status, explicit `register(root, { referenceTarget })` for hydration or already-created roots supplied by their owner, and `dispose()`. Component hooks for label policies and text providers remain opt-in; selecting an adapter cannot supply an unknown component's semantics. Component callbacks must not receive private elements belonging to another component further along a nested forwarding chain. Disposal removes owned subscriptions/proxies and restores patches only if they still belong to this installation. The core owns root lifecycle, target resolution, mutation batching, binding ownership, and service deduplication; optional services start only when selected adapters need them.
+The installation handle exposes truthful `mode`, `reason`, per-adapter `statuses`, `activeAdapters`, `register()`, `hydrate()`, `refresh()`, and `dispose()`. Its states distinguish `fallback`, `native-unverified`, `unsupported`, `inactive`, and `disposed`. Component hooks for label policies and text providers remain opt-in; selecting an adapter cannot supply an unknown component's semantics. Component callbacks never receive private elements belonging to another component further along a nested forwarding chain. Disposal removes owned subscriptions/proxies and restores patches only if they still belong to this installation. The core owns root lifecycle, target resolution, mutation batching, binding ownership, and service deduplication; optional services start only when selected adapters need them.
 
-Default adapter registration is complete before component construction. Later registration can be an explicit extension, reconciling already-captured roots, but it is not a way to recover missed interactions. Reject conflicting adapter IDs/configurations; deduplicate compatible registrations. The wrapper cannot recover previously-created inaccessible closed roots or intercept code calling a cached original method or another realm's prototype. Declarative roots still need the hydration contract below.
+Adapter selection is complete before component construction and cannot be extended on a live handle. `register()` adds a root, not an adapter, and is not a way to recover missed interactions. Duplicate adapter IDs are rejected. The wrapper cannot recover previously-created inaccessible closed roots or intercept code calling a cached original method or another realm's prototype. Declarative roots still need the hydration contract below.
 
 For removal, delete the capability check, conditional setup import, and setup module; the application can keep its dynamic import or become the direct module entry point. Components using native initialization and assignment remain unchanged. Component-specific structural fallbacks and declarative metadata have separate retirement paths. Eagerly bundling setup remains an alternative where avoiding the extra network boundary matters more than saving the selected fallback bytes in native browsers. In either deployment, `attachShadow()` itself remains synchronous.
 
@@ -161,9 +193,9 @@ function resolveRegisteredTarget(element) {
 
 Before calling this resolver, an adapter must obtain the original host correctly. Content IDREFs use the source's actual node tree, not a document-wide search and not the composed tree. Multi-ID attributes require ASCII-whitespace tokenization and order preservation. Explicit element references have their own allowed-scope rules; they cannot be reconstructed from the attribute string after a setter has cleared it. Bindings need a separate explicit-reference path. A root registration missing from the chain means the fallback cannot see that component's intended forwarding.
 
-Resolve at activation time to handle synchronous ID/DOM changes. Use a separate `MutationObserver` for each participating root and for source trees where bindings change; a document observer cannot see through shadow roots. Update only affected bindings, include `slotchange` for text projections, and dispose observers/proxies/listeners on removal. Observer callbacks cannot provide all native synchronous behavior. Avoid intercepting every DOM mutation method in an attempt to hide that difference.
+Resolve at activation time to handle synchronous ID/DOM changes. The implementation observes participating roots and source trees where bindings change; a document observer cannot see through shadow roots. Mutation interests are declared by adapters, unrelated records are ignored, and affected adapters reconcile after coalescing. `refresh()` initiates no unconditional document/root scan, but synchronously drains already-queued records and their bounded added-subtree discovery; `hydrate(container)` deliberately performs one supplied-container traversal. Observer callbacks cannot provide all native synchronous behavior. Avoid intercepting every DOM mutation method in an attempt to hide that difference.
 
-**How the adapters would work.**
+## How the adapters work
 
 For labels, resolve the participating control, then let the component select the correct focus and activation operation. When the label is in a permitted ancestor tree, `innerControl.ariaLabelledByElements = externalLabels` can provide the name because this reference points outward. Merge intentionally with authored/internal labels and respect name precedence. This requires its own updates and does not recreate native label association. Interactive descendants, canceled events, disabled/inert controls, reentrancy, clicks already coming from the target, and existing FACE behavior all need explicit handling. A document capture listener calling `.click()` before later handlers can cancel is insufficient. [Native label behavior](https://html.spec.whatwg.org/multipage/forms.html#the-label-element).
 
@@ -173,7 +205,9 @@ For dialogs/popovers, route a supported command to `showModal()`, `close()`, `re
 
 For actual accessible relationships, prefer a structural fallback. A real input or listbox option can remain in light DOM and be rendered through a slot; references within its actual tree then remain native. Alternatively, design the host as the semantic control and implement its role, state, keyboard, and form behavior coherently. These choices require component cooperation and may change the authoring contract. A hidden clone of an active option cannot generally stand in for the real accessible node.
 
-**Declarative shadow DOM requires an explicit server contract.** A browser can support declarative shadow DOM while ignoring `shadowrootreferencetarget`. Its parser consumes the template, leaving no template for a late script to scan for that unknown attribute. Patching `attachShadow()` does not intercept the parser's internal operation. [Template parsing behavior](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template#declarative_shadow_dom).
+## Declarative Shadow DOM requires an explicit server contract
+
+A browser can support declarative shadow DOM while ignoring `shadowrootreferencetarget`. Its parser consumes the template, leaving no template for a late script to scan for that unknown attribute. Patching `attachShadow()` does not intercept the parser's internal operation. [Template parsing behavior](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template#declarative_shadow_dom).
 
 Either register the target ID from component code during hydration or emit surviving metadata, such as:
 
@@ -187,7 +221,9 @@ Either register the target ID from component code during hydration or emit survi
 
 `data-reference-target` is a proposed library convention, not a platform attribute. An open root can be registered using that metadata. A closed root still needs the component to provide its saved root or its own `ElementInternals.shadowRoot` where available. Reattaching just to retrieve a declarative root can clear its contents. If declarative shadow DOM itself is unsupported, that requires a separate hydration strategy. [ElementInternals shadow-root access](https://html.spec.whatwg.org/multipage/custom-elements.html#dom-elementinternals-shadowroot), [attachShadow behavior](https://dom.spec.whatwg.org/#dom-element-attachshadow).
 
-**What to document and validate before offering this as a library.** Extend the existing brief MDN entries rather than assuming there is no documentation: the [template page](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template#shadowrootreferencetarget) already mentions the attribute, and [mdn/content #43453](https://github.com/mdn/content/issues/43453) tracks the API documentation and compatibility work. Document the four entry points, direction of forwarding, null/invalid semantics, observable getters, live updates, supported relations, and the difference between flags and default support. The dialog sample in issue #832 needs an actual action, for example `command="show-modal"`, as well as a visible button label; `commandfor` alone does not identify a dialog action.
+## Validation and documentation contract
+
+Extend the existing brief MDN entries rather than assuming there is no documentation: the [template page](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template#shadowrootreferencetarget) already mentions the attribute, and [mdn/content #43453](https://github.com/mdn/content/issues/43453) tracks the API documentation and compatibility work. Document the four native entry points, direction of forwarding, null/invalid semantics, observable getters, live updates, supported relations, and the difference between flags and default support. The dialog sample in issue #832 needs an actual action, for example `command="show-modal"`, as well as a visible button label; `commandfor` alone does not identify a dialog action.
 
 Use the upstream WPT scenarios as behavioral requirements, while publishing a separate fallback support matrix. Cover nested roots, missing/empty/null targets, duplicate and changing IDs, content versus explicit-element references, cancellation, implicit labels, FACE interactions, and teardown. Native DSD, already-created closed roots, cloning/serialization, and different realms need explicit expectations. Run each adapter with native support absent and compare with Chrome 152. Independently inspect accessible names and real relationships using browser accessibility tooling and screen readers; DOM getter assertions cannot establish accessibility parity.
 

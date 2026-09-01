@@ -1,3 +1,5 @@
+import { managePopoverFocus } from "../popover-focus.js";
+
 const section = document.getElementById("popover-commands");
 const host = document.getElementById("pc-host");
 const root = host?.shadowRoot;
@@ -28,6 +30,10 @@ panel.addEventListener("command", (event) => {
   queueMicrotask(update);
 });
 panel.addEventListener("toggle", update);
+managePopoverFocus(panel, [
+  document.getElementById("pc-toggle"),
+  document.getElementById("pc-show"),
+]);
 // This component-owned close button provides a native escape route even when
 // the outside Reference Target connection is unavailable in Browser alone.
 root.getElementById("pc-close").addEventListener("click", () => panel.hidePopover());

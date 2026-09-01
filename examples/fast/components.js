@@ -1,5 +1,6 @@
 import { FASTElement, Updates, html, repeat } from "@microsoft/fast-element";
 import componentStyles from "../shared/components.css";
+import { withRendererTimeout } from "../shared/renderer-readiness.js";
 
 class FastCheckbox extends FASTElement {
   constructor() {
@@ -45,16 +46,18 @@ const popoverDefinition = FastPopover.define({
   shadowOptions: { mode: "open" },
   styles: componentStyles,
   template: html`
-    <div id="panel" popover="auto">
+    <div id="panel" popover="auto" role="dialog" aria-labelledby="panel-title">
       <p class="eyebrow">FASTElement · shadow DOM</p>
-      <h2>Rendered with FAST</h2>
+      <h2 id="panel-title">Rendered with FAST</h2>
       <p>This native popover lives inside a FASTElement shadow root.</p>
-      <button type="button" popovertarget="panel" popovertargetaction="hide">Close popover</button>
+      <button type="button" popovertarget="panel" popovertargetaction="hide" autofocus>Close popover</button>
     </div>
   `,
 });
 
 export async function whenReady() {
-  await Promise.all([checkboxDefinition, popoverDefinition]);
-  await Updates.next();
+  await withRendererTimeout((async () => {
+    await Promise.all([checkboxDefinition, popoverDefinition]);
+    await Updates.next();
+  })(), "FAST");
 }

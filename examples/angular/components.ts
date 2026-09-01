@@ -11,6 +11,7 @@ import {
 } from "@angular/core";
 import { createCustomElement } from "@angular/elements";
 import { createApplication } from "@angular/platform-browser";
+import { withRendererTimeout } from "../../examples/shared/renderer-readiness.js";
 
 function setReferenceTarget(host: HTMLElement, target: string) {
   const root = host.shadowRoot as ShadowRoot & { referenceTarget: string };
@@ -49,11 +50,11 @@ class AngularCheckbox implements AfterViewInit {
   encapsulation: ViewEncapsulation.ShadowDom,
   styleUrl: "../shared/components.css",
   template: `
-    <div id="panel" popover="auto">
+    <div id="panel" popover="auto" role="dialog" aria-labelledby="panel-title">
       <p class="eyebrow">Angular Elements · shadow DOM</p>
-      <h2>Rendered with Angular</h2>
+      <h2 id="panel-title">Rendered with Angular</h2>
       <p>This native popover lives inside an Angular component shadow root.</p>
-      <button type="button" popovertarget="panel" popovertargetaction="hide">Close popover</button>
+      <button type="button" popovertarget="panel" popovertargetaction="hide" autofocus>Close popover</button>
     </div>
   `,
 })
@@ -78,11 +79,13 @@ const application = createApplication().then(app => {
 });
 
 export async function whenReady() {
-  const app = await application;
-  await app.whenStable();
-  for (const [id, target] of [["renderer-checkbox", "control"], ["renderer-popover", "panel"]]) {
-    if (!document.getElementById(id)?.shadowRoot?.getElementById(target)) {
-      throw new Error(`Angular did not finish rendering ${id}`);
+  await withRendererTimeout((async () => {
+    const app = await application;
+    await app.whenStable();
+    for (const [id, target] of [["renderer-checkbox", "control"], ["renderer-popover", "panel"]]) {
+      if (!document.getElementById(id)?.shadowRoot?.getElementById(target)) {
+        throw new Error(`Angular did not finish rendering ${id}`);
+      }
     }
-  }
+  })(), "Angular");
 }

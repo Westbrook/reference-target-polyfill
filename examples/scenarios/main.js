@@ -1,4 +1,4 @@
-import { hasNativeReferenceTarget } from "../../src/detect.js";
+import { hasNativeReferenceTarget } from "../../src/detect/surface.js";
 
 const requestedMode = new URL(location.href).searchParams.get("mode") ?? "auto";
 const selectedMode = ["auto", "fallback", "off"].includes(requestedMode) ? requestedMode : "auto";

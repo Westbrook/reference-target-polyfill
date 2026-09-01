@@ -6,6 +6,23 @@ const fixtureContainer = document.querySelector("#fixtures");
 const environment = {
   userAgent: navigator.userAgent,
   nativeReferenceTarget: "referenceTarget" in ShadowRoot.prototype,
+  capabilities: {
+    declarativeShadowDOM: "shadowRootMode" in HTMLTemplateElement.prototype,
+    popover: typeof HTMLElement.prototype.showPopover === "function" &&
+      typeof HTMLElement.prototype.hidePopover === "function",
+    popoverElementReflection: "popoverTargetElement" in HTMLButtonElement.prototype,
+    dialog: typeof HTMLDialogElement?.prototype.showModal === "function" &&
+      typeof HTMLDialogElement?.prototype.close === "function",
+    requestClose: typeof HTMLDialogElement?.prototype.requestClose === "function",
+    forms: typeof HTMLFormElement.prototype.requestSubmit === "function" &&
+      typeof HTMLFormElement.prototype.reset === "function",
+    configurableRequestSubmit: !!Object.getOwnPropertyDescriptor(
+      HTMLFormElement.prototype, "requestSubmit",
+    )?.configurable,
+    ariaElementReflection: "ariaLabelledByElements" in Element.prototype &&
+      "ariaDescribedByElements" in Element.prototype,
+    cssHighlights: typeof CSS !== "undefined" && !!CSS.highlights && typeof Highlight === "function",
+  },
   startedAt: new Date().toISOString(),
 };
 document.querySelector("#user-agent").textContent = environment.userAgent;
@@ -13,14 +30,32 @@ document.querySelector("#native-reference-target").textContent = environment.nat
 const tests = [];
 const results = [];
 const asynchronousErrors = [];
+const capturedRealms = new WeakSet();
+const TEST_TIMEOUT_MS = 20000;
+const runStartedAt = performance.now();
 let sequence = 0;
 
-window.addEventListener("error", (event) => {
-  asynchronousErrors.push(event.error ?? new Error(event.message));
-});
-window.addEventListener("unhandledrejection", (event) => {
-  asynchronousErrors.push(event.reason instanceof Error ? event.reason : new Error(String(event.reason)));
-});
+function asynchronousError(realm, value, fallback) {
+  if (value instanceof Error) return value;
+  const location = (() => {
+    try { return realm.location.href; } catch { return "isolated realm"; }
+  })();
+  const detail = value?.stack ?? value?.message ?? fallback ?? String(value);
+  return new Error(`${location}: ${detail}`);
+}
+
+function captureAsynchronousErrors(realm) {
+  if (!realm || capturedRealms.has(realm)) return;
+  capturedRealms.add(realm);
+  realm.addEventListener("error", (event) => {
+    asynchronousErrors.push(asynchronousError(realm, event.error, event.message));
+  });
+  realm.addEventListener("unhandledrejection", (event) => {
+    asynchronousErrors.push(asynchronousError(realm, event.reason, "Unhandled promise rejection"));
+  });
+}
+
+captureAsynchronousErrors(window);
 
 function assert(condition, message = "Expected a truthy value") {
   if (!condition) throw new Error(message);
@@ -49,6 +84,7 @@ function requirePrimitive(condition, explanation) {
   if (!condition) {
     const error = new Error(explanation);
     error.name = "SkipTest";
+    error.code = "missing-primitive";
     throw error;
   }
 }
@@ -56,6 +92,42 @@ function requirePrimitive(condition, explanation) {
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 const test = (name, callback) => tests.push({ name, callback });
 const uniqueId = (prefix = "test") => `${prefix}-${++sequence}`;
+
+async function withTimeout(name, callback) {
+  let timer;
+  try {
+    return await Promise.race([
+      Promise.resolve().then(callback),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          const error = new Error(`Test exceeded ${TEST_TIMEOUT_MS} ms: ${name}`);
+          error.name = "TestTimeoutError";
+          reject(error);
+        }, TEST_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function publishSummary(summary) {
+  window.__referenceTargetTestResults = summary;
+  window.__referenceTargetTestComplete = true;
+  const report = new URL(location.href).searchParams.get("report");
+  if (!report) return;
+  const endpoint = new URL(report, location.href);
+  if (endpoint.protocol !== "http:" || !["127.0.0.1", "localhost", "[::1]"].includes(endpoint.hostname)) {
+    throw new Error("Browser-test reports may only be sent to a local HTTP endpoint");
+  }
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=UTF-8" },
+    body: JSON.stringify(summary),
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error(`Browser-test report failed with HTTP ${response.status}`);
+}
 
 function element(tag, attributes = {}, text) {
   const node = document.createElement(tag);
@@ -101,6 +173,7 @@ async function iframeRealm(fixture) {
   const ready = new Promise((resolve) => frame.addEventListener("load", resolve, { once: true }));
   fixture.append(frame);
   await ready;
+  captureAsynchronousErrors(frame.contentWindow);
   return frame.contentWindow;
 }
 
@@ -174,6 +247,7 @@ async function scenarioPage(fixture, mode = "fallback") {
     function loaded() {
       // Ignore any initial about:blank load; inspect the actual application.
       if (frame.contentWindow.location.pathname !== url.pathname) return;
+      captureAsynchronousErrors(frame.contentWindow);
       observer?.disconnect();
       observer = new MutationObserver(check);
       observer.observe(frame.contentDocument.documentElement, {
@@ -254,7 +328,7 @@ async function run() {
     const probe = detection.probeReferenceTarget(realm);
     let installed = false;
     const handle = install([{ id: "native-bypass", install() { installed = true; } }], { realm, force: false });
-    const expected = probe.nullable && probe.labels ? "native" : "unsupported";
+    const expected = probe.nullable && probe.labels ? "native-unverified" : "unsupported";
     equal(handle.mode, expected);
     equal(handle.statuses["native-bypass"], expected);
     equal(handle.activeAdapters.length, 0);
@@ -313,8 +387,20 @@ async function run() {
     equal(root.referenceTarget, "target", "Root is configured before attachShadow returns");
     throws(() => installReferenceTarget({ adapters: [observer.adapter], force: true }), /already installed/);
     handle.dispose();
+    equal(handle.mode, "disposed");
+    equal(handle.statuses[observer.adapter.id], "disposed");
+    equal(handle.activeAdapters.length, 0);
+    assert(/disposed/i.test(handle.reason));
     equal(Element.prototype.attachShadow, originalAttachShadow);
     equal(install([observer.adapter]).mode, "fallback");
+  });
+
+  test("Independent module copies share one realm installation guard", async ({ install }) => {
+    const adapter = instrument().adapter;
+    install([adapter]);
+    const duplicate = await import(`../src/core.js?duplicate=${uniqueId()}`);
+    throws(() => duplicate.installReferenceTarget({ adapters: [adapter], realm: window, force: true }),
+      /already installed/);
   });
 
   test("Captured roots get their own accessor without changing ShadowRoot.prototype", ({ fixture, install }) => {
@@ -564,6 +650,339 @@ async function run() {
     root.referenceTarget = null;
     await tick();
     assert(notifications > before, "A property-only update must schedule adapter refresh");
+  });
+
+  test("Hydration clears removed metadata only while it still owns the target", ({ fixture, install }) => {
+    const ownedHost = element("div", { "data-reference-target": "first" });
+    const ownedRoot = ownedHost.attachShadow({ mode: "open" });
+    ownedRoot.append(element("input", { id: "first" }));
+    const authoredHost = element("div", { "data-reference-target": "first" });
+    const authoredRoot = authoredHost.attachShadow({ mode: "open" });
+    authoredRoot.append(element("input", { id: "first" }), element("input", { id: "second" }));
+    fixture.append(ownedHost, authoredHost);
+    const handle = install([instrument().adapter]);
+
+    handle.hydrate(fixture);
+    equal(ownedRoot.referenceTarget, "first");
+    equal(authoredRoot.referenceTarget, "first");
+    ownedHost.removeAttribute("data-reference-target");
+    authoredRoot.referenceTarget = "second";
+    authoredHost.removeAttribute("data-reference-target");
+    handle.hydrate(fixture);
+    equal(ownedRoot.referenceTarget, null, "Removing owned hydration metadata clears the fallback target");
+    equal(authoredRoot.referenceTarget, "second", "Hydration does not erase a later programmatic assignment");
+  });
+
+  test("Mutation discovery captures nested pre-existing roots exactly once", async ({ fixture, install }) => {
+    const outerHost = element("div");
+    const outerRoot = outerHost.attachShadow({ mode: "open" });
+    outerRoot.referenceTarget = "middle";
+    const middle = element("div", { id: "middle" });
+    const innerRoot = middle.attachShadow({ mode: "open" });
+    innerRoot.referenceTarget = "deep";
+    const deep = element("input", { id: "deep" });
+    innerRoot.append(deep);
+    outerRoot.append(middle);
+
+    const observer = instrument();
+    install([observer.adapter]);
+    fixture.append(outerHost);
+    await tick();
+    await tick();
+
+    equal(observer.context.resolveTarget(outerHost), deep);
+    const discovered = observer.context.roots().filter(root => root !== document);
+    equal(discovered.length, 2, "Nested mutation discovery registers each root once");
+    equal(new Set(discovered).size, 2, "Known roots contain no duplicate entries");
+  });
+
+  test("Automatic discovery survives named form controls that mask DOM traversal properties", async ({ fixture, install }) => {
+    const form = element("form");
+    form.append(
+      element("input", { name: "nodeType" }),
+      element("input", { name: "querySelectorAll" }),
+    );
+    const host = element("div");
+    const root = host.attachShadow({ mode: "open" });
+    root.referenceTarget = "control";
+    const control = element("input", { id: "control" });
+    root.append(control);
+    form.append(host);
+
+    const observer = instrument();
+    install([observer.adapter]);
+    fixture.append(form);
+    await tick();
+    await tick();
+    equal(observer.context.resolveTarget(host), control,
+      "Named form properties cannot suppress traversal of a valid nested root");
+  });
+
+  test("Automatic discovery isolates an uncapturable root from later valid siblings", async ({ fixture, install }) => {
+    const invalidHost = element("div");
+    const invalidRoot = invalidHost.attachShadow({ mode: "open" });
+    Object.defineProperty(invalidRoot, "referenceTarget", {
+      configurable: false, enumerable: true, value: "blocked",
+    });
+    const validHost = element("div");
+    const validRoot = validHost.attachShadow({ mode: "open" });
+    validRoot.referenceTarget = "control";
+    const control = element("input", { id: "control" });
+    validRoot.append(control);
+    const diagnostics = [];
+    const observer = instrument();
+    install([observer.adapter], { onDiagnostic(entry) { diagnostics.push(entry); } });
+
+    fixture.append(invalidHost, validHost);
+    await tick();
+    await tick();
+    equal(observer.context.resolveTarget(validHost), control,
+      "A later valid sibling remains discoverable after an earlier capture failure");
+    equal(diagnostics.filter(({ code }) => code === "root-discovery-error").length, 1,
+      "Automatic capture failure is reported once through the public diagnostic boundary");
+  });
+
+  test("Mutation bursts coalesce and adapter attribute interests ignore unrelated changes", async ({ fixture, install }) => {
+    let refreshes = 0;
+    install([{
+      id: "mutation-interest",
+      attributes: ["data-relevant"],
+      install() { return { refresh() { refreshes++; } }; },
+    }]);
+    await tick();
+    refreshes = 0;
+    for (let index = 0; index < 100; index++) fixture.setAttribute("data-relevant", String(index));
+    await tick();
+    equal(refreshes, 1, "One synchronous relevant-attribute burst produces one refresh");
+
+    refreshes = 0;
+    for (let index = 0; index < 100; index++) fixture.setAttribute("class", `unrelated-${index}`);
+    await tick();
+    equal(refreshes, 0, "Unrelated attributes do not reconcile an attribute-scoped adapter");
+  });
+
+  test("Adapter-owned mutations do not schedule a self-feedback refresh", async ({ fixture, install }) => {
+    let armed = false;
+    let refreshes = 0;
+    let ownedMarker = null;
+    install([{
+      id: "mutation-convergence",
+      observation: {
+        attributes: [], characterData: false, childList: true, slotchange: false,
+      },
+      install() {
+        return {
+          refresh() {
+            refreshes++;
+            if (armed && !fixture.querySelector("[data-owned-marker]")) {
+              ownedMarker = element("span", { "data-owned-marker": "" });
+              fixture.append(ownedMarker);
+            }
+          },
+          ownsMutation(mutation) {
+            return mutation.type === "childList" && Array.from(mutation.addedNodes).includes(ownedMarker);
+          },
+        };
+      },
+    }]);
+    await tick();
+    refreshes = 0;
+    armed = true;
+    fixture.append(element("span", { "data-external-trigger": "" }));
+    await tick();
+    await tick();
+    await tick();
+    equal(refreshes, 1, "The external mutation reconciles once and its owned marker is suppressed");
+    await tick();
+    equal(refreshes, 1, "No redundant refresh train continues after adapter state converges");
+  });
+
+  test("Refresh is reconciliation-only and hydration discovery stays container-scoped", async ({ install }) => {
+    const container = element("section");
+    const host = element("div", { "data-reference-target": "control" });
+    const root = host.attachShadow({ mode: "open" });
+    root.append(element("input", { id: "control" }));
+    container.append(host);
+
+    const originals = {
+      document: Document.prototype.querySelectorAll,
+      element: Element.prototype.querySelectorAll,
+      shadow: ShadowRoot.prototype.querySelectorAll,
+    };
+    const counts = { document: 0, element: 0, shadow: 0 };
+    Document.prototype.querySelectorAll = function (...args) {
+      counts.document++;
+      return Reflect.apply(originals.document, this, args);
+    };
+    Element.prototype.querySelectorAll = function (...args) {
+      counts.element++;
+      return Reflect.apply(originals.element, this, args);
+    };
+    ShadowRoot.prototype.querySelectorAll = function (...args) {
+      counts.shadow++;
+      return Reflect.apply(originals.shadow, this, args);
+    };
+
+    try {
+      const observer = instrument();
+      const handle = install([observer.adapter]);
+      await tick();
+      counts.document = counts.element = counts.shadow = 0;
+      handle.refresh();
+      const refreshDocumentScans = counts.document;
+
+      counts.document = counts.element = counts.shadow = 0;
+      handle.hydrate(container);
+      const hydrationDocumentScans = counts.document;
+      assert(counts.element + counts.shadow > 0, "Hydration discovers the supplied container");
+      equal(observer.context.resolveTarget(host)?.id, "control");
+      equal(refreshDocumentScans, 0, "refresh() does not rediscover the document");
+      equal(hydrationDocumentScans, 0, "hydrate(container) does not escape into the document");
+    } finally {
+      Document.prototype.querySelectorAll = originals.document;
+      Element.prototype.querySelectorAll = originals.element;
+      ShadowRoot.prototype.querySelectorAll = originals.shadow;
+    }
+  });
+
+  test("Overlapping connected additions are traversed linearly", async ({ fixture, install }) => {
+    const observer = instrument();
+    install([observer.adapter]);
+    await tick();
+    const original = Element.prototype.querySelectorAll;
+    let visited = 0;
+    Element.prototype.querySelectorAll = function (selector) {
+      const result = Reflect.apply(original, this, [selector]);
+      if (selector === "*") visited += 1 + result.length;
+      return result;
+    };
+    try {
+      const depth = 80;
+      let current = element("div");
+      fixture.append(current);
+      for (let index = 1; index < depth; index++) {
+        const child = element("div");
+        current.append(child);
+        current = child;
+      }
+      await tick();
+      await tick();
+      assert(visited <= depth * 2,
+        `A ${depth}-node connected insertion visited ${visited} nodes; expected linear discovery`);
+    } finally {
+      Element.prototype.querySelectorAll = original;
+    }
+  });
+
+  test("Discovery ignores spoofed cyclic and throwing shadowRoot getters", ({ fixture, install }) => {
+    const host = element("div");
+    const root = host.attachShadow({ mode: "open" });
+    const cyclic = element("span");
+    Object.defineProperty(cyclic, "shadowRoot", {
+      configurable: true,
+      get() { return root; },
+    });
+    const throwing = element("span");
+    Object.defineProperty(throwing, "shadowRoot", {
+      configurable: true,
+      get() { throw new Error("Authored shadowRoot getter must not run"); },
+    });
+    root.append(cyclic, throwing);
+    fixture.append(host);
+
+    const observer = instrument();
+    install([observer.adapter]);
+    const roots = observer.context.roots().filter(candidate => candidate !== document);
+    equal(roots.length, 1, "Only a root owned by the inspected host is discoverable");
+    equal(roots[0], root);
+  });
+
+  test("A dirty naming root does not reconcile unrelated roots", async ({ fixture, install }) => {
+    let providerCalls = 0;
+    install([textNames({
+      getText(host) {
+        providerCalls++;
+        return host.getAttribute("data-name");
+      },
+    })]);
+    const sources = [];
+    const publicIds = [];
+    for (let index = 0; index < 20; index++) {
+      const scopeHost = element("div");
+      fixture.append(scopeHost);
+      const scope = scopeHost.attachShadow({ mode: "open" });
+      const targetHost = element("span", { id: `name-host-${index}`, "data-name": `Name ${index}` });
+      const targetRoot = targetHost.attachShadow({ mode: "closed", referenceTarget: "target" });
+      targetRoot.append(element("span", { id: "target" }));
+      const source = element("input", { "aria-labelledby": targetHost.id });
+      scope.append(targetHost, source);
+      sources.push(source);
+      publicIds.push(targetHost.id);
+    }
+    await tick();
+    await tick();
+    providerCalls = 0;
+    sources[0].setAttribute("aria-labelledby", `${publicIds[0]} missing`);
+    await tick();
+    await tick();
+    assert(providerCalls > 0, "The dirty root is reconciled");
+    assert(providerCalls <= 4,
+      `One dirty naming root invoked the provider ${providerCalls} times across unrelated roots`);
+  });
+
+  test("Unhandled composed clicks visit adapter runtimes once across deep open roots", ({ fixture, install }) => {
+    let calls = 0;
+    install([{
+      id: "deep-click-count",
+      install() { return { click() { calls++; return false; } }; },
+    }]);
+    let parent = fixture;
+    for (let depth = 0; depth < 20; depth++) {
+      const host = element("div");
+      parent.append(host);
+      parent = host.attachShadow({ mode: "open" });
+    }
+    const button = element("button", { type: "button" });
+    parent.append(button);
+    syntheticClick(button);
+    equal(calls, 1, "One physical event runs each adapter runtime once");
+  });
+
+  test("Disposal cancels pending work, restores detached roots, and permits a single-listener reinstall", async ({ fixture, install }) => {
+    let refreshes = 0;
+    let activations = 0;
+    const adapter = {
+      id: "dispose-race",
+      attributes: ["data-dispose-work"],
+      install() {
+        return {
+          refresh() { refreshes++; },
+          click() { activations++; return true; },
+        };
+      },
+    };
+    const first = install([adapter]);
+    const host = element("div");
+    fixture.append(host);
+    const root = host.attachShadow({ mode: "open", referenceTarget: "target" });
+    root.append(element("span", { id: "target" }));
+    await tick();
+    refreshes = 0;
+    fixture.setAttribute("data-dispose-work", "queued");
+    host.remove();
+    first.dispose();
+    await tick();
+    equal(refreshes, 0, "A disposed installation performs no queued refresh");
+    equal(Object.getOwnPropertyDescriptor(root, "referenceTarget"), undefined,
+      "Disposal restores a detached captured root");
+
+    const button = element("button", { type: "button" });
+    fixture.append(button);
+    syntheticClick(button);
+    equal(activations, 0, "Disposed listeners do not receive later clicks");
+    install([adapter]);
+    syntheticClick(button);
+    equal(activations, 1, "Reinstallation contributes exactly one active listener");
   });
 
   test("A reentrant refresh request schedules another pass for model-only changes", async ({ install }) => {
@@ -1301,9 +1720,9 @@ async function run() {
     test, assert, equal, throws, requirePrimitive, element, syntheticClick, uniqueId,
   });
   const { registerGalleryTests } = await import("./gallery.js");
-  registerGalleryTests({ test, assert, equal, requirePrimitive });
+  registerGalleryTests({ test, assert, equal, requirePrimitive, captureAsynchronousErrors });
   const { registerRendererTests } = await import("./renderers.js");
-  registerRendererTests({ test, assert, equal, requirePrimitive });
+  registerRendererTests({ test, assert, equal, requirePrimitive, captureAsynchronousErrors });
 
   for (const { name, callback } of tests) {
     statusElement.textContent = `Running ${results.length + 1}/${tests.length}: ${name}`;
@@ -1311,17 +1730,19 @@ async function run() {
     fixtureContainer.append(fixture);
     const handles = [];
     const beforeErrors = asynchronousErrors.length;
+    const testStartedAt = performance.now();
     let outcome = "pass";
     let failure;
+    let detail;
     try {
-      await callback({
+      detail = await withTimeout(name, () => callback({
         fixture,
         install(adapters, options = {}) {
           const handle = installReferenceTarget({ adapters, realm: window, force: true, ...options });
           handles.push(handle);
           return handle;
         },
-      });
+      }));
       await tick();
       if (asynchronousErrors.length > beforeErrors) throw asynchronousErrors[beforeErrors];
     } catch (error) {
@@ -1333,8 +1754,19 @@ async function run() {
       }
       fixture.remove();
       await tick();
+      if (asynchronousErrors.length > beforeErrors) {
+        outcome = "fail";
+        failure ??= asynchronousErrors[beforeErrors];
+      }
     }
-    const entry = { name, outcome, ...(failure ? { error: String(failure.stack ?? failure) } : {}) };
+    const entry = {
+      name,
+      outcome,
+      durationMs: performance.now() - testStartedAt,
+      ...(detail?.metrics ? { metrics: detail.metrics } : {}),
+      ...(outcome === "skip" ? { skipCode: failure.code ?? "unspecified", skipReason: failure.message } : {}),
+      ...(failure ? { error: String(failure.stack ?? failure) } : {}),
+    };
     results.push(entry);
     const item = element("li", { class: outcome }, `${outcome.toUpperCase()}: ${name}`);
     if (failure) item.append(element("pre", {}, String(failure.stack ?? failure)));
@@ -1344,17 +1776,33 @@ async function run() {
   const passed = results.filter(({ outcome }) => outcome === "pass").length;
   const failed = results.filter(({ outcome }) => outcome === "fail").length;
   const skipped = results.filter(({ outcome }) => outcome === "skip").length;
-  const summary = { passed, failed, skipped, total: results.length, environment, results };
-  window.__referenceTargetTestResults = summary;
+  const summary = {
+    passed, failed, skipped, total: results.length,
+    durationMs: performance.now() - runStartedAt,
+    completedAt: new Date().toISOString(),
+    environment, results,
+  };
   statusElement.dataset.state = failed ? "failed" : "passed";
   statusElement.textContent = `${passed} passed, ${failed} failed, ${skipped} skipped (${results.length} tests).`;
   document.title = `${failed ? "FAIL" : "PASS"}: Reference Target browser tests`;
   console.log("Reference Target browser tests:", summary);
+  await publishSummary(summary);
 }
 
-run().catch((error) => {
+run().catch(async (error) => {
   statusElement.dataset.state = "failed";
   statusElement.textContent = `Test harness failed: ${error.message}`;
   resultsElement.append(element("pre", {}, error.stack ?? String(error)));
-  window.__referenceTargetTestResults = { failed: 1, environment, harnessError: String(error.stack ?? error) };
+  const summary = {
+    passed: 0, failed: 1, skipped: 0, total: results.length,
+    durationMs: performance.now() - runStartedAt,
+    completedAt: new Date().toISOString(),
+    environment, results,
+    harnessError: String(error.stack ?? error),
+  };
+  try {
+    await publishSummary(summary);
+  } catch (reportError) {
+    console.error("Browser-test result reporting failed:", reportError);
+  }
 });

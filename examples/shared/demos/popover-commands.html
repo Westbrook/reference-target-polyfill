@@ -17,7 +17,7 @@
           <h2 id="pc-panel-title">A panel with a say</h2>
           <p>The component can cancel a <code>command</code> event before the corresponding native popover operation runs.</p>
           <p>This manual popover stays open until a hide or toggle action closes it.</p>
-          <button id="pc-close" type="button" disabled>Close from inside</button>
+          <button id="pc-close" type="button" autofocus disabled>Close from inside</button>
         </section>
       </template>
     </rt-popover-command-demo>
@@ -45,6 +45,7 @@
     &lt;section id="pc-panel" popover="manual" role="dialog"
         aria-labelledby="pc-panel-title"&gt;
       &lt;h2 id="pc-panel-title"&gt;A panel with a say&lt;/h2&gt;
+      &lt;button type="button" autofocus&gt;Close from inside&lt;/button&gt;
     &lt;/section&gt;
   &lt;/template&gt;
 &lt;/rt-popover-command-demo&gt;</code></pre>

@@ -1,3 +1,5 @@
+import { managePopoverFocus } from "../popover-focus.js";
+
 // Application behavior only. The bootstrap has already selected any fallback.
 const section = document.getElementById("popover-targets");
 const host = document.getElementById("pt-host");
@@ -17,6 +19,10 @@ function update() {
 }
 
 panel.addEventListener("toggle", () => { toggles += 1; update(); });
+managePopoverFocus(panel, [
+  document.getElementById("pt-toggle"),
+  document.getElementById("pt-show"),
+]);
 // Reading after dispatch observes either native or fallback activation. These
 // listeners never open the panel on behalf of the outside controls.
 section.addEventListener("click", () => queueMicrotask(update));
